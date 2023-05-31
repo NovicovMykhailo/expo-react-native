@@ -10,8 +10,8 @@ export default function App() {
 
   return (
     <View style={{ width: "100%"}} >
-      {/* <Registration /> */}
-      <LoginScreen />
+      <Registration />
+      {/* <LoginScreen /> */}
     </View>
   );
 }

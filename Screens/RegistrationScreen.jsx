@@ -51,6 +51,9 @@ const Registration = () => {
   };
   const onLogin = () => {
     Alert.alert("Credentials", `${login} + ${password}+ ${email}`);
+    setLogin('')
+    setPassword('')
+    setEmail('')
   };
 
   return (
@@ -58,8 +61,14 @@ const Registration = () => {
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
         <View style={styles.box}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <KeyboardAvoidingView style={styles.keyView} behavior={Platform.OS == "ios" ? "padding" : "height"}>
-              <View style={styles.view}>
+            <View style={styles.view}>
+              <KeyboardAvoidingView
+                style={styles.keyView}
+                behavior={Platform.OS == "ios" ? "padding" : "height"}
+                keyboardVerticalOffset={400}
+                disabled
+
+              >
                 <View style={styles.userPhoto}>
                   <TouchableOpacity style={styles.takePhotoOut}>
                     <Text style={styles.insideText}>+</Text>
@@ -104,14 +113,14 @@ const Registration = () => {
                   </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity style={styles.btn} onClick={onLogin}>
+                <TouchableOpacity style={styles.btn} onPress={onLogin}>
                   <Text style={styles.btnText}>Зареєстуватися</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.bottomTextContainer}>
                   <Text style={styles.bottomText}>Вже є акаунт? Увійти</Text>
                 </TouchableOpacity>
-              </View>
-            </KeyboardAvoidingView>
+              </KeyboardAvoidingView>
+            </View>
           </TouchableWithoutFeedback>
         </View>
       </ImageBackground>
@@ -127,9 +136,9 @@ const styles = StyleSheet.create({
   },
   keyView: {
 
-    // keyboardVerticalOffset: 730,
-    
-    // height: 730,
+
+    // marginBottom: 710,
+
   },
   box: {
     height: "100%",
@@ -155,8 +164,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: "#F6F6F6",
     position: "absolute",
-    top: -65,
-    left: "50%",
+    top: -160,
+    left: "46%",
     transform: [{ translateX: -50 }],
   },
   takePhotoOut: {
