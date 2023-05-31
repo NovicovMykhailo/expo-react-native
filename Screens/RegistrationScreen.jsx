@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
+  Keyboard
 } from "react-native";
 import { useState } from "react";
 import image from "../assets/Photo_BG2x.png";
@@ -18,6 +19,7 @@ const Registration = () => {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isShownPasword, setIsShownPasword] = useState(true);
   const [isFocused, setIsFocused] = useState({
     email: false,
     password: false,
@@ -31,6 +33,10 @@ const Registration = () => {
   if (!fontsLoaded) {
     return null;
   }
+
+  const showPassword = () => {
+    setIsShownPasword(prev => !prev)
+  };
 
   const handleInputFocus = textinput => {
     setIsFocused({
@@ -47,10 +53,11 @@ const Registration = () => {
   };
 
   return (
-    <TouchableWithoutFeedback style={styles.base}>
+    <SafeAreaView style={styles.base} onPress={Keyboard.dismiss}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
         <View style={styles.box}>
-          <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} style={styles.view}>
+          {/* <KeyboardAvoidingView behavior={Platform.OS === "android" ? "padding" : "height"} style={styles.view}> */}
+          <KeyboardAvoidingView style={styles.view}>
             <View style={styles.userPhoto}>
               <TouchableOpacity style={styles.takePhotoOut}>
                 <Text style={styles.insideText}>+</Text>
@@ -78,17 +85,22 @@ const Registration = () => {
               inputMode="email"
               placeholderTextColor="#BDBDBD"
             />
-            <TextInput
-              onFocus={() => handleInputFocus("password")}
-              onBlur={() => handleInputBlur("password")}
-              placeholder="Пароль"
-              style={isFocused.password ? styles.inputOnFocus : styles.input}
-              onChangeText={setPassword}
-              value={password}
-              textContentType="password"
-              placeholderTextColor="#BDBDBD"
-              secureTextEntry={true}
-            />
+            <View>
+              <TextInput
+                onFocus={() => handleInputFocus("password")}
+                onBlur={() => handleInputBlur("password")}
+                placeholder="Пароль"
+                style={isFocused.password ? styles.inputOnFocus : styles.input}
+                onChangeText={setPassword}
+                value={password}
+                textContentType="password"
+                placeholderTextColor="#BDBDBD"
+                secureTextEntry={isShownPasword}
+              />
+              <TouchableOpacity onPress={showPassword} style={styles.passwordInputBtn}>
+                <Text style={styles.showPassText}>Показати</Text>
+              </TouchableOpacity>
+            </View>
 
             <TouchableOpacity style={styles.btn} onClick={onLogin}>
               <Text style={styles.btnText}>Зареєстуватися</Text>
@@ -99,25 +111,24 @@ const Registration = () => {
           </KeyboardAvoidingView>
         </View>
       </ImageBackground>
-    </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 };
 export default Registration;
 
 const styles = StyleSheet.create({
-  base: { },
+  image: {
+    resizeMode: "cover",
+    height: "100%",
+  },
   box: {
-
     height: "100%",
     justifyContent: "flex-end",
     textAlign: "center",
     position: "relative",
     flexDirection: "column",
-
   },
   view: {
-
-
     backgroundColor: "#ffffff",
     borderColor: "#ffffff",
     borderWidth: 5,
@@ -152,9 +163,16 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontFamily: "Roboto",
-    fontWeight: "100",
+
   },
+    insideText: {
+      fontSize: 13,
+      fontWeight: "100",
+      transform: [{ scale: 1.8 }],
+      color: "#FF6C00",
+      fontFamily: "Roboto",
+
+    },
   input: {
     height: 50,
     marginTop: 16,
@@ -165,6 +183,7 @@ const styles = StyleSheet.create({
     borderColor: "#E8E8E8",
     borderStyle: "solid",
     borderRadius: 8,
+    position: "relative",
   },
   inputOnFocus: {
     height: 50,
@@ -179,6 +198,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     fontSize: 16,
     color: "#212121",
+    position: "relative",
   },
   title: {
     fontStyle: "normal",
@@ -191,11 +211,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     fontFamily: "Roboto",
   },
-  image: {
 
-    resizeMode: "cover",
-    height: '100%',
-  },
   btn: {
     backgroundColor: "#FF6C00",
     borderRadius: 100,
@@ -213,13 +229,7 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     color: "#FFFFFF",
   },
-  insideText: {
-    fontSize: 13,
-    fontWeight: "100",
-    transform: [{ scale: 2 }],
-    color: "#FF6C00",
-    fontFamily: "Roboto",
-  },
+
   bottomText: {
     paddingTop: 16,
     color: "#1B4371",
@@ -229,5 +239,21 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     textAlign: "center",
     fontFamily: "Roboto",
+  },
+  showPassText: {
+    fontFamily: "Roboto",
+    fontSize: 16,
+    color: "#1B4371",
+  },
+  passwordInputBtn: {
+    height: 50,
+    width: 100,
+    position: "absolute",
+    top: 16,
+    right: 0,
+    textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
