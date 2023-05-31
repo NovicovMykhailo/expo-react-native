@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
-  Keyboard
+  Keyboard,
+  Alert,
 } from "react-native";
 import { useState } from "react";
 import image from "../assets/Photo_BG2x.png";
@@ -35,7 +36,7 @@ const Registration = () => {
   }
 
   const showPassword = () => {
-    setIsShownPasword(prev => !prev)
+    setIsShownPasword(prev => !prev);
   };
 
   const handleInputFocus = textinput => {
@@ -53,62 +54,65 @@ const Registration = () => {
   };
 
   return (
-    <SafeAreaView style={styles.base} onPress={Keyboard.dismiss}>
+    <SafeAreaView style={styles.base}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
         <View style={styles.box}>
-          {/* <KeyboardAvoidingView behavior={Platform.OS === "android" ? "padding" : "height"} style={styles.view}> */}
-          <KeyboardAvoidingView style={styles.view}>
-            <View style={styles.userPhoto}>
-              <TouchableOpacity style={styles.takePhotoOut}>
-                <Text style={styles.insideText}>+</Text>
-              </TouchableOpacity>
-            </View>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <KeyboardAvoidingView style={styles.keyView} behavior={Platform.OS == "ios" ? "padding" : "height"}>
+              <View style={styles.view}>
+                <View style={styles.userPhoto}>
+                  <TouchableOpacity style={styles.takePhotoOut}>
+                    <Text style={styles.insideText}>+</Text>
+                  </TouchableOpacity>
+                </View>
 
-            <Text style={styles.title}>Реєстрація</Text>
-            <TextInput
-              onFocus={() => handleInputFocus("login")}
-              onBlur={() => handleInputBlur("login")}
-              style={isFocused.login ? styles.inputOnFocus : styles.input}
-              placeholder="Логін"
-              onChangeText={setLogin}
-              value={login}
-              inputMode="text"
-              placeholderTextColor="#BDBDBD"
-            />
-            <TextInput
-              onFocus={() => handleInputFocus("email")}
-              onBlur={() => handleInputBlur("email")}
-              placeholder="Адреса електронної пошти"
-              style={isFocused.email ? styles.inputOnFocus : styles.input}
-              onChangeText={setEmail}
-              value={email}
-              inputMode="email"
-              placeholderTextColor="#BDBDBD"
-            />
-            <View>
-              <TextInput
-                onFocus={() => handleInputFocus("password")}
-                onBlur={() => handleInputBlur("password")}
-                placeholder="Пароль"
-                style={isFocused.password ? styles.inputOnFocus : styles.input}
-                onChangeText={setPassword}
-                value={password}
-                textContentType="password"
-                placeholderTextColor="#BDBDBD"
-                secureTextEntry={isShownPasword}
-              />
-              <TouchableOpacity onPress={showPassword} style={styles.passwordInputBtn}>
-                <Text style={styles.showPassText}>Показати</Text>
-              </TouchableOpacity>
-            </View>
+                <Text style={styles.title}>Реєстрація</Text>
+                <TextInput
+                  onFocus={() => handleInputFocus("login")}
+                  onBlur={() => handleInputBlur("login")}
+                  style={isFocused.login ? styles.inputOnFocus : styles.input}
+                  placeholder="Логін"
+                  onChangeText={setLogin}
+                  value={login}
+                  inputMode="text"
+                  placeholderTextColor="#BDBDBD"
+                />
+                <TextInput
+                  onFocus={() => handleInputFocus("email")}
+                  onBlur={() => handleInputBlur("email")}
+                  placeholder="Адреса електронної пошти"
+                  style={isFocused.email ? styles.inputOnFocus : styles.input}
+                  onChangeText={setEmail}
+                  value={email}
+                  inputMode="email"
+                  placeholderTextColor="#BDBDBD"
+                />
+                <View>
+                  <TextInput
+                    onFocus={() => handleInputFocus("password")}
+                    onBlur={() => handleInputBlur("password")}
+                    placeholder="Пароль"
+                    style={isFocused.password ? styles.inputOnFocus : styles.input}
+                    onChangeText={setPassword}
+                    value={password}
+                    textContentType="password"
+                    placeholderTextColor="#BDBDBD"
+                    secureTextEntry={isShownPasword}
+                  />
+                  <TouchableOpacity onPress={showPassword} style={styles.passwordInputBtn}>
+                    <Text style={styles.showPassText}>Показати</Text>
+                  </TouchableOpacity>
+                </View>
 
-            <TouchableOpacity style={styles.btn} onClick={onLogin}>
-              <Text style={styles.btnText}>Зареєстуватися</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.bottomTextContainer}>
-              <Text style={styles.bottomText}>Вже є акаунт? Увійти</Text>
-            </TouchableOpacity>
-          </KeyboardAvoidingView>
+                <TouchableOpacity style={styles.btn} onClick={onLogin}>
+                  <Text style={styles.btnText}>Зареєстуватися</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.bottomTextContainer}>
+                  <Text style={styles.bottomText}>Вже є акаунт? Увійти</Text>
+                </TouchableOpacity>
+              </View>
+            </KeyboardAvoidingView>
+          </TouchableWithoutFeedback>
         </View>
       </ImageBackground>
     </SafeAreaView>
@@ -120,6 +124,12 @@ const styles = StyleSheet.create({
   image: {
     resizeMode: "cover",
     height: "100%",
+  },
+  keyView: {
+
+    // keyboardVerticalOffset: 730,
+    
+    // height: 730,
   },
   box: {
     height: "100%",
@@ -146,7 +156,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
     position: "absolute",
     top: -65,
-    left: "48%",
+    left: "50%",
     transform: [{ translateX: -50 }],
   },
   takePhotoOut: {
@@ -163,16 +173,14 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-
   },
-    insideText: {
-      fontSize: 13,
-      fontWeight: "100",
-      transform: [{ scale: 1.8 }],
-      color: "#FF6C00",
-      fontFamily: "Roboto",
-
-    },
+  insideText: {
+    fontSize: 12,
+    fontWeight: "100",
+    transform: [{ scale: 1.7 }],
+    color: "#FF6C00",
+    fontFamily: "Roboto",
+  },
   input: {
     height: 50,
     marginTop: 16,
@@ -251,9 +259,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 16,
     right: 0,
-    textAlign: 'center',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    textAlign: "center",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
