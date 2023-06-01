@@ -15,8 +15,11 @@ Alert
 import { useState } from "react";
 import image from "../assets/Photo_BG2x.png";
 import { useFonts } from "expo-font";
+import { useNavigation } from "@react-navigation/native";
+
 
 const LoginScreen = () => {
+   const navigation = useNavigation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -93,7 +96,7 @@ const LoginScreen = () => {
                 <Text style={styles.btnText}>Увійти</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.bottomTextContainer}>
-                <Text style={styles.bottomText}>
+                <Text style={styles.bottomText} onPress={() => navigation.navigate("Registration")}>
                   Немає акаунту? <Text style={styles.underlinedText}>Зареєструватися</Text>
                 </Text>
               </TouchableOpacity>

@@ -1,19 +1,20 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
+import "react-native-gesture-handler";
 
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import Registration from "./Screens/RegistrationScreen";
 import LoginScreen from "./Screens/LoginScreen";
 
+const MainStack = createStackNavigator();
 
 export default function App() {
-
-
   return (
-    <View style={{ width: "100%"}} >
-      <Registration />
-      {/* <LoginScreen /> */}
-    </View>
+    <NavigationContainer>
+      <MainStack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+        <MainStack.Screen name="Registration" component={Registration} />
+        <MainStack.Screen name="Login" component={LoginScreen} />
+        {/* <MainStack.Screen name="Home" component={PostsScreen} /> */}
+      </MainStack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({});

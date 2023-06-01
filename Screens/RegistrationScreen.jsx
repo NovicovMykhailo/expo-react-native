@@ -15,8 +15,13 @@ import {
 import { useState } from "react";
 import image from "../assets/Photo_BG2x.png";
 import { useFonts } from "expo-font";
+import { useNavigation } from "@react-navigation/native";
+
+
 
 const Registration = () => {
+ const navigation = useNavigation();
+
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,6 +44,8 @@ const Registration = () => {
     setIsShownPasword(prev => !prev);
   };
 
+
+
   const handleInputFocus = textinput => {
     setIsFocused({
       [textinput]: true,
@@ -56,6 +63,7 @@ const Registration = () => {
     setEmail('')
   };
 
+
   return (
     <SafeAreaView style={styles.base}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
@@ -65,9 +73,7 @@ const Registration = () => {
               <KeyboardAvoidingView
                 style={styles.keyView}
                 behavior={Platform.OS == "ios" ? "padding" : "height"}
-                keyboardVerticalOffset={400}
-                disabled
-
+                keyboardVerticalOffset={800}
               >
                 <View style={styles.userPhoto}>
                   <TouchableOpacity style={styles.takePhotoOut}>
@@ -112,14 +118,13 @@ const Registration = () => {
                     <Text style={styles.showPassText}>Показати</Text>
                   </TouchableOpacity>
                 </View>
-
-                <TouchableOpacity style={styles.btn} onPress={onLogin}>
-                  <Text style={styles.btnText}>Зареєстуватися</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.bottomTextContainer}>
-                  <Text style={styles.bottomText}>Вже є акаунт? Увійти</Text>
-                </TouchableOpacity>
               </KeyboardAvoidingView>
+              <TouchableOpacity style={styles.btn} onPress={onLogin}>
+                <Text style={styles.btnText}>Зареєстуватися</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.bottomTextContainer} onPress={() => navigation.navigate("Login")}>
+                <Text style={styles.bottomText}>Вже є акаунт? Увійти</Text>
+              </TouchableOpacity>
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -130,16 +135,14 @@ const Registration = () => {
 export default Registration;
 
 const styles = StyleSheet.create({
+  base: {
+    width: '100%',
+  },
   image: {
-    resizeMode: "cover",
+    resizeMode: "contain",
     height: "100%",
   },
-  keyView: {
 
-
-    // marginBottom: 710,
-
-  },
   box: {
     height: "100%",
     justifyContent: "flex-end",
