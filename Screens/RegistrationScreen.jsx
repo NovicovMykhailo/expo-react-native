@@ -66,69 +66,68 @@ const Registration = () => {
 
   return (
     <SafeAreaView style={styles.base}>
-      <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-        <View style={styles.box}>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.view}>
-              <KeyboardAvoidingView
-                style={styles.keyView}
-                behavior={Platform.OS == "ios" ? "padding" : "height"}
-                keyboardVerticalOffset={800}
-              >
-                <View style={styles.userPhoto}>
-                  <TouchableOpacity style={styles.takePhotoOut}>
-                    <Text style={styles.insideText}>+</Text>
-                  </TouchableOpacity>
-                </View>
+      <ImageBackground source={image} style={styles.image} />
+      <View style={styles.box}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.view}>
+            <KeyboardAvoidingView
+              style={styles.keyView}
+              behavior={Platform.OS == "ios" ? "padding" : "height"}
+              keyboardVerticalOffset={800}
+            >
+              <View style={styles.userPhoto}>
+                <TouchableOpacity style={styles.takePhotoOut}>
+                  <Text style={styles.insideText}>+</Text>
+                </TouchableOpacity>
+              </View>
 
-                <Text style={styles.title}>Реєстрація</Text>
+              <Text style={styles.title}>Реєстрація</Text>
+              <TextInput
+                onFocus={() => handleInputFocus("login")}
+                onBlur={() => handleInputBlur("login")}
+                style={isFocused.login ? styles.inputOnFocus : styles.input}
+                placeholder="Логін"
+                onChangeText={setLogin}
+                value={login}
+                inputMode="text"
+                placeholderTextColor="#BDBDBD"
+              />
+              <TextInput
+                onFocus={() => handleInputFocus("email")}
+                onBlur={() => handleInputBlur("email")}
+                placeholder="Адреса електронної пошти"
+                style={isFocused.email ? styles.inputOnFocus : styles.input}
+                onChangeText={setEmail}
+                value={email}
+                inputMode="email"
+                placeholderTextColor="#BDBDBD"
+              />
+              <View>
                 <TextInput
-                  onFocus={() => handleInputFocus("login")}
-                  onBlur={() => handleInputBlur("login")}
-                  style={isFocused.login ? styles.inputOnFocus : styles.input}
-                  placeholder="Логін"
-                  onChangeText={setLogin}
-                  value={login}
-                  inputMode="text"
+                  onFocus={() => handleInputFocus("password")}
+                  onBlur={() => handleInputBlur("password")}
+                  placeholder="Пароль"
+                  style={isFocused.password ? styles.inputOnFocus : styles.input}
+                  onChangeText={setPassword}
+                  value={password}
+                  textContentType="password"
                   placeholderTextColor="#BDBDBD"
+                  secureTextEntry={isShownPasword}
                 />
-                <TextInput
-                  onFocus={() => handleInputFocus("email")}
-                  onBlur={() => handleInputBlur("email")}
-                  placeholder="Адреса електронної пошти"
-                  style={isFocused.email ? styles.inputOnFocus : styles.input}
-                  onChangeText={setEmail}
-                  value={email}
-                  inputMode="email"
-                  placeholderTextColor="#BDBDBD"
-                />
-                <View>
-                  <TextInput
-                    onFocus={() => handleInputFocus("password")}
-                    onBlur={() => handleInputBlur("password")}
-                    placeholder="Пароль"
-                    style={isFocused.password ? styles.inputOnFocus : styles.input}
-                    onChangeText={setPassword}
-                    value={password}
-                    textContentType="password"
-                    placeholderTextColor="#BDBDBD"
-                    secureTextEntry={isShownPasword}
-                  />
-                  <TouchableOpacity onPress={showPassword} style={styles.passwordInputBtn}>
-                    <Text style={styles.showPassText}>Показати</Text>
-                  </TouchableOpacity>
-                </View>
-              </KeyboardAvoidingView>
-              <TouchableOpacity style={styles.btn} onPress={onLogin}>
-                <Text style={styles.btnText}>Зареєстуватися</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.bottomTextContainer} onPress={() => navigation.navigate("Login")}>
-                <Text style={styles.bottomText}>Вже є акаунт? Увійти</Text>
-              </TouchableOpacity>
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-      </ImageBackground>
+                <TouchableOpacity onPress={showPassword} style={styles.passwordInputBtn}>
+                  <Text style={styles.showPassText}>Показати</Text>
+                </TouchableOpacity>
+              </View>
+            </KeyboardAvoidingView>
+            <TouchableOpacity style={styles.btn} onPress={onLogin}>
+              <Text style={styles.btnText}>Зареєстуватися</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.bottomTextContainer} onPress={() => navigation.navigate("PostScreen")}>
+              <Text style={styles.bottomText}>Вже є акаунт? Увійти</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
     </SafeAreaView>
   );
 };
@@ -136,11 +135,12 @@ export default Registration;
 
 const styles = StyleSheet.create({
   base: {
-    width: '100%',
+    width: "100%",
   },
   image: {
-    resizeMode: "contain",
-    height: "100%",
+    resizeMode: "cover",
+    height: 900,
+    flex: 1,
   },
 
   box: {
