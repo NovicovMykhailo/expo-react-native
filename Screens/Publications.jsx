@@ -1,26 +1,34 @@
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { ScrollView, View, StyleSheet } from "react-native";
+import UserTab from "../Components/UserTab";
+import Card from "../Components/Card";
 
 export default Publications = () => {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "space-between" }}>
-      <View
-        style={{
-          width: "100%",
-          height: 240,
-          backgroundColor: "#F6F6F6",
-          borderRadius: 8,
-          flex: 2,
-          alignItems: "center",
-          justifyContent: "center",
-          borderWidth: 1,
-          borderStyle: "solid",
-          borderColor: "#E8E8E8",
-        }}
-      >
-      
+    <ScrollView vertical={true} automaticallyAdjustContentInsets={false}>
+      <View style={styles.container}>
+        <UserTab />
+        <Card />
+        <Card />
+        <Card />
+        <Card />
+        <Card />
+        <Card />
+        <Card />
+        <Card />
       </View>
-
-    </View>
+    </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    flex: 1,
+    display: "flex",
+    alignItems: "flex-start",
+    paddingHorizontal: 16,
+    paddingVertical: 32,
+    gap: 16,
+    backgroundColor: "#FFFFFF",
+  },
+});
