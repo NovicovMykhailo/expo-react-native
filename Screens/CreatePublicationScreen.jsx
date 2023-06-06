@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+    Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -22,9 +23,22 @@ export default CreatePublicationScreen = () => {
   const [presed, setPresed] = useState(false);
 
   useEffect(() => {
-    if (title && location ) setIsBtnDisabled(false);
-    setIsBtnDisabled(true);
-  }, [title, location, photo]);
+
+    if ((title !== "" && location !== "") ) {
+      setIsBtnDisabled(false);
+    } else {
+      setIsBtnDisabled(true);
+    };
+  }, [title, location]);
+
+const  HandleSubmit = () => {
+   Alert.alert("FormData: ", `title:  ${title}  location:  ${location} photo: ${photo}`);
+  setPresed(prev => !prev)
+  setTitle('')
+  setLocation('')
+  
+    
+  }
 
   return (
     <View style={styles.container}>
@@ -42,7 +56,7 @@ export default CreatePublicationScreen = () => {
               placeholder="Назва..."
               placeholderTextColor="#BDBDBD"
               value={title}
-              onTextInput={setTitle}
+              onChangeText={setTitle}
             />
             <View style={styles.location}>
               <Feather name="map-pin" size={24} color="#BDBDBD" style={{ marginRight: 10 }} />
@@ -51,20 +65,17 @@ export default CreatePublicationScreen = () => {
                 placeholderTextColor="#BDBDBD"
                 style={styles.locationIn}
                 value={location}
-                onTextInput={setLocation}
+                onChangeText={setLocation}
               />
             </View>
-            <TouchableOpacity style={[styles.btn, isBtnDisabled && styles.active]} disabled={isBtnDisabled}>
+            <TouchableOpacity style={[styles.btn, isBtnDisabled && styles.active]} disabled={isBtnDisabled} onPress={HandleSubmit}>
               <Text style={[styles.btnText, isBtnDisabled && styles.btnTextActive]}>Опубліковати</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
       </TouchableWithoutFeedback>
       <View style={styles.trashBtnContainer}>
-        <TouchableOpacity
-          style={[styles.trashBtn, presed && styles.trashBtnPresed]}
-          onPress={() => setPresed(prev => !prev)}
-        >
+        <TouchableOpacity style={[styles.trashBtn, presed && styles.trashBtnPresed]} >
           <Feather name="trash-2" size={24} style={[styles.icon, presed && styles.iconPresed]} />
         </TouchableOpacity>
       </View>
