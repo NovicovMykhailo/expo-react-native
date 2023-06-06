@@ -39,7 +39,7 @@ function ExitBtn() {
   const navigation = useNavigation();
   return (
     <TouchableOpacity>
-      <Feather name="log-out" size={24} onPress={() => navigation.navigate('Login')} style={styles.exitBtn} />
+      <Feather name="log-out" size={24} style={styles.exitBtn} onPress={() => navigation.navigate("Login")} />
     </TouchableOpacity>
   );
 }

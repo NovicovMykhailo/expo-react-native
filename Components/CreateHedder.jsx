@@ -6,7 +6,7 @@ export function CreateHedder({ navigation, route, options, to }) {
   const title = getHeaderTitle(options, route.name);
   return (
     <View style={styles.hedder}>
-      <Feather name="arrow-left" size={24} onPress={() => onNavigate(navigation, to)} style={styles.icon} />
+      <Feather name="arrow-left" size={24} style={styles.icon} onPress={() => onNavigate(navigation, to)} />
       <Text style={styles.title}>{title}</Text>
     </View>
   );

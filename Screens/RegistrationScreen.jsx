@@ -15,7 +15,8 @@ import {
 import { useState } from "react";
 import image from "../assets/Photo_BG2x.png";
 import { useFonts } from "expo-font";
-import { useNavigation } from "@react-navigation/native";
+import { StackActions, useNavigation } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
 
 export default RegistrationScreen = () => {
   const navigation = useNavigation();
@@ -43,7 +44,8 @@ export default RegistrationScreen = () => {
     setLogin("");
     setPassword("");
     setEmail("");
-   navigation.navigate("HomeScreen");
+      navigation.dispatch(StackActions.replace("HomeScreen"));
+    // navigation.navigate("HomeScreen");
   };
 
   return (
@@ -59,7 +61,7 @@ export default RegistrationScreen = () => {
             >
               <View style={styles.userPhoto}>
                 <TouchableOpacity style={styles.takePhotoOut}>
-                  <Text style={styles.insideText}>+</Text>
+                  <AntDesign name="plus" size={19} style={styles.BtnIcon} />
                 </TouchableOpacity>
               </View>
 
@@ -67,7 +69,7 @@ export default RegistrationScreen = () => {
               <TextInput
                 onFocus={() => setIsFocused("login")}
                 onBlur={() => setIsFocused(null)}
-                style={[styles.input, isFocused === 'login' && styles.active]}
+                style={[styles.input, isFocused === "login" && styles.active]}
                 placeholder="Логін"
                 onChangeText={setLogin}
                 value={login}
@@ -78,7 +80,7 @@ export default RegistrationScreen = () => {
                 onFocus={() => setIsFocused("email")}
                 onBlur={() => setIsFocused(null)}
                 placeholder="Адреса електронної пошти"
-                style={[styles.input, isFocused==='email' && styles.active]}
+                style={[styles.input, isFocused === "email" && styles.active]}
                 onChangeText={setEmail}
                 value={email}
                 inputMode="email"
@@ -89,7 +91,7 @@ export default RegistrationScreen = () => {
                   onFocus={() => setIsFocused("password")}
                   onBlur={() => setIsFocused(null)}
                   placeholder="Пароль"
-                  style={[styles.input, isFocused ==='password' && styles.active]}
+                  style={[styles.input, isFocused === "password" && styles.active]}
                   onChangeText={setPassword}
                   value={password}
                   textContentType="password"
@@ -167,13 +169,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  insideText: {
-    fontSize: 12,
-    fontWeight: "100",
-    transform: [{ scale: 1.7 }],
+  BtnIcon: {
     color: "#FF6C00",
-    fontFamily: "Roboto",
   },
+
   input: {
     height: 50,
     marginTop: 16,

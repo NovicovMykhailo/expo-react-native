@@ -6,9 +6,7 @@ import ProfileScreen from "../Screens/ProfileScreen";
 import { CreateHedder, PublicationsHedder } from "../Components/CreateHedder";
 
 import { Feather, MaterialIcons } from "@expo/vector-icons";
-import { View } from "react-native";
-
-
+import { View, StyleSheet } from "react-native";
 
 const Tabs = createBottomTabNavigator();
 
@@ -47,24 +45,40 @@ const homeScreenOptions = ({ route }) => ({
   tabBarIcon: ({ focused }) => {
     if (route.name === "Create") {
       return (
-        <View
-          style={{
-            width: 70,
-            height: 40,
-            backgroundColor: !focused ? "#F6F6F6" : "#FF6C00",
-            borderRadius: 20,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Feather name="plus" size={24} color={!focused ? "#212121cc" : "white"} />
+        <View style={[styles.overlay, focused && styles.focusedIcon]}>
+          <Feather name="plus" size={24} style={[styles.plusIcon, focused && styles.focusedPlusIcon]} />
         </View>
       );
     } else if (route.name === "User") {
-      return <Feather name="user" size={24} color={!focused ? "#212121cc" : "#FF6C00"} />;
+      return <Feather name="user" size={24} style={[styles.icon, focused && styles.focusedIcon]} />;
     } else if (route.name === "Publications") {
-      return <MaterialIcons name="grid-view" size={24} color={!focused ? "#212121cc" : "#FF6C00"} />;
+      return <MaterialIcons name="grid-view" size={24} style={[styles.icon, focused && styles.focusedIcon]} />;
     }
+  },
+});
+
+const styles = StyleSheet.create({
+  overlay: {
+    width: 70,
+    height: 40,
+    borderRadius: 20,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#F6F6F6",
+  },
+  focusedOverlay: {
+    backgroundColor: "#FF6C00", //orange
+  },
+  plusIcon: {
+    color: "#212121cc",
+  },
+  focusedPlusIcon: {
+    color: "white",
+  },
+
+  icon: { color: "#212121cc" }, //grey
+  focusedIcon: {
+    color: "#FF6C00",
   },
 });

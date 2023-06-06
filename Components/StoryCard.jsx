@@ -14,22 +14,17 @@ export default function StoryCard() {
       <View style={styles.bottomContainer}>
         <View style={styles.leftSideIcons}>
           <TouchableOpacity style={styles.barLeft} onPress={() => navigation.navigate("Comments")}>
-            <Feather
-              name="message-circle"
-              size={24}
-              iconStyle={{ color: "#FF6C00" }}
-              style={{ marginRight: 4, color: "#FF6C00", transform: [{ rotateY: "-180deg" }] }}
-            />
+            <Feather name="message-circle" size={24} style={styles.messageIcon} />
             <Text style={styles.barLeftText}>6</Text>
           </TouchableOpacity>
           <View style={styles.barLeft}>
-            <Feather name="thumbs-up" size={24} color="#FF6C00" style={{ marginRight: 6 }} />
+            <Feather name="thumbs-up" size={24} style={styles.thumbUpIcon} />
             <Text style={styles.barLeftText}>26</Text>
           </View>
         </View>
 
-        <TouchableOpacity style={styles.barRight}>
-          <Feather name="map-pin" size={24} color="#BDBDBD" style={{ marginRight: 6 }} />
+        <TouchableOpacity style={styles.barRight} onPress={() => navigation.navigate("Map")}>
+          <Feather name="map-pin" size={24} style={styles.pinIcon} />
           <Text style={styles.barRightText}>Ukraine</Text>
         </TouchableOpacity>
       </View>
@@ -55,9 +50,9 @@ const styles = StyleSheet.create({
     color: "#212121",
   },
   leftSideIcons: {
-    disply: 'flex',
-    flexDirection: 'row',
-  gap: 24,
+    disply: "flex",
+    flexDirection: "row",
+    gap: 24,
   },
 
   bottomContainer: {
@@ -90,5 +85,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     textDecorationLine: "underline",
+  },
+  messageIcon: {
+    marginRight: 4,
+    color: "#FF6C00",
+    transform: [{ rotateY: "-180deg" }],
+  },
+  thumbUpIcon: {
+    marginRight: 6,
+    color: "#FF6C00",
+  },
+  pinIcon: {
+    marginRight: 6,
+    color: "#BDBDBD",
   },
 });

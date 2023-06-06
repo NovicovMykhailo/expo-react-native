@@ -14,19 +14,20 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { useFonts } from "expo-font";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, StackActions } from "@react-navigation/native";
 
 
 
 import image from "../assets/Photo_BG2x.png";
 
 const LoginScreen = () => {
-  const navigation = useNavigation();
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isShownPasword, setIsShownPasword] = useState(true);
   const [isFocused, setIsFocused] = useState(null);
+
+  const navigation = useNavigation();
+
 
   const showPassword = () => {
     setIsShownPasword(prev => !prev);
@@ -43,7 +44,9 @@ const LoginScreen = () => {
     Alert.alert("FormData: ", `pass:  ${password}  email:  ${email}`);
     setEmail("");
     setPassword("");
-   navigation.navigate("HomeScreen");
+     navigation.dispatch(StackActions.replace("HomeScreen"));
+    // navigation.navigate("HomeScreen");
+    
   };
 
   return (

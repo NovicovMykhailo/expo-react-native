@@ -6,7 +6,7 @@ export default function UserPhoto() {
     <View style={styles.userPhoto}>
       <ImageBackground source={require("../assets/userPhoto.png")} style={styles.photo} />
       <TouchableOpacity style={styles.Btn}>
-        <AntDesign name="plus" size={18} style={styles.BtnIcon} />
+        <AntDesign name="plus" size={19} style={styles.BtnIcon} />
       </TouchableOpacity>
     </View>
   );

@@ -6,8 +6,8 @@ import CommentCardGuest from "../Components/CommentCardGuest";
 
 export default function CommentsScreen() {
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView style={{ width: "100%" }}>
+    <View style={styles.box}>
+      <ScrollView style={styles.scrollView}>
         <View style={styles.container}>
           <Image source={require("../assets/UserRect1.png")} style={styles.photo} />
           <View style={styles.commentsContainer}>
@@ -23,23 +23,28 @@ export default function CommentsScreen() {
         </View>
       </ScrollView>
       <View style={styles.footer}>
-        <TextInput placeholder="Коментувати..." style={styles.input}/>
-          <TouchableOpacity style={styles.upBtn}>
-            <Feather name="arrow-up" size={26} color="white" />
-          </TouchableOpacity>
-
+        <TextInput placeholder="Коментувати..." style={styles.input} />
+        <TouchableOpacity style={styles.upBtn}>
+          <Feather name="arrow-up" size={26} style={styles.icon} />
+        </TouchableOpacity>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  box: {
+    flex: 1,
+  },
   container: {
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 32,
     gap: 32,
+  },
+  scrollView: {
+    width: "100%",
   },
   photo: {
     width: "100%",
@@ -51,7 +56,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   footer: {
-
     padding: 16,
     position: "relative",
   },
@@ -60,18 +64,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E8E8E8",
     backgroundColor: "#F6F6F6",
-      height: 50,
+    height: 50,
     padding: 16,
   },
   upBtn: {
-      position: "absolute",
-      bottom: 24,
-      right: 24,
+    position: "absolute",
+    bottom: 24,
+    right: 24,
     backgroundColor: "tomato",
     width: 34,
     height: 34,
     borderRadius: 17,
     justifyContent: "center",
     alignItems: "center",
+  },
+  icon: {
+    color: "white",
   },
 });

@@ -7,47 +7,60 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-    Alert,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-
+import { useNavigation } from "@react-navigation/native";
 
 export default CreatePublicationScreen = () => {
   const [isBtnDisabled, setIsBtnDisabled] = useState(true);
   const [photo, setPhoto] = useState(null);
-  const [title, setTitle] = useState('');
-  const [location, setLocation] = useState('');
+  const [title, setTitle] = useState("");
+  const [location, setLocation] = useState("");
 
   const [presed, setPresed] = useState(false);
 
-  useEffect(() => {
+  const navigation = useNavigation();
 
-    if ((title !== "" && location !== "") ) {
+  useEffect(() => {
+    if (title !== "" && location !== "") {
       setIsBtnDisabled(false);
     } else {
       setIsBtnDisabled(true);
-    };
+    }
   }, [title, location]);
 
-const  HandleSubmit = () => {
-   Alert.alert("FormData: ", `title:  ${title}  location:  ${location} photo: ${photo}`);
-  setPresed(prev => !prev)
-  setTitle('')
-  setLocation('')
-  
-    
-  }
+  const HandleSubmit = () => {
+    Alert.alert("FormData: ", `title:  ${title};  location:  ${location}; photo: ${photo}`, [
+      {
+        text: "OK",
+        onPress: () => navigation.navigate("Publications"),
+      },
+    ]);
+    setPresed(prev => !prev);
+    setTitle("");
+    setLocation("");
+  };
+
+  const onDelete = () => {
+    Alert.alert("Deleted", "", [{ text: "OK", onPress: () => navigation.navigate("Publications") }]);
+
+    setPresed(prev => !prev);
+    setTimeout(() => {
+      setPresed(false);
+    }, 200);
+  };
 
   return (
     <View style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView style={{ width: "100%" }}>
+        <ScrollView style={styles.scrollView}>
           <View style={styles.inner}>
             <View style={styles.photoBar}>
               <TouchableOpacity style={styles.PhotoButton}>
-                <Ionicons name="md-camera-sharp" size={24} color="#BDBDBD" />
+                <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
               </TouchableOpacity>
             </View>
             <Text style={styles.decription}>Завантажте фото</Text>
@@ -59,7 +72,7 @@ const  HandleSubmit = () => {
               onChangeText={setTitle}
             />
             <View style={styles.location}>
-              <Feather name="map-pin" size={24} color="#BDBDBD" style={{ marginRight: 10 }} />
+              <Feather name="map-pin" size={24} style={styles.pinIcon} />
               <TextInput
                 placeholder="Місцевість..."
                 placeholderTextColor="#BDBDBD"
@@ -68,14 +81,18 @@ const  HandleSubmit = () => {
                 onChangeText={setLocation}
               />
             </View>
-            <TouchableOpacity style={[styles.btn, isBtnDisabled && styles.active]} disabled={isBtnDisabled} onPress={HandleSubmit}>
+            <TouchableOpacity
+              style={[styles.btn, isBtnDisabled && styles.active]}
+              disabled={isBtnDisabled}
+              onPress={HandleSubmit}
+            >
               <Text style={[styles.btnText, isBtnDisabled && styles.btnTextActive]}>Опубліковати</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
       </TouchableWithoutFeedback>
       <View style={styles.trashBtnContainer}>
-        <TouchableOpacity style={[styles.trashBtn, presed && styles.trashBtnPresed]} >
+        <TouchableOpacity style={[styles.trashBtn, presed && styles.trashBtnPresed]} onPress={onDelete}>
           <Feather name="trash-2" size={24} style={[styles.icon, presed && styles.iconPresed]} />
         </TouchableOpacity>
       </View>
@@ -97,6 +114,9 @@ const styles = StyleSheet.create({
     flex: 1,
 
     backgroundColor: "#FFFFFF",
+  },
+  scrollView: {
+    width: "100%",
   },
   photoBar: {
     width: "100%",
@@ -183,8 +203,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
     width: "100%",
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   trashBtn: {
     width: 70,
@@ -204,4 +224,6 @@ const styles = StyleSheet.create({
   iconPresed: {
     color: "white",
   },
+  pinIcon: { marginRight: 10, color: "#BDBDBD" },
+  photoIcon: { color: "#BDBDBD" },
 });

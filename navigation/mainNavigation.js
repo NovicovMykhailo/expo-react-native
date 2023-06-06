@@ -4,8 +4,10 @@ import RegistrationScreen from "../Screens/RegistrationScreen";
 import LoginScreen from "../Screens/LoginScreen";
 import CommentsScreen from "../Screens/CommentsScreen";
 import HomeScreen from "../Screens/HomeScreen";
+import MapScreen from "../Screens/MapScreen";
 
 import { CreateHedder } from "../Components/CreateHedder";
+
 
 // =========  Main Navigation
 
@@ -19,12 +21,24 @@ export const Routes = () => (
     <MainStack.Screen
       name="Comments"
       component={CommentsScreen}
-      options={{ title: "Публікації", ...CommentsScreenHeaderOption }}
+      options={{ title: "Коментарі", ...CommentsScreenHeaderOption }}
+    />
+    <MainStack.Screen
+      name="Map"
+      component={MapScreen}
+      options={{ title: "Мапа", ...mapScreenHeaderOption }}
     />
   </MainStack.Navigator>
 );
 
 const CommentsScreenHeaderOption = {
+  headerShown: true,
+  header: ({ navigation, route, options }) => (
+    <CreateHedder navigation={navigation} route={route} options={options} to={"User"} />
+  ),
+};
+
+const mapScreenHeaderOption = {
   headerShown: true,
   header: ({ navigation, route, options }) => (
     <CreateHedder navigation={navigation} route={route} options={options} to={"User"} />

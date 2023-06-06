@@ -1,7 +1,9 @@
 import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
+
 export default function Card() {
+
   return (
     <TouchableOpacity style={styles.container} disabled={true}>
       <View>
@@ -11,17 +13,12 @@ export default function Card() {
 
       <View style={styles.bottomContainer}>
         <TouchableOpacity style={styles.barLeft}>
-          <Feather
-            name="message-circle"
-            size={24}
-            color="#BDBDBD"
-            style={{ marginRight: 4, transform: [{ rotateY: "-180deg" }] }}
-          />
+          <Feather name="message-circle" size={24} style={styles.messageIcon} />
           <Text style={styles.barLeftText}>0</Text>
         </TouchableOpacity>
-      
-        <TouchableOpacity style={styles.barRight}>
-          <Feather name="map-pin" size={24} color="#BDBDBD" style={{ marginRight: 6 }} />
+
+        <TouchableOpacity style={styles.barRight} >
+          <Feather name="map-pin" size={24} style={styles.pinIcon} />
           <Text style={styles.barRightText}>Ivano-Frankivs'k Region, Ukraine</Text>
         </TouchableOpacity>
       </View>
@@ -77,5 +74,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     textDecorationLine: "underline",
+  },
+  pinIcon: {
+    marginRight: 6,
+    color: "#BDBDBD",
+  },
+  messageIcon: {
+    marginRight: 4,
+    transform: [{ rotateY: "-180deg" }],
+    color: "#BDBDBD",
   },
 });
