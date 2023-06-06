@@ -2,12 +2,8 @@ import { View, Text, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { getHeaderTitle } from "@react-navigation/elements";
 
-
-
-
 export function CreateHedder({ navigation, route, options, to }) {
   const title = getHeaderTitle(options, route.name);
-  console.log(to)
   return (
     <View style={styles.hedder}>
       <Feather name="arrow-left" size={24} onPress={() => onNavigate(navigation, to)} style={styles.icon} />
@@ -15,7 +11,6 @@ export function CreateHedder({ navigation, route, options, to }) {
     </View>
   );
 }
-
 
 export function PublicationsHedder({ navigation, route, options }) {
   const title = getHeaderTitle(options, route.name);
@@ -34,7 +29,7 @@ export function PublicationsHedder({ navigation, route, options }) {
 }
 
 function onNavigate(navigation, to) {
-  if (to === 'User') return navigation.navigate("User");
+  if (to === "User") return navigation.navigate("User");
   else return navigation.navigate("Publications");
 }
 

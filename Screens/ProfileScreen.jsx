@@ -9,8 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 
 
 
-export default User = () => {
-
+export default ProfileScreen = () => {
   return (
     <SafeAreaView>
       <ImageBackground source={image} style={styles.image} />

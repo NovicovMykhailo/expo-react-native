@@ -11,35 +11,23 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   Alert,
-  Dimensions,
 } from "react-native";
 import { useState } from "react";
-import image from "../assets/Photo_BG2x.png";
 import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
+
+
+
+import image from "../assets/Photo_BG2x.png";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isShownPasword, setIsShownPasword] = useState(true);
-  const [isFocused, setIsFocused] = useState({
-    email: false,
-    password: false,
-    login: false,
-  });
+  const [isFocused, setIsFocused] = useState(null);
 
-  const handleInputFocus = textinput => {
-    setIsFocused({
-      [textinput]: true,
-    });
-  };
-  const handleInputBlur = textinput => {
-    setIsFocused({
-      [textinput]: false,
-    });
-  };
   const showPassword = () => {
     setIsShownPasword(prev => !prev);
   };
@@ -52,24 +40,24 @@ const LoginScreen = () => {
     return null;
   }
   const onLogin = () => {
-    Alert.alert("Credentials", `${password}+ ${email}`);
+    Alert.alert("FormData: ", `pass:  ${password}  email:  ${email}`);
     setEmail("");
     setPassword("");
   };
 
   return (
     <SafeAreaView>
-      <ImageBackground source={image}  style={styles.image}/>
+      <ImageBackground source={image} style={styles.image} />
       <View style={styles.box}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.view}>
             <KeyboardAvoidingView style={styles.keyView} behavior={Platform.OS == "ios" ? "padding" : "height"}>
               <Text style={styles.title}>Увійти</Text>
               <TextInput
-                onFocus={() => handleInputFocus("email")}
-                onBlur={() => handleInputBlur("email")}
+                onFocus={() => setIsFocused("email")}
+                onBlur={() => setIsFocused(null)}
                 placeholder="Адреса електронної пошти"
-                style={isFocused.email ? styles.inputOnFocus : styles.input}
+                style={[styles.input, isFocused === 'email' && styles.active]}
                 onChangeText={setEmail}
                 value={email}
                 inputMode="email"
@@ -77,10 +65,10 @@ const LoginScreen = () => {
               />
               <View>
                 <TextInput
-                  onFocus={() => handleInputFocus("password")}
-                  onBlur={() => handleInputBlur("password")}
+                  onFocus={() => setIsFocused("password")}
+                  onBlur={() => setIsFocused(null)}
                   placeholder="Пароль"
-                  style={isFocused.password ? styles.inputOnFocus : styles.input}
+                  style={[styles.input, isFocused === 'password' && styles.active]}
                   onChangeText={setPassword}
                   value={password}
                   textContentType="password"
@@ -116,7 +104,6 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     height: 900,
     flex: 1,
-
   },
   box: {
     height: "100%",
@@ -159,21 +146,12 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderRadius: 8,
     position: "relative",
-  },
-  inputOnFocus: {
-    height: 50,
-    marginTop: 16,
-    padding: 16,
-    backgroundColor: "#FFFFFF",
-    borderWidth: 1,
-    borderColor: "#FF6C00",
-
-    borderStyle: "solid",
-    borderRadius: 8,
     fontWeight: "400",
-    fontSize: 16,
+  },
+  active: {
+    backgroundColor: "#FFFFFF",
+    borderColor: "#FF6C00",
     color: "#212121",
-    position: "relative",
   },
   showPassText: {
     fontFamily: "Roboto",

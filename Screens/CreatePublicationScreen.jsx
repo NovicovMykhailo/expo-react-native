@@ -3,7 +3,6 @@ import {
   Text,
   TouchableWithoutFeedback,
   Keyboard,
-  SafeAreaView,
   TextInput,
   TouchableOpacity,
   StyleSheet,
@@ -13,16 +12,17 @@ import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 
-export default CreatePublication = () => {
+
+export default CreatePublicationScreen = () => {
   const [isBtnDisabled, setIsBtnDisabled] = useState(true);
   const [photo, setPhoto] = useState(null);
-  const [title, setTitle] = useState("");
-  const [location, setLocation] = useState("");
+  const [title, setTitle] = useState('');
+  const [location, setLocation] = useState('');
 
   const [presed, setPresed] = useState(false);
 
   useEffect(() => {
-    if ((title && location !== "") || photo !== null) setIsBtnDisabled(prev => !prev);
+    if (title && location ) setIsBtnDisabled(false);
     setIsBtnDisabled(true);
   }, [title, location, photo]);
 
@@ -54,18 +54,18 @@ export default CreatePublication = () => {
                 onTextInput={setLocation}
               />
             </View>
-            <TouchableOpacity style={isBtnDisabled ? styles.btn : styles.btnEnabled} disabled={isBtnDisabled}>
-              <Text style={isBtnDisabled ? styles.btnText : styles.btnTextEnabled}>Опубліковати</Text>
+            <TouchableOpacity style={[styles.btn, isBtnDisabled && styles.active]} disabled={isBtnDisabled}>
+              <Text style={[styles.btnText, isBtnDisabled && styles.btnTextActive]}>Опубліковати</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
       </TouchableWithoutFeedback>
       <View style={styles.trashBtnContainer}>
         <TouchableOpacity
-          style={presed ? styles.trashBtn : styles.trashBtnPresed}
+          style={[styles.trashBtn, presed && styles.trashBtnPresed]}
           onPress={() => setPresed(prev => !prev)}
         >
-          <Feather name="trash-2" size={24} style={presed ? styles.icon : styles.iconPresed} />
+          <Feather name="trash-2" size={24} style={[styles.icon, presed && styles.iconPresed]} />
         </TouchableOpacity>
       </View>
     </View>
@@ -75,7 +75,6 @@ export default CreatePublication = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     alignItems: "center",
     justifyContent: "space-between",
   },
@@ -145,18 +144,8 @@ const styles = StyleSheet.create({
     marginBottom: -4,
   },
   btn: {
-    backgroundColor: "#E8E8E8",
-    borderRadius: 100,
-    paddingTop: 16,
-    paddingBottom: 16,
-    paddingLeft: 32,
-    paddingRight: 32,
-    marginTop: 32,
-    display: "flex",
-    alignItems: "center",
-  },
-  btnEnabled: {
     backgroundColor: "#FF6C00",
+
     borderRadius: 100,
     paddingTop: 16,
     paddingBottom: 16,
@@ -166,17 +155,15 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
   },
+  active: { backgroundColor: "#E8E8E8" },
   btnText: {
     fontWeight: "400",
     fontSize: 16,
     lineHeight: 19,
-    color: "#BDBDBD",
-  },
-  btnTextEnabled: {
-    fontWeight: "400",
-    fontSize: 16,
-    lineHeight: 19,
     color: "#FFFFFF",
+  },
+  btnTextActive: {
+    color: "#BDBDBD",
   },
   trashBtnContainer: {
     display: "flex",
@@ -201,13 +188,7 @@ const styles = StyleSheet.create({
     color: "#BDBDBD",
   },
   trashBtnPresed: {
-    width: 70,
-    height: 40,
     backgroundColor: "#FF6C00",
-    borderRadius: 20,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
   },
   iconPresed: {
     color: "white",

@@ -1,10 +1,10 @@
 import { View, StyleSheet, ScrollView, TextInput, Image, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-import CommentCardUser from "./CommentCardUser";
-import CommentCardGuest from "./CommentCardGuest";
+import CommentCardUser from "../Components/CommentCardUser";
+import CommentCardGuest from "../Components/CommentCardGuest";
 
-export default function Comments() {
+export default function CommentsScreen() {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={{ width: "100%" }}>

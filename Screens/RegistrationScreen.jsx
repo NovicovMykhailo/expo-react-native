@@ -17,20 +17,14 @@ import image from "../assets/Photo_BG2x.png";
 import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
 
-
-
-const Registration = () => {
- const navigation = useNavigation();
+export default RegistrationScreen = () => {
+  const navigation = useNavigation();
 
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isShownPasword, setIsShownPasword] = useState(true);
-  const [isFocused, setIsFocused] = useState({
-    email: false,
-    password: false,
-    login: false,
-  });
+  const [isFocused, setIsFocused] = useState(null);
 
   const [fontsLoaded] = useFonts({
     Roboto: require("../assets/fonts/Roboto-Regular.ttf"),
@@ -44,25 +38,12 @@ const Registration = () => {
     setIsShownPasword(prev => !prev);
   };
 
-
-
-  const handleInputFocus = textinput => {
-    setIsFocused({
-      [textinput]: true,
-    });
-  };
-  const handleInputBlur = textinput => {
-    setIsFocused({
-      [textinput]: false,
-    });
-  };
   const onLogin = () => {
-    Alert.alert("Credentials", `${login} + ${password}+ ${email}`);
-    setLogin('')
-    setPassword('')
-    setEmail('')
+    Alert.alert("FormData", `Login: ${login}  Password: ${password} Email: ${email}`);
+    setLogin("");
+    setPassword("");
+    setEmail("");
   };
-
 
   return (
     <SafeAreaView style={styles.base}>
@@ -83,9 +64,9 @@ const Registration = () => {
 
               <Text style={styles.title}>Реєстрація</Text>
               <TextInput
-                onFocus={() => handleInputFocus("login")}
-                onBlur={() => handleInputBlur("login")}
-                style={isFocused.login ? styles.inputOnFocus : styles.input}
+                onFocus={() => setIsFocused("login")}
+                onBlur={() => setIsFocused(null)}
+                style={[styles.input, isFocused === 'login' && styles.active]}
                 placeholder="Логін"
                 onChangeText={setLogin}
                 value={login}
@@ -93,10 +74,10 @@ const Registration = () => {
                 placeholderTextColor="#BDBDBD"
               />
               <TextInput
-                onFocus={() => handleInputFocus("email")}
-                onBlur={() => handleInputBlur("email")}
+                onFocus={() => setIsFocused("email")}
+                onBlur={() => setIsFocused(null)}
                 placeholder="Адреса електронної пошти"
-                style={isFocused.email ? styles.inputOnFocus : styles.input}
+                style={[styles.input, isFocused==='email' && styles.active]}
                 onChangeText={setEmail}
                 value={email}
                 inputMode="email"
@@ -104,10 +85,10 @@ const Registration = () => {
               />
               <View>
                 <TextInput
-                  onFocus={() => handleInputFocus("password")}
-                  onBlur={() => handleInputBlur("password")}
+                  onFocus={() => setIsFocused("password")}
+                  onBlur={() => setIsFocused(null)}
                   placeholder="Пароль"
-                  style={isFocused.password ? styles.inputOnFocus : styles.input}
+                  style={[styles.input, isFocused ==='password' && styles.active]}
                   onChangeText={setPassword}
                   value={password}
                   textContentType="password"
@@ -122,7 +103,7 @@ const Registration = () => {
             <TouchableOpacity style={styles.btn} onPress={onLogin}>
               <Text style={styles.btnText}>Зареєстуватися</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.bottomTextContainer} onPress={() => navigation.navigate("PostScreen")}>
+            <TouchableOpacity style={styles.bottomTextContainer} onPress={() => navigation.navigate("HomeScreen")}>
               <Text style={styles.bottomText}>Вже є акаунт? Увійти</Text>
             </TouchableOpacity>
           </View>
@@ -131,7 +112,6 @@ const Registration = () => {
     </SafeAreaView>
   );
 };
-export default Registration;
 
 const styles = StyleSheet.create({
   base: {
@@ -204,21 +184,12 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderRadius: 8,
     position: "relative",
-  },
-  inputOnFocus: {
-    height: 50,
-    marginTop: 16,
-    padding: 16,
-    backgroundColor: "#FFFFFF",
-    borderWidth: 1,
-    borderColor: "#FF6C00",
-
-    borderStyle: "solid",
-    borderRadius: 8,
     fontWeight: "400",
-    fontSize: 16,
+  },
+  active: {
+    backgroundColor: "#FFFFFF",
+    borderColor: "#FF6C00",
     color: "#212121",
-    position: "relative",
   },
   title: {
     fontStyle: "normal",
