@@ -43,6 +43,7 @@ export default RegistrationScreen = () => {
     setLogin("");
     setPassword("");
     setEmail("");
+   navigation.navigate("HomeScreen");
   };
 
   return (
@@ -103,7 +104,7 @@ export default RegistrationScreen = () => {
             <TouchableOpacity style={styles.btn} onPress={onLogin}>
               <Text style={styles.btnText}>Зареєстуватися</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.bottomTextContainer} onPress={() => navigation.navigate("HomeScreen")}>
+            <TouchableOpacity style={styles.bottomTextContainer} onPress={() => navigation.navigate("Login")}>
               <Text style={styles.bottomText}>Вже є акаунт? Увійти</Text>
             </TouchableOpacity>
           </View>

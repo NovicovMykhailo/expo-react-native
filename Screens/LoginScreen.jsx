@@ -43,6 +43,7 @@ const LoginScreen = () => {
     Alert.alert("FormData: ", `pass:  ${password}  email:  ${email}`);
     setEmail("");
     setPassword("");
+   navigation.navigate("HomeScreen");
   };
 
   return (
