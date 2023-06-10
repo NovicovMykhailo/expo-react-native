@@ -15,7 +15,7 @@ const MainStack = createStackNavigator();
 
 export const Routes = () => (
   <MainStack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
-    <MainStack.Screen name="Registration" component={RegistrationScreen} />
+    <MainStack.Screen name="Registration" component={RegistrationScreen}  />
     <MainStack.Screen name="Login" component={LoginScreen} />
     <MainStack.Screen name="HomeScreen" component={HomeScreen} />
     <MainStack.Screen
@@ -23,11 +23,7 @@ export const Routes = () => (
       component={CommentsScreen}
       options={{ title: "Коментарі", ...CommentsScreenHeaderOption }}
     />
-    <MainStack.Screen
-      name="Map"
-      component={MapScreen}
-      options={{ title: "Мапа", ...mapScreenHeaderOption }}
-    />
+    <MainStack.Screen name="Map" component={MapScreen} options={{ title: "Мапа", ...mapScreenHeaderOption }} />
   </MainStack.Navigator>
 );
 

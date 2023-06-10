@@ -44,8 +44,7 @@ const LoginScreen = () => {
     Alert.alert("FormData: ", `pass:  ${password}  email:  ${email}`);
     setEmail("");
     setPassword("");
-     navigation.dispatch(StackActions.replace("HomeScreen"));
-    // navigation.navigate("HomeScreen");
+    navigation.replace("HomeScreen");
     
   };
 
@@ -88,7 +87,7 @@ const LoginScreen = () => {
               <Text style={styles.btnText}>Увійти</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.bottomTextContainer}>
-              <Text style={styles.bottomText} onPress={() => navigation.navigate("Registration")}>
+              <Text style={styles.bottomText} onPress={() => navigation.replace("Registration")}>
                 Немає акаунту? <Text style={styles.underlinedText}>Зареєструватися</Text>
               </Text>
             </TouchableOpacity>

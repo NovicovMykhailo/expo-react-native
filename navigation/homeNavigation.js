@@ -20,7 +20,7 @@ export const HomeScreenRoutes = () => (
     <Tabs.Screen
       name="Create"
       component={CreatePublicationScreen}
-      options={{ title: "Створити публікацію", ...CreateHeaderOption, tabBarStyle: { display: "none" } }}
+      options={{ title: "Створити публікацію", ...CreateHeaderOption, tabBarStyle:  styles.tabBarHidden  }}
     />
     <Tabs.Screen name="User" component={ProfileScreen} options={{ title: "Користувачі", headerShown: false }} />
   </Tabs.Navigator>
@@ -40,7 +40,7 @@ const PublicationsHeaderOption = {
 
 const homeScreenOptions = ({ route }) => ({
   tabBarShowLabel: false,
-  tabBarStyle: { paddingHorizontal: 82 },
+  tabBarStyle: styles.tabBarHomeScreen,
 
   tabBarIcon: ({ focused }) => {
     if (route.name === "Create") {
@@ -80,5 +80,11 @@ const styles = StyleSheet.create({
   icon: { color: "#212121cc" }, //grey
   focusedIcon: {
     color: "#FF6C00",
+  },
+  tabBarHidden: {
+    display: "none",
+  },
+  tabBarHomeScreen: {
+    paddingHorizontal: 82,
   },
 });

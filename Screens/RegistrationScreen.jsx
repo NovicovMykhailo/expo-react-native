@@ -44,8 +44,8 @@ export default RegistrationScreen = () => {
     setLogin("");
     setPassword("");
     setEmail("");
-      navigation.dispatch(StackActions.replace("HomeScreen"));
-    // navigation.navigate("HomeScreen");
+
+    navigation.replace("HomeScreen");
   };
 
   return (

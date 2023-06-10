@@ -1,8 +1,7 @@
 import { View, StyleSheet, ScrollView, TextInput, Image, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-import CommentCardUser from "../Components/CommentCardUser";
-import CommentCardGuest from "../Components/CommentCardGuest";
+import CommentCard from "../Components/CommentCard";
 
 export default function CommentsScreen() {
   return (
@@ -11,14 +10,14 @@ export default function CommentsScreen() {
         <View style={styles.container}>
           <Image source={require("../assets/UserRect1.png")} style={styles.photo} />
           <View style={styles.commentsContainer}>
-            <CommentCardUser />
-            <CommentCardGuest />
-            <CommentCardUser />
-            <CommentCardGuest />
-            <CommentCardUser />
-            <CommentCardGuest />
-            <CommentCardUser />
-            <CommentCardGuest />
+            <CommentCard name={'a'}/>
+            <CommentCard name={'b'}/>
+            <CommentCard name={'a'}/>
+            <CommentCard name={'b'}/>
+            <CommentCard name={'a'}/>
+            <CommentCard name={'b'}/>
+            <CommentCard name={'a'}/>
+            <CommentCard name={'b'}/>
           </View>
         </View>
       </ScrollView>
