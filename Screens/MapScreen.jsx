@@ -1,10 +1,29 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import MapView, { Marker } from "react-native-maps";
 
 export default MapScreen = () => {
   return (
     <View style={styles.container}>
-      <View style={styles.map}></View>
+      <View style={styles.map}>
+        <MapView
+          style={styles.mapStyle}
+          region={{
+            latitude: 37.78825,
+            longitude: -122.4324,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+          mapType="standard"
+          showsUserLocation={true}
+          minZoomLevel={15}
+          onMapReady={() => console.log("Map is ready")}
+          onRegionChange={() => console.log("Region change")}
+        >
+          <Marker title="I am here" coordinate={{ latitude: 37.78825, longitude: -122.4324 }} description="Hello" />
+        </MapView>
+      </View>
+
       <View style={styles.barRight}>
         <Feather name="map-pin" size={24} style={styles.pinIcon} />
         <Text style={styles.barRightText}>Ukraine</Text>
@@ -16,32 +35,38 @@ export default MapScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "flex-start",
     padding: 16,
-    alignItems: "flex-start",
-    justifyContent: "center",
-    backgroundColor: "white",
+
   },
+
   map: {
     width: "100%",
-    minHeight: "70%",
-    display: "flex",
+    minHeight: "85%",
+    // width: Dimensions.get("window").width,
+    // height: Dimensions.get("window").height,
+    overflow: "hidden",
     borderWidth: 1,
     borderColor: "grey",
-    paddingTop: "50%",
     borderRadius: 16,
-    justifyContent: "center",
-    textAlign: "center",
-    alignItems: "center",
-    backgroundColor: "#E8E8E8",
 
-    fontSize: 24,
+    backgroundColor: "#E8E8E8",
+    display: "flex",
+  },
+  mapStyle: {
+    width: "100%",
+    minHeight: "85%",
   },
 
-    barRight: {
-      marginTop: 16,
+  barRight: {
+    marginTop: 20, 
     display: "flex",
     flexDirection: "row",
-    alignItems: "flex-end",
+    alignSelf: "flex-start",
+    justifyContent: 'flex-start',
+    marginLeft: 10,
   },
   barRightText: {
     color: "#212121",
@@ -53,6 +78,8 @@ const styles = StyleSheet.create({
   },
   pinIcon: {
     marginRight: 6,
+    marginTop: -6,
     color: "#BDBDBD",
   },
 });
+   
