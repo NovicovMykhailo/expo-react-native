@@ -8,22 +8,38 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { Camera } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
+import * as Permissions from "expo-permissions";
+import ModalWindow from "../Components/ModalWindow";
+import { Pressable } from "react-native";
 
 export default CreatePublicationScreen = () => {
   const [isBtnDisabled, setIsBtnDisabled] = useState(true);
   const [photo, setPhoto] = useState(null);
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [hasPermission, setHasPermission] = useState(null);
+  const [cameraRef, setCameraRef] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+
+  const [response, setResponse] = useState(null);
 
   const [presed, setPresed] = useState(false);
+  // console.log(photo);
 
   const navigation = useNavigation();
 
+  //disabling button on empty lines
   useEffect(() => {
     if (title !== "" && location !== "") {
       setIsBtnDisabled(false);
@@ -31,7 +47,36 @@ export default CreatePublicationScreen = () => {
       setIsBtnDisabled(true);
     }
   }, [title, location]);
+  //camera init
+  useEffect(() => {
+    setPhoto(null);
+    (async () => {
+      try {
+        checkCameraPermission();
+      } catch (error) {
+        console.log(error);
+        setHasPermission(null);
+        Alert.alert(`${error}`);
+      }
+    })();
+  }, []);
+//ask 4 camera permissions
+  async function checkCameraPermission() {
+    const { status } = await Camera.requestCameraPermissionsAsync();
+    await MediaLibrary.requestPermissionsAsync().then(permission => {
+      if (!permission.granted) {
+        Alert.alert("Attantion", "No access to camera", [
+          {
+            text: "Allow Permission",
+            onPress: () => checkCameraPermission,
+          },
+        ]);
+      }
+    });
+    setHasPermission(status === "granted");
+  }
 
+  //submit
   const HandleSubmit = () => {
     Alert.alert("FormData: ", `title:  ${title};  location:  ${location}; photo: ${photo}`, [
       {
@@ -39,11 +84,38 @@ export default CreatePublicationScreen = () => {
         onPress: () => navigation.navigate("Publications"),
       },
     ]);
+    console.log({ title, location, photo });
+
     setPresed(prev => !prev);
     setTitle("");
     setLocation("");
   };
 
+  //showModal
+  const showModal = () => {
+    setModalVisible(prev => !prev);
+  };
+
+  //edit photo
+  const editPhoto = async () => {
+    showModal();
+    const albumName = "Pictures";
+    const getPhotos = await MediaLibrary.getAlbumAsync(albumName);
+
+    const getAllAlbums = await MediaLibrary.getAlbumsAsync();
+    console.log(
+      "editPhoto -> getPhotos",
+      getAllAlbums.map(i => i.title),
+    );
+
+    const getAllPhotos = await MediaLibrary.getAssetsAsync({
+      album: getPhotos,
+      // first: 60,
+      mediaType: "photo",
+    });
+    setResponse(getAllPhotos.assets);
+  };
+  //delete publication
   const onDelete = () => {
     Alert.alert("Deleted", "", [{ text: "OK", onPress: () => navigation.navigate("Publications") }]);
 
@@ -56,40 +128,92 @@ export default CreatePublicationScreen = () => {
   return (
     <View style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView style={styles.scrollView}>
-          <View style={styles.inner}>
-            <View style={styles.photoBar}>
-              <TouchableOpacity style={styles.PhotoButton}>
-                <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
+        <>
+          <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContainer}>
+            <View style={styles.inner}>
+              {hasPermission ? (
+                !photo && (
+                  <View style={styles.photoBar}>
+                    <Camera style={styles.camera} type={type} ref={setCameraRef}>
+                      <TouchableOpacity
+                        style={[styles.PhotoButton, styles.light]}
+                        onPress={async () => {
+                          if (cameraRef) {
+                            const { uri } = await cameraRef.takePictureAsync();
+                            const asset = await MediaLibrary.createAssetAsync(uri);
+                            console.log(uri);
+                            setPhoto(asset);
+                          }
+                        }}
+                      >
+                        <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
+                      </TouchableOpacity>
+                    </Camera>
+                  </View>
+                )
+              ) : (
+                <View style={styles.photoBar}>
+                  <View style={styles.PhotoButton}>
+                    <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
+                  </View>
+                </View>
+              )}
+
+              {photo && (
+                <View style={styles.photoBar}>
+                  <Image source={photo} style={styles.photo} />
+                </View>
+              )}
+              <TouchableOpacity style={styles.decription} onPress={editPhoto}>
+                {photo ? <Text>Редагувати фото</Text> : <Text>Завантажте фото</Text>}
+              </TouchableOpacity>
+              <TextInput
+                style={styles.title}
+                placeholder="Назва..."
+                placeholderTextColor="#BDBDBD"
+                value={title}
+                onChangeText={setTitle}
+              />
+              <View style={styles.location}>
+                <Feather name="map-pin" size={24} style={styles.pinIcon} />
+                <TextInput
+                  placeholder="Місцевість..."
+                  placeholderTextColor="#BDBDBD"
+                  style={styles.locationIn}
+                  value={location}
+                  onChangeText={setLocation}
+                />
+              </View>
+              <TouchableOpacity
+                style={[styles.btn, isBtnDisabled && styles.active]}
+                disabled={isBtnDisabled}
+                onPress={HandleSubmit}
+              >
+                <Text style={[styles.btnText, isBtnDisabled && styles.btnTextActive]}>Опубліковати</Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.decription}>Завантажте фото</Text>
-            <TextInput
-              style={styles.title}
-              placeholder="Назва..."
-              placeholderTextColor="#BDBDBD"
-              value={title}
-              onChangeText={setTitle}
-            />
-            <View style={styles.location}>
-              <Feather name="map-pin" size={24} style={styles.pinIcon} />
-              <TextInput
-                placeholder="Місцевість..."
-                placeholderTextColor="#BDBDBD"
-                style={styles.locationIn}
-                value={location}
-                onChangeText={setLocation}
-              />
-            </View>
-            <TouchableOpacity
-              style={[styles.btn, isBtnDisabled && styles.active]}
-              disabled={isBtnDisabled}
-              onPress={HandleSubmit}
-            >
-              <Text style={[styles.btnText, isBtnDisabled && styles.btnTextActive]}>Опубліковати</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
+            {response && modalVisible && (
+              <ModalWindow setVisible={showModal}>
+                <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}>
+                  {response.map(item => (
+                    <Pressable
+                      key={item.id}
+                      onPress={async e => {
+                        const target = e._dispatchInstances.child.memoizedProps.source.uri;
+
+                        const asset = await MediaLibrary.createAssetAsync(target);
+                        setPhoto(asset);
+                        showModal();
+                      }}
+                    >
+                      <Image source={{ uri: item.uri }} style={{ width: 100, height: 100 }} />
+                    </Pressable>
+                  ))}
+                </View>
+              </ModalWindow>
+            )}
+          </ScrollView>
+        </>
       </TouchableWithoutFeedback>
       <View style={styles.trashBtnContainer}>
         <TouchableOpacity style={[styles.trashBtn, presed && styles.trashBtnPresed]} onPress={onDelete}>
@@ -107,16 +231,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   inner: {
-    height: "100%",
-    width: "100%",
     paddingHorizontal: 16,
     paddingTop: 32,
-    flex: 1,
-
+    flexGrow: 1,
     backgroundColor: "#FFFFFF",
   },
   scrollView: {
     width: "100%",
+    flex: 1,
+  },
+  scrollContainer: {
+    flexGrow: 1,
   },
   photoBar: {
     width: "100%",
@@ -128,7 +253,24 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: "solid",
     borderColor: "#E8E8E8",
+    overflow: "hidden",
   },
+  camera: {
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "#E8E8E8",
+    overflow: "hidden",
+    width: "100%",
+    aspectRatio: "3/4",
+  },
+  photo: {
+    width: "100%",
+    height: 240,
+    resizeMode: "cover",
+  },
+
   PhotoButton: {
     borderRadius: 30,
     width: 60,
@@ -137,6 +279,9 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+  light: {
+    backgroundColor: "#ffffff55",
   },
   decription: {
     fontSize: 16,
@@ -176,7 +321,6 @@ const styles = StyleSheet.create({
   },
   btn: {
     backgroundColor: "#FF6C00",
-
     borderRadius: 100,
     paddingTop: 16,
     paddingBottom: 16,

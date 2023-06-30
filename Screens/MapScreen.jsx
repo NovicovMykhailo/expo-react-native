@@ -1,27 +1,49 @@
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import MapView, { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+import { useEffect, useState } from "react";
 
 export default MapScreen = () => {
+
+  const [location, setLocation] = useState(null);
+  
+
+    useEffect(() => {
+      (async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          console.log("Permission to access location was denied");
+        }
+
+        let location = await Location.getCurrentPositionAsync({});
+        const coords = {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        };
+        setLocation(coords);
+      })();
+    }, []);
   return (
     <View style={styles.container}>
       <View style={styles.map}>
         <MapView
           style={styles.mapStyle}
           region={{
-            latitude: 37.78825,
-            longitude: -122.4324,
+            ...location,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
-          mapType="standard"
           showsUserLocation={true}
+          mapType="standard"
           minZoomLevel={15}
           onMapReady={() => console.log("Map is ready")}
           onRegionChange={() => console.log("Region change")}
         >
-          <Marker title="I am here" coordinate={{ latitude: 37.78825, longitude: -122.4324 }} description="Hello" />
-        </MapView>
+          {location && (
+          <Marker title="I am here" coordinate={location} description="Hello" />
+          )}
+          </MapView>
       </View>
 
       <View style={styles.barRight}>
@@ -39,7 +61,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     padding: 16,
-
   },
 
   map: {
@@ -56,16 +77,15 @@ const styles = StyleSheet.create({
     display: "flex",
   },
   mapStyle: {
-    width: "100%",
-    minHeight: "85%",
+    flex: 1,
   },
 
   barRight: {
-    marginTop: 20, 
+    marginTop: 20,
     display: "flex",
     flexDirection: "row",
     alignSelf: "flex-start",
-    justifyContent: 'flex-start',
+    justifyContent: "flex-start",
     marginLeft: 10,
   },
   barRightText: {

@@ -6,6 +6,16 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+     "plugins": [
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow PictuGramm to access your photos.",
+          "savePhotosPermission": "Allow PictuGramm to save photos.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ]
+    ],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",

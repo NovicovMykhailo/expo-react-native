@@ -1,8 +1,11 @@
 import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+
 
 
 export default function Card() {
+  const navigation = useNavigation()
 
   return (
     <TouchableOpacity style={styles.container} disabled={true}>
@@ -17,7 +20,7 @@ export default function Card() {
           <Text style={styles.barLeftText}>0</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.barRight} >
+        <TouchableOpacity style={styles.barRight} onPress={() => navigation.navigate("Map")}>
           <Feather name="map-pin" size={24} style={styles.pinIcon} />
           <Text style={styles.barRightText}>Ivano-Frankivs'k Region, Ukraine</Text>
         </TouchableOpacity>
