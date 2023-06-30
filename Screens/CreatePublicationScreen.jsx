@@ -9,6 +9,7 @@ import {
   ScrollView,
   Alert,
   Image,
+  Pressable,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -17,9 +18,9 @@ import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
-import * as Permissions from "expo-permissions";
-import ModalWindow from "../Components/ModalWindow";
-import { Pressable } from "react-native";
+
+// import ModalWindow from "../Components/ModalWindow";
+import PhotoPicker from "../Components/PhotoPicker";
 
 export default CreatePublicationScreen = () => {
   const [isBtnDisabled, setIsBtnDisabled] = useState(true);
@@ -32,10 +33,7 @@ export default CreatePublicationScreen = () => {
   const [cameraRef, setCameraRef] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
 
-  const [response, setResponse] = useState(null);
-
   const [presed, setPresed] = useState(false);
-  // console.log(photo);
 
   const navigation = useNavigation();
 
@@ -50,6 +48,7 @@ export default CreatePublicationScreen = () => {
   //camera init
   useEffect(() => {
     setPhoto(null);
+
     (async () => {
       try {
         checkCameraPermission();
@@ -60,7 +59,7 @@ export default CreatePublicationScreen = () => {
       }
     })();
   }, []);
-//ask 4 camera permissions
+  //ask 4 camera permissions
   async function checkCameraPermission() {
     const { status } = await Camera.requestCameraPermissionsAsync();
     await MediaLibrary.requestPermissionsAsync().then(permission => {
@@ -75,6 +74,10 @@ export default CreatePublicationScreen = () => {
     });
     setHasPermission(status === "granted");
   }
+  //showModal
+  const showModal = () => {
+    setModalVisible(prev => !prev);
+  };
 
   //submit
   const HandleSubmit = () => {
@@ -91,30 +94,6 @@ export default CreatePublicationScreen = () => {
     setLocation("");
   };
 
-  //showModal
-  const showModal = () => {
-    setModalVisible(prev => !prev);
-  };
-
-  //edit photo
-  const editPhoto = async () => {
-    showModal();
-    const albumName = "Pictures";
-    const getPhotos = await MediaLibrary.getAlbumAsync(albumName);
-
-    const getAllAlbums = await MediaLibrary.getAlbumsAsync();
-    console.log(
-      "editPhoto -> getPhotos",
-      getAllAlbums.map(i => i.title),
-    );
-
-    const getAllPhotos = await MediaLibrary.getAssetsAsync({
-      album: getPhotos,
-      // first: 60,
-      mediaType: "photo",
-    });
-    setResponse(getAllPhotos.assets);
-  };
   //delete publication
   const onDelete = () => {
     Alert.alert("Deleted", "", [{ text: "OK", onPress: () => navigation.navigate("Publications") }]);
@@ -128,92 +107,70 @@ export default CreatePublicationScreen = () => {
   return (
     <View style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <>
-          <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContainer}>
-            <View style={styles.inner}>
-              {hasPermission ? (
-                !photo && (
-                  <View style={styles.photoBar}>
-                    <Camera style={styles.camera} type={type} ref={setCameraRef}>
-                      <TouchableOpacity
-                        style={[styles.PhotoButton, styles.light]}
-                        onPress={async () => {
-                          if (cameraRef) {
-                            const { uri } = await cameraRef.takePictureAsync();
-                            const asset = await MediaLibrary.createAssetAsync(uri);
-                            console.log(uri);
-                            setPhoto(asset);
-                          }
-                        }}
-                      >
-                        <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
-                      </TouchableOpacity>
-                    </Camera>
-                  </View>
-                )
-              ) : (
+        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.inner}>
+            {hasPermission ? (
+              !photo && (
                 <View style={styles.photoBar}>
-                  <View style={styles.PhotoButton}>
-                    <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
-                  </View>
-                </View>
-              )}
-
-              {photo && (
-                <View style={styles.photoBar}>
-                  <Image source={photo} style={styles.photo} />
-                </View>
-              )}
-              <TouchableOpacity style={styles.decription} onPress={editPhoto}>
-                {photo ? <Text>Редагувати фото</Text> : <Text>Завантажте фото</Text>}
-              </TouchableOpacity>
-              <TextInput
-                style={styles.title}
-                placeholder="Назва..."
-                placeholderTextColor="#BDBDBD"
-                value={title}
-                onChangeText={setTitle}
-              />
-              <View style={styles.location}>
-                <Feather name="map-pin" size={24} style={styles.pinIcon} />
-                <TextInput
-                  placeholder="Місцевість..."
-                  placeholderTextColor="#BDBDBD"
-                  style={styles.locationIn}
-                  value={location}
-                  onChangeText={setLocation}
-                />
-              </View>
-              <TouchableOpacity
-                style={[styles.btn, isBtnDisabled && styles.active]}
-                disabled={isBtnDisabled}
-                onPress={HandleSubmit}
-              >
-                <Text style={[styles.btnText, isBtnDisabled && styles.btnTextActive]}>Опубліковати</Text>
-              </TouchableOpacity>
-            </View>
-            {response && modalVisible && (
-              <ModalWindow setVisible={showModal}>
-                <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}>
-                  {response.map(item => (
-                    <Pressable
-                      key={item.id}
-                      onPress={async e => {
-                        const target = e._dispatchInstances.child.memoizedProps.source.uri;
-
-                        const asset = await MediaLibrary.createAssetAsync(target);
-                        setPhoto(asset);
-                        showModal();
+                  <Camera style={styles.camera} type={type} ref={setCameraRef}>
+                    <TouchableOpacity
+                      style={[styles.PhotoButton, styles.light]}
+                      onPress={async () => {
+                        if (cameraRef) {
+                          const { uri } = await cameraRef.takePictureAsync();
+                          const asset = await MediaLibrary.createAssetAsync(uri);
+                          setPhoto(asset);
+                        }
                       }}
                     >
-                      <Image source={{ uri: item.uri }} style={{ width: 100, height: 100 }} />
-                    </Pressable>
-                  ))}
+                      <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
+                    </TouchableOpacity>
+                  </Camera>
                 </View>
-              </ModalWindow>
+              )
+            ) : (
+              <View style={styles.photoBar}>
+                <View style={styles.PhotoButton}>
+                  <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
+                </View>
+              </View>
             )}
-          </ScrollView>
-        </>
+
+            {photo && (
+              <View style={styles.photoBar}>
+                <Image source={photo} style={styles.photo} />
+              </View>
+            )}
+            <TouchableOpacity style={styles.decription} onPress={() => showModal()}>
+              {photo ? <Text>Редагувати фото</Text> : <Text>Завантажте фото</Text>}
+            </TouchableOpacity>
+            <TextInput
+              style={styles.title}
+              placeholder="Назва..."
+              placeholderTextColor="#BDBDBD"
+              value={title}
+              onChangeText={setTitle}
+            />
+            <View style={styles.location}>
+              <Feather name="map-pin" size={24} style={styles.pinIcon} />
+              <TextInput
+                placeholder="Місцевість..."
+                placeholderTextColor="#BDBDBD"
+                style={styles.locationIn}
+                value={location}
+                onChangeText={setLocation}
+              />
+            </View>
+            <TouchableOpacity
+              style={[styles.btn, isBtnDisabled && styles.active]}
+              disabled={isBtnDisabled}
+              onPress={HandleSubmit}
+            >
+              <Text style={[styles.btnText, isBtnDisabled && styles.btnTextActive]}>Опубліковати</Text>
+            </TouchableOpacity>
+          </View>
+          {modalVisible && <PhotoPicker showModal={showModal} setPhoto={setPhoto} />}
+        </ScrollView>
       </TouchableWithoutFeedback>
       <View style={styles.trashBtnContainer}>
         <TouchableOpacity style={[styles.trashBtn, presed && styles.trashBtnPresed]} onPress={onDelete}>

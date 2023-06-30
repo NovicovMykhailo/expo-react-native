@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Alert, Modal, StyleSheet, Text, Pressable, View, ScrollView, Dimensions } from "react-native";
 
 const ModalWindow = ({ setVisible, children }) => {
-
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -14,14 +13,7 @@ const ModalWindow = ({ setVisible, children }) => {
         }}
       >
         <View style={styles.centeredView}>
-          <ScrollView
-            style={styles.modalView}
-            contentContainerStyle={{
-              flexGrow: 1,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <ScrollView style={styles.modalView} contentContainerStyle={styles.contentContainer}>
             {children}
 
             <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setVisible()}>
@@ -36,40 +28,29 @@ const ModalWindow = ({ setVisible, children }) => {
 
 const styles = StyleSheet.create({
   centeredView: {
-    // flex: 1,
+    flex: 1,
 
     width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    // marginTop: 22,
-    // paddingHorizontal: 20,
-    // paddingVertical: 0,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+
+    overflow: "hidden",
+  },
+  contentContainer: {
+    flexGrow: 1,
+    justifyContent: "space-between",
   },
   modalView: {
-    // flex: 1,
-    // flexGrow: 1,
-    // marginBottom: 22,
-    // alignItems: "center",
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
     backgroundColor: "white",
-    borderRadius: 20,
-
-    paddingVertical: 0,
-    paddingHorizontal: 20,
-
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
   },
   button: {
+    width: "90%",
     position: "relative",
     top: 0,
+    left: 20,
+
     marginTop: 20,
     marginBottom: 20,
     borderRadius: 20,
@@ -80,7 +61,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F194FF",
   },
   buttonClose: {
-    backgroundColor: "#2196F3",
+    backgroundColor: "#FF6C00",
   },
   textStyle: {
     color: "white",
