@@ -15,8 +15,9 @@ import {
 import { useState } from "react";
 import image from "../assets/Photo_BG2x.png";
 import { useFonts } from "expo-font";
-import { StackActions, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
+import PhotoPicker from "../Components/PhotoPicker";
 
 export default RegistrationScreen = () => {
   const navigation = useNavigation();
@@ -26,6 +27,8 @@ export default RegistrationScreen = () => {
   const [password, setPassword] = useState("");
   const [isShownPasword, setIsShownPasword] = useState(true);
   const [isFocused, setIsFocused] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [photo, setPhoto] = useState(null);
 
   const [fontsLoaded] = useFonts({
     Roboto: require("../assets/fonts/Roboto-Regular.ttf"),
@@ -34,6 +37,10 @@ export default RegistrationScreen = () => {
   if (!fontsLoaded) {
     return null;
   }
+
+  const showModal = () => {
+    setModalVisible(prev => !prev);
+  };
 
   const showPassword = () => {
     setIsShownPasword(prev => !prev);
@@ -51,6 +58,7 @@ export default RegistrationScreen = () => {
   return (
     <SafeAreaView style={styles.base}>
       <ImageBackground source={image} style={styles.image} />
+      {modalVisible && <PhotoPicker showModal={showModal} setPhoto={setPhoto} />}
       <View style={styles.box}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.view}>
@@ -60,9 +68,12 @@ export default RegistrationScreen = () => {
               keyboardVerticalOffset={800}
             >
               <View style={styles.userPhoto}>
-                <TouchableOpacity style={styles.takePhotoOut}>
-                  <AntDesign name="plus" size={19} style={styles.BtnIcon} />
-                </TouchableOpacity>
+                <>
+                  {photo && <ImageBackground source={photo} style={styles.photo} />}
+                  <TouchableOpacity style={styles.takePhotoOut} onPress={() => showModal()}>
+                    <AntDesign name="plus" size={19} style={styles.BtnIcon} />
+                  </TouchableOpacity>
+                </>
               </View>
 
               <Text style={styles.title}>Реєстрація</Text>
@@ -154,6 +165,7 @@ const styles = StyleSheet.create({
     left: "46%",
     transform: [{ translateX: -50 }],
   },
+  photo: { resizeMode: "contain", width: 120, height: 120, borderRadius: 16, overflow: "hidden" },
   takePhotoOut: {
     position: "absolute",
     width: 25,

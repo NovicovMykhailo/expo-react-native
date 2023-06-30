@@ -9,7 +9,6 @@ import {
   ScrollView,
   Alert,
   Image,
-  Pressable,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -19,7 +18,6 @@ import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 
-// import ModalWindow from "../Components/ModalWindow";
 import PhotoPicker from "../Components/PhotoPicker";
 
 export default CreatePublicationScreen = () => {
@@ -32,7 +30,7 @@ export default CreatePublicationScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
-
+  
   const [presed, setPresed] = useState(false);
 
   const navigation = useNavigation();
