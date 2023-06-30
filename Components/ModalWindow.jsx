@@ -7,6 +7,7 @@ const ModalWindow = ({ setVisible, children }) => {
       <Modal
         animationType="slide"
         transparent={true}
+        statusBarTranslucent={true}
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
           setVisible();
@@ -15,7 +16,6 @@ const ModalWindow = ({ setVisible, children }) => {
         <View style={styles.centeredView}>
           <ScrollView style={styles.modalView} contentContainerStyle={styles.contentContainer}>
             {children}
-
             <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setVisible()}>
               <Text style={styles.textStyle}>Hide Modal</Text>
             </Pressable>
@@ -29,11 +29,9 @@ const ModalWindow = ({ setVisible, children }) => {
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-
     width: "100%",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-
     overflow: "hidden",
   },
   contentContainer: {
@@ -41,6 +39,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   modalView: {
+    // flex: 1,
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
     backgroundColor: "white",

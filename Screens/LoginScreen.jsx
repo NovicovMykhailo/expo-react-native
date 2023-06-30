@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { useFonts } from "expo-font";
-import { useNavigation, StackActions } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 
 

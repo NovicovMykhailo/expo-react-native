@@ -1,14 +1,31 @@
-import { View, TouchableOpacity, StyleSheet, ImageBackground } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { View,  StyleSheet, ImageBackground } from "react-native";
+
+import PlusStyledButton from "./PlusStyledButton";
+import PhotoPicker from "./PhotoPicker";
+import { useState, useEffect } from "react";
 
 export default function UserPhoto() {
+  const [isBtnActive, setIsBtnActive] = useState(false);
+  const [userPhoto, setUserPhoto] = useState(require("../assets/userPhoto.png"));
+    const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    if (userPhoto) setIsBtnActive(true);
+    else setIsBtnActive(false);
+  }, [userPhoto]);
+
+    const showModal = () => {
+      setModalVisible(prev => !prev);
+    };
+
   return (
-    <View style={styles.userPhoto}>
-      <ImageBackground source={require("../assets/userPhoto.png")} style={styles.photo} />
-      <TouchableOpacity style={styles.Btn}>
-        <AntDesign name="plus" size={19} style={styles.BtnIcon} />
-      </TouchableOpacity>
-    </View>
+    <>
+      {modalVisible && <PhotoPicker showModal={showModal} setPhoto={setUserPhoto} />}
+      <View style={styles.userPhoto}>
+        <ImageBackground source={userPhoto} style={styles.photo} />
+        <PlusStyledButton isActive={isBtnActive} onPress={() => (userPhoto ? setUserPhoto(null) : showModal())} />
+      </View>
+    </>
   );
 }
 
@@ -31,24 +48,5 @@ const styles = StyleSheet.create({
     width: 120,
     borderRadius: 16,
     overflow: "hidden",
-  },
-  Btn: {
-    position: "absolute",
-    right: -11,
-    top: 81,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: 25,
-    height: 25,
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: "#E8E8E8",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 50,
-  },
-  BtnIcon: {
-    transform: [{ rotate: "45deg" }],
-    color: "#E8E8E8",
   },
 });

@@ -12,12 +12,12 @@ import {
   Keyboard,
   Alert,
 } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import image from "../assets/Photo_BG2x.png";
 import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
-import { AntDesign } from "@expo/vector-icons";
 import PhotoPicker from "../Components/PhotoPicker";
+import PlusStyledButton from "../Components/PlusStyledButton";
 
 export default RegistrationScreen = () => {
   const navigation = useNavigation();
@@ -29,6 +29,12 @@ export default RegistrationScreen = () => {
   const [isFocused, setIsFocused] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [photo, setPhoto] = useState(null);
+  const [isBtnActive, setIsBtnActive] = useState(false);
+
+  useEffect(() => {
+    if (photo) setIsBtnActive(true);
+    else  setIsBtnActive(false);
+  }, [photo]);
 
   const [fontsLoaded] = useFonts({
     Roboto: require("../assets/fonts/Roboto-Regular.ttf"),
@@ -68,12 +74,8 @@ export default RegistrationScreen = () => {
               keyboardVerticalOffset={800}
             >
               <View style={styles.userPhoto}>
-                <>
-                  {photo && <ImageBackground source={photo} style={styles.photo} />}
-                  <TouchableOpacity style={styles.takePhotoOut} onPress={() => showModal()}>
-                    <AntDesign name="plus" size={19} style={styles.BtnIcon} />
-                  </TouchableOpacity>
-                </>
+                {photo && <ImageBackground source={photo} style={styles.photo} />}
+                <PlusStyledButton isActive={isBtnActive} onPress={() => (photo ? setPhoto(null) : showModal())} />
               </View>
 
               <Text style={styles.title}>Реєстрація</Text>
