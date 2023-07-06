@@ -12,6 +12,8 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
+import * as Location from "expo-location";
+
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -25,12 +27,13 @@ export default CreatePublicationScreen = () => {
   const [photo, setPhoto] = useState(null);
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
+  const [geoposition, setGoposition] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
-  
+
   const [presed, setPresed] = useState(false);
 
   const navigation = useNavigation();
@@ -57,6 +60,22 @@ export default CreatePublicationScreen = () => {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      const coords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+      setGoposition(coords);
+    })();
+  }, []);
   //ask 4 camera permissions
   async function checkCameraPermission() {
     const { status } = await Camera.requestCameraPermissionsAsync();
@@ -78,14 +97,21 @@ export default CreatePublicationScreen = () => {
   };
 
   //submit
-  const HandleSubmit = () => {
-    Alert.alert("FormData: ", `title:  ${title};  location:  ${location}; photo: ${photo}`, [
-      {
-        text: "OK",
-        onPress: () => navigation.navigate("Publications"),
-      },
-    ]);
-    console.log({ title, location, photo });
+  const HandleSubmit = async () => {
+
+    Alert.alert(
+      "FormData: ",
+      `• Title:  ${title};\n• Location:  ${location};\n• Photo: ${
+        photo ? `[object]` : "none"
+      };\n• Goposition:\n    - Latitude: ${geoposition.latitude},\n    - Longitude: ${geoposition.longitude} `,
+      [
+        {
+          text: "OK",
+          onPress: () => navigation.navigate("Publications"),
+        },
+      ],
+    );
+    console.log({ title, location, photo, geoposition });
 
     setPresed(prev => !prev);
     setTitle("");
