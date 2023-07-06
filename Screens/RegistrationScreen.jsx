@@ -33,7 +33,7 @@ export default RegistrationScreen = () => {
 
   useEffect(() => {
     if (photo) setIsBtnActive(true);
-    else  setIsBtnActive(false);
+    else setIsBtnActive(false);
   }, [photo]);
 
   const [fontsLoaded] = useFonts({

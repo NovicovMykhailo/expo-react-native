@@ -34,6 +34,7 @@ export default function CommentsScreen() {
 const styles = StyleSheet.create({
   box: {
     flex: 1,
+    backgroundColor: "white",
   },
   container: {
     justifyContent: "center",
