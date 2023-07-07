@@ -1,5 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
+
+
 export default function HeaderTitle({ title }) {
   const [fontsLoaded] = useFonts({
     Roboto: require("../assets/fonts/Roboto-Regular.ttf"),

@@ -9,7 +9,6 @@ import {
   ScrollView,
   Alert,
   ImageBackground,
-  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -19,7 +18,7 @@ import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
-import Spinner from "../Components/Spinner";
+import Spinner from "../components/Spinner";
 import * as MediaLibrary from "expo-media-library";
 
 export default CreatePublicationScreen = () => {
@@ -27,15 +26,14 @@ export default CreatePublicationScreen = () => {
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
   const [geoposition, setGeoposition] = useState("");
+  const [isFocused, setIsFocused] = useState(null);
+  const [showLoader, setShowLoader] = useState(false);
 
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
   const [type, _] = useState(Camera.Constants.Type.back);
 
-  const [showLoader, setShowLoader] = useState(false);
-
   const navigation = useNavigation();
-
   const isBtnDisabled = !(!!title && !!location && !!photo);
   const isActive = Boolean(title || location || photo);
 
@@ -47,7 +45,6 @@ export default CreatePublicationScreen = () => {
       try {
         checkCameraPermission();
       } catch (error) {
-        console.log(error);
         setHasPermission(null);
         Alert.alert(`${error}`);
       }
@@ -55,12 +52,12 @@ export default CreatePublicationScreen = () => {
 
     return () => setPhoto(null);
   }, []);
-  //find geolication
+  //Search for  geolication
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        console.log("Permission to access location was denied");
+        Alert.error("Message: ", "Permission to access location was denied");
       }
 
       let location = await Location.getCurrentPositionAsync({});
@@ -86,11 +83,7 @@ export default CreatePublicationScreen = () => {
     });
     setHasPermission(status === "granted");
   }
-
-  const rePhoto = () => {
-    setPhoto(null);
-  };
-
+  //Make Photo
   const makePhoto = async () => {
     setShowLoader(true);
     const { uri } = await cameraRef.takePictureAsync();
@@ -98,7 +91,6 @@ export default CreatePublicationScreen = () => {
     setPhoto(asset);
     setShowLoader(false);
   };
-
   //submiting
   const HandleSubmit = async () => {
     if (title && location && photo) {
@@ -132,9 +124,10 @@ export default CreatePublicationScreen = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContainer}>
           <View style={styles.inner}>
-            {!hasPermission && !photo && (
+            {/* photoBar */}
+            {!hasPermission && (
               <View style={styles.photoBar}>
-                <View style={styles.PhotoButton}>
+                <View style={styles.photoButton}>
                   <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
                 </View>
               </View>
@@ -146,7 +139,7 @@ export default CreatePublicationScreen = () => {
                     {showLoader && <Spinner />}
                     {!showLoader && (
                       <TouchableOpacity
-                        style={[styles.PhotoButton, styles.light]}
+                        style={[styles.photoButton, styles.light]}
                         onPress={async () => {
                           if (cameraRef) makePhoto();
                         }}
@@ -157,43 +150,50 @@ export default CreatePublicationScreen = () => {
                   </Camera>
                 )}
                 {photo && (
-                  <View style={styles.photoBar}>
-                    <ImageBackground source={photo} style={styles.photo}>
-                      <TouchableOpacity
-                        style={[styles.PhotoButton, styles.light]}
-                        onPress={async () => {
-                          if (cameraRef) makePhoto();
-                        }}
-                      >
-                        <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
-                      </TouchableOpacity>
-                    </ImageBackground>
-                  </View>
+                  <ImageBackground source={photo} style={styles.photo}>
+                    <TouchableOpacity
+                      style={[styles.photoButton, styles.light]}
+                      onPress={() => {
+                        setPhoto(null);
+                      }}
+                    >
+                      <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
+                    </TouchableOpacity>
+                  </ImageBackground>
                 )}
               </View>
             )}
-
-            <View style={styles.decriptionContainer} onPress={rePhoto}>
+            {/* photobar description */}
+            <View style={styles.decriptionContainer}>
               <Text style={styles.decriptionText}>{photo ? "Редагувати фото" : "Завантажте фото"}</Text>
             </View>
+            {/* inputs */}
             <TextInput
-              style={styles.title}
+              style={[styles.title, isFocused === "name" && styles.activeField]}
               placeholder="Назва..."
               placeholderTextColor="#BDBDBD"
               value={title}
               onChangeText={setTitle}
+              onFocus={() => setIsFocused("name")}
+              onBlur={() => setIsFocused(null)}
             />
-            <View style={styles.location}>
-              <Feather name="map-pin" size={24} style={styles.pinIcon} />
+            <View style={[styles.location, isFocused === "location" && styles.activeField]}>
+              <Feather
+                name="map-pin"
+                size={24}
+                style={[styles.pinIcon, isFocused === "location" && styles.activeIcon]}
+              />
               <TextInput
+                style={styles.locationIn}
                 placeholder="Місцевість..."
                 placeholderTextColor="#BDBDBD"
-                style={styles.locationIn}
                 value={location}
                 onChangeText={setLocation}
-                requiered
+                onFocus={() => setIsFocused("location")}
+                onBlur={() => setIsFocused(null)}
               />
             </View>
+            {/* buttons */}
             <TouchableOpacity
               style={[styles.btn, isBtnDisabled && styles.active]}
               disabled={isBtnDisabled}
@@ -238,6 +238,7 @@ const styles = StyleSheet.create({
     height: 240,
     backgroundColor: "#F6F6F6",
     borderRadius: 8,
+
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
@@ -248,22 +249,19 @@ const styles = StyleSheet.create({
   camera: {
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: "#E8E8E8",
-    overflow: "hidden",
     width: "100%",
     aspectRatio: "3/4",
   },
   photo: {
     width: "100%",
+    stretched: "false",
     height: 240,
     resizeMode: "cover",
     alignItems: "center",
     justifyContent: "center",
   },
 
-  PhotoButton: {
+  photoButton: {
     borderRadius: 30,
     width: 60,
     height: 60,
@@ -364,4 +362,9 @@ const styles = StyleSheet.create({
   },
   pinIcon: { marginRight: 10, color: "#BDBDBD" },
   photoIcon: { color: "#BDBDBD" },
+  activeField: {
+    borderColor: "#FF6C00",
+    color: "#212121",
+  },
+  activeIcon: { color: "#FF6C00" },
 });

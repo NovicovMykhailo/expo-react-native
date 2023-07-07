@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import MapView, { Marker } from "react-native-maps";
-import * as Location from "expo-location";
 import { useEffect, useState } from "react";
 
 export default MapScreen = ({ geoposition }) => {

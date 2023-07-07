@@ -16,8 +16,8 @@ import { useState, useEffect } from "react";
 import image from "../assets/Photo_BG2x.png";
 import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
-import PhotoPicker from "../Components/PhotoPicker";
-import PlusStyledButton from "../Components/PlusStyledButton";
+import PhotoPicker from "../components/PhotoPicker";
+import PlusStyledButton from "../components/PlusStyledButton";
 
 export default RegistrationScreen = () => {
   const navigation = useNavigation();

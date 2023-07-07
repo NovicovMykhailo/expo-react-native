@@ -1,4 +1,4 @@
-import { View,  StyleSheet, ImageBackground } from "react-native";
+import { View, StyleSheet, ImageBackground } from "react-native";
 
 import PlusStyledButton from "./PlusStyledButton";
 import PhotoPicker from "./PhotoPicker";
@@ -7,16 +7,16 @@ import { useState, useEffect } from "react";
 export default function UserPhoto() {
   const [isBtnActive, setIsBtnActive] = useState(false);
   const [userPhoto, setUserPhoto] = useState(require("../assets/userPhoto.png"));
-    const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     if (userPhoto) setIsBtnActive(true);
     else setIsBtnActive(false);
   }, [userPhoto]);
 
-    const showModal = () => {
-      setModalVisible(prev => !prev);
-    };
+  const showModal = () => {
+    setModalVisible(prev => !prev);
+  };
 
   return (
     <>

@@ -3,8 +3,8 @@ import { Feather } from "@expo/vector-icons";
 
 
 import image from "../assets/Photo_BG2x.png";
-import UserPhoto from "../Components/UserPhoto";
-import StoryCard from "../Components/StoryCard";
+import UserPhoto from "../components/UserPhoto";
+import StoryCard from "../components/StoryCard";
 import { useNavigation } from "@react-navigation/native";
 
 

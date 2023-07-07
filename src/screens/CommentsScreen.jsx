@@ -1,7 +1,7 @@
 import { View, StyleSheet, ScrollView, TextInput, Image, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-import CommentCard from "../Components/CommentCard";
+import CommentCard from "../components/CommentCard";
 
 export default function CommentsScreen() {
   return (

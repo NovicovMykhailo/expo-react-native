@@ -1,9 +1,9 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import CreatePublicationScreen from "../Screens/CreatePublicationScreen";
-import PostsScreen from "../Screens/PostsScreen";
-import ProfileScreen from "../Screens/ProfileScreen";
+import CreatePublicationScreen from "../screens/CreatePublicationScreen";
+import PostsScreen from "../screens/PostsScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 
-import { CreateHedder, PublicationsHedder } from "../Components/CreateHedder";
+import { CreateHedder, PublicationsHedder } from "../components/CreateHedder";
 
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { View, StyleSheet } from "react-native";

@@ -13,7 +13,6 @@ const PhotoPicker = ({ showModal, setPhoto }) => {
     (async () => {
       const getPhotos = await MediaLibrary.getAlbumAsync(searchAlbum);
       const getAllAlbums = await MediaLibrary.getAlbumsAsync();
-      const filteredAssets = getAllAlbums.filter(album => album.assetCount > 1);
 
       // setAlbums(filteredAssets);
       setAlbums(getAllAlbums);

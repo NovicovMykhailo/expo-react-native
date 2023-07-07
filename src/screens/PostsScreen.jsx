@@ -1,13 +1,14 @@
 
 import { ScrollView, View, StyleSheet } from "react-native";
-import UserTab from "../Components/UserTab";
-import Card from "../Components/Card";
+import UserTab from "../components/UserTab";
+import Card from "../components/Card";
 
 export default PostsScreen = () => {
   return (
     <ScrollView vertical={true} automaticallyAdjustContentInsets={false}>
       <View style={styles.container}>
         <UserTab />
+
         <Card />
         <Card />
         <Card />

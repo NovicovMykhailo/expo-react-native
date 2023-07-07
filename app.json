@@ -4,20 +4,20 @@
     "slug": "AndroidApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",
      "plugins": [
       [
         "expo-media-library",
         {
-          "photosPermission": "Allow PictuGramm to access your photos.",
-          "savePhotosPermission": "Allow PictuGramm to save photos.",
+          "photosPermission": "Allow AndroidApp to access your photos.",
+          "savePhotosPermission": "Allow AndroidApp to save photos.",
           "isAccessMediaLocationEnabled": true
         }
       ]
     ],
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./src/assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -30,12 +30,12 @@
     "android": {
       "softwareKeyboardLayoutMode": "pan", 
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "favicon": "./assets/icon.png",
+      "favicon": "./src/assets/icon.png",
       "bundler": "metro"
     }
   }
