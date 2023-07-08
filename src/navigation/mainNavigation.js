@@ -3,8 +3,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import RegistrationScreen from "../screens/RegistrationScreen";
 import LoginScreen from "../screens/LoginScreen";
 import CommentsScreen from "../screens/CommentsScreen";
-import HomeScreen from "../screens/HomeScreen";
 import MapScreen from "../screens/MapScreen";
+import HomeScreenRoutes from "../navigation/HomeNavigation";
+
+
 
 import { CreateHedder } from "../components/CreateHedder";
 
@@ -16,7 +18,7 @@ export const Routes = () => (
   <MainStack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
     <MainStack.Screen name="Registration" component={RegistrationScreen} />
     <MainStack.Screen name="Login" component={LoginScreen} />
-    <MainStack.Screen name="HomeScreen" component={HomeScreen} />
+    <MainStack.Screen name="HomeScreen" component={HomeScreenRoutes} />
     <MainStack.Screen
       name="Comments"
       component={CommentsScreen}
@@ -29,7 +31,7 @@ export const Routes = () => (
 const CommentsScreenHeaderOption = {
   headerShown: true,
   header: ({ navigation, route, options }) => (
-    <CreateHedder navigation={navigation} route={route} options={options} to={"User"} />
+    <CreateHedder navigation={navigation} route={route} options={options} to={"back"} />
   ),
 };
 

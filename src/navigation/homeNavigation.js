@@ -10,7 +10,7 @@ import { View, StyleSheet } from "react-native";
 
 const Tabs = createBottomTabNavigator();
 
-export const HomeScreenRoutes = () => (
+ const HomeScreenRoutes = () => (
   <Tabs.Navigator screenOptions={homeScreenOptions}>
     <Tabs.Screen
       name="Publications"
@@ -88,3 +88,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 82,
   },
 });
+
+export default HomeScreenRoutes;

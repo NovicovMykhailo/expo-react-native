@@ -21,7 +21,6 @@ import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import Spinner from "../components/Spinner";
 import * as MediaLibrary from "expo-media-library";
-import { ActivityIndicator } from "react-native-web";
 
 export default CreatePublicationScreen = () => {
   const [photo, setPhoto] = useState(null);
