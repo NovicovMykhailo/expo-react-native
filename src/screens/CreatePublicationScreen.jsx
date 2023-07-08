@@ -9,9 +9,9 @@ import {
   ScrollView,
   Alert,
   ImageBackground,
-  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { EvilIcons } from "@expo/vector-icons";
 
 import * as Location from "expo-location";
 
@@ -21,6 +21,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import Spinner from "../components/Spinner";
 import * as MediaLibrary from "expo-media-library";
+import { ActivityIndicator } from "react-native-web";
 
 export default CreatePublicationScreen = () => {
   const [photo, setPhoto] = useState(null);
@@ -28,14 +29,14 @@ export default CreatePublicationScreen = () => {
   const [location, setLocation] = useState("");
   const [geoposition, setGeoposition] = useState("");
   const [isFocused, setIsFocused] = useState(null);
-  const [showLoader, setShowLoader] = useState(false);
+  const [loadingStatus, setLoadingStatus] = useState("idle");
 
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
   const [type, _] = useState(Camera.Constants.Type.back);
 
   const navigation = useNavigation();
-  const isBtnDisabled = !!!photo;
+  const isBtnDisabled = !photo;
   const isActive = Boolean(title || location || photo);
 
   //camera init
@@ -47,12 +48,13 @@ export default CreatePublicationScreen = () => {
         checkCameraPermission();
       } catch (error) {
         setHasPermission(null);
-        Alert.alert(`${error}`);
+        Alert.alert(`${error.message}`);
       }
     })();
 
     return () => setPhoto(null);
   }, []);
+
   //Search for  geolication
   useEffect(() => {
     (async () => {
@@ -86,9 +88,6 @@ export default CreatePublicationScreen = () => {
     });
     setHasPermission(status === "granted");
   }
-
-
-  
   //submiting
   const HandleSubmit = async () => {
     if (photo) {
@@ -110,6 +109,7 @@ export default CreatePublicationScreen = () => {
       setLocation("");
     }
   };
+
   //deleating
   const onDelete = () => {
     setPhoto(null);
@@ -123,43 +123,53 @@ export default CreatePublicationScreen = () => {
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContainer}>
           <View style={styles.inner}>
             {/* photoBar */}
-            {!hasPermission && (
-              <View style={styles.photoBar}>
-                <View style={styles.photoButton}>
-                  <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
-                </View>
-              </View>
-            )}
             {hasPermission ? (
               !photo && (
                 <View style={styles.photoBar}>
                   <Camera style={styles.camera} type={type} ref={setCameraRef}>
                     <TouchableOpacity
+                      disabled={loadingStatus === "pending" ? true : false}
                       style={[styles.photoButton, styles.light]}
                       onPress={async () => {
+                        setLoadingStatus("pending");
                         if (cameraRef) {
                           const { uri } = await cameraRef.takePictureAsync();
                           const asset = await MediaLibrary.createAssetAsync(uri);
                           setPhoto(asset);
+                          setLoadingStatus("fullfield");
                         }
                       }}
                     >
-                      <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
+                      {loadingStatus === "idle" && (
+                        <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
+                      )}
+                      {loadingStatus === "pending" && <Spinner />}
+                      {loadingStatus === "fullfield" && (
+                        <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
+                      )}
                     </TouchableOpacity>
                   </Camera>
                 </View>
               )
             ) : (
               <View style={styles.photoBar}>
-                <View style={styles.photoButton}>
-                  <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
-                </View>
+                <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
               </View>
             )}
 
             {photo && (
               <View style={styles.photoBar}>
-                <Image source={photo} style={styles.photo} />
+                <ImageBackground source={photo} style={styles.photo}>
+                  <TouchableOpacity
+                    style={[styles.photoButton, styles.light]}
+                    onPress={() => {
+                      setPhoto(null);
+                      setLoadingStatus("idle");
+                    }}
+                  >
+                    <EvilIcons name="redo" size={60} style={styles.redoIcon} />
+                  </TouchableOpacity>
+                </ImageBackground>
               </View>
             )}
             {/* photobar description */}
@@ -253,11 +263,12 @@ const styles = StyleSheet.create({
   },
   photo: {
     width: "100%",
-    stretched: "false",
+    // stretched: "false",
     height: 240,
     resizeMode: "cover",
     alignItems: "center",
     justifyContent: "center",
+    textAlign: "center",
   },
 
   photoButton: {
@@ -268,6 +279,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    textAlign: "center",
   },
   light: {
     backgroundColor: "#ffffff55",
@@ -359,6 +371,10 @@ const styles = StyleSheet.create({
   },
   pinIcon: { marginRight: 10, color: "#BDBDBD" },
   photoIcon: { color: "#BDBDBD" },
+  redoIcon: {
+    color: "#BDBDBD",
+    transform : [{rotate: '-230deg'}]
+  },
   activeField: {
     borderColor: "#FF6C00",
     color: "#212121",

@@ -1,14 +1,26 @@
-import { StyleSheet, ActivityIndicator } from "react-native";
-import React from "react";
+import { StyleSheet, View, Image } from "react-native";
+import image from "../assets/SpinnerOrange.gif";
 
 const Spinner = () => {
-  return <ActivityIndicator size="large" color="gray" style={styles.spiner} />;
+  return (
+    <View style={styles.container}>
+      <Image source={image} style={styles.icon} />
+    </View>
+  );
 };
 
 export default Spinner;
 
 const styles = StyleSheet.create({
-  spiner: {
-    transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  icon: {
+    tintColor: "#FF6C00",
+    objectFit: "contain",
+    width: 50,
+    height: 50,
   },
 });
