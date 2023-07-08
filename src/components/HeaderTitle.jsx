@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
 
-
 export default function HeaderTitle({ title }) {
   const [fontsLoaded] = useFonts({
     Roboto: require("../assets/fonts/Roboto-Regular.ttf"),
@@ -17,7 +16,7 @@ export default function HeaderTitle({ title }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: "center", flexDirection: "row", paddingLeft: 75, paddingRight: 75 },
+  container: { flex: 1, alignItems: "center", flexDirection: "row", paddingHorizontal: 75 },
   text: {
     color: "#212121",
     fontFamily: "Roboto",

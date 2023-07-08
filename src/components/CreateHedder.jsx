@@ -30,6 +30,7 @@ export function PublicationsHedder({ navigation, route, options }) {
 
 function onNavigate(navigation, to) {
   if (to === "User") return navigation.navigate("User");
+  if(to === 'back') return navigation.goBack()
   else return navigation.navigate("Publications");
 }
 

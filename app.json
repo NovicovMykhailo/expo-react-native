@@ -31,7 +31,8 @@
       "softwareKeyboardLayoutMode": "pan", 
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "permissions": ["ACCESS_BACKGROUND_LOCATION"]
       }
     },
     "web": {

@@ -66,11 +66,11 @@ const styles = StyleSheet.create({
 
   barRight: {
     marginTop: 20,
+    marginLeft: 10,
     display: "flex",
     flexDirection: "row",
     alignSelf: "flex-start",
     justifyContent: "flex-start",
-    marginLeft: 10,
   },
   barRightText: {
     color: "#212121",

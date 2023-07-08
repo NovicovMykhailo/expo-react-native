@@ -9,7 +9,6 @@ import {
   ScrollView,
   Alert,
   ImageBackground,
-  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -86,9 +85,22 @@ export default CreatePublicationScreen = () => {
     });
     setHasPermission(status === "granted");
   }
+  //Make Photo
 
+  const makePhoto = async () => {
+    setShowLoader(true);
 
-  
+    try {
+      const { uri } = await cameraRef.takePictureAsync();
+      const asset = await MediaLibrary.createAssetAsync(uri);
+      setPhoto(asset);
+    } catch (error) {
+      Alert.alert("Attantion", `${error.message}`);
+      setShowLoader(false);
+    } finally {
+      setShowLoader(false);
+    }
+  };
   //submiting
   const HandleSubmit = async () => {
     if (photo) {
@@ -130,36 +142,35 @@ export default CreatePublicationScreen = () => {
                 </View>
               </View>
             )}
-            {hasPermission ? (
-              !photo && (
-                <View style={styles.photoBar}>
+            {hasPermission && (
+              <View style={styles.photoBar}>
+                {!photo && (
                   <Camera style={styles.camera} type={type} ref={setCameraRef}>
+                    {showLoader && <Spinner />}
+                    {!showLoader && (
+                      <TouchableOpacity
+                        style={[styles.photoButton, styles.light]}
+                        onPress={async () => {
+                          if (cameraRef) makePhoto();
+                        }}
+                      >
+                        <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
+                      </TouchableOpacity>
+                    )}
+                  </Camera>
+                )}
+                {photo && (
+                  <ImageBackground source={photo} style={styles.photo}>
                     <TouchableOpacity
                       style={[styles.photoButton, styles.light]}
-                      onPress={async () => {
-                        if (cameraRef) {
-                          const { uri } = await cameraRef.takePictureAsync();
-                          const asset = await MediaLibrary.createAssetAsync(uri);
-                          setPhoto(asset);
-                        }
+                      onPress={() => {
+                        setPhoto(null);
                       }}
                     >
                       <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
                     </TouchableOpacity>
-                  </Camera>
-                </View>
-              )
-            ) : (
-              <View style={styles.photoBar}>
-                <View style={styles.photoButton}>
-                  <Ionicons name="md-camera-sharp" size={24} style={styles.photoIcon} />
-                </View>
-              </View>
-            )}
-
-            {photo && (
-              <View style={styles.photoBar}>
-                <Image source={photo} style={styles.photo} />
+                  </ImageBackground>
+                )}
               </View>
             )}
             {/* photobar description */}

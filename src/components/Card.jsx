@@ -15,7 +15,7 @@ export default function Card() {
       </View>
 
       <View style={styles.bottomContainer}>
-        <TouchableOpacity style={styles.barLeft}>
+        <TouchableOpacity style={styles.barLeft} onPress={() => navigation.navigate("Comments")}>
           <Feather name="message-circle" size={24} style={styles.messageIcon} />
           <Text style={styles.barLeftText}>0</Text>
         </TouchableOpacity>

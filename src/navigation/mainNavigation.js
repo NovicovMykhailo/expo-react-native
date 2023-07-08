@@ -36,6 +36,6 @@ const CommentsScreenHeaderOption = {
 const mapScreenHeaderOption = {
   headerShown: true,
   header: ({ navigation, route, options }) => (
-    <CreateHedder navigation={navigation} route={route} options={options} to={"User"} />
+    <CreateHedder navigation={navigation} route={route} options={options} to={"back"} />
   ),
 };

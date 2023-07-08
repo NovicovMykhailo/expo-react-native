@@ -11,7 +11,7 @@ export default function CommentCard({ name }) {
         <Image source={require("../assets/userPhoto.png")} style={styles.photo} />
       </View>
 
-      <View style={[styles.commentContainer, name === currentName && styles.commentLeft]}>
+      <View style={[styles.commentContainer, name === currentName && styles.commentRight]}>
         <Text style={styles.comment}>
           Really love your most recent photo. I’ve been trying to capture the same thing for a few months and would love
           some tips!
@@ -46,7 +46,8 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 6,
     borderTopRightRadius: 6,
   },
-  commentLeft: {
+  commentRight: {
+    borderTopRightRadius: 0,
     borderTopLeftRadius: 6,
   },
   comment: {

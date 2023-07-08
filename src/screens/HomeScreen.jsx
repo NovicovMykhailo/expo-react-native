@@ -1,4 +1,4 @@
-import { HomeScreenRoutes } from "../navigation/homeNavigation";
+import { HomeScreenRoutes } from "../navigation/HomeNavigation";
 
 export default HomeScreen = () => {
   return <HomeScreenRoutes />;

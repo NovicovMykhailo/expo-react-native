@@ -122,9 +122,8 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
+    paddingHorizontal: 16,
     paddingTop: 32,
-    paddingLeft: 16,
-    paddingRight: 16,
     paddingBottom: 43,
   },
   title: {
@@ -175,10 +174,8 @@ const styles = StyleSheet.create({
   btn: {
     backgroundColor: "#FF6C00",
     borderRadius: 100,
-    paddingTop: 16,
-    paddingBottom: 16,
-    paddingLeft: 32,
-    paddingRight: 32,
+    paddingVertical: 16,
+    paddingHorizontal:32,
     marginTop: 43,
     display: "flex",
     alignItems: "center",

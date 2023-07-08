@@ -39,9 +39,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   modalView: {
-    // flex: 1,
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
+    flex: 1,
     backgroundColor: "white",
   },
   button: {
@@ -49,9 +47,7 @@ const styles = StyleSheet.create({
     position: "relative",
     top: 0,
     left: 20,
-
-    marginTop: 20,
-    marginBottom: 20,
+    marginVertical:20,
     borderRadius: 20,
     padding: 10,
     elevation: 2,

@@ -4,7 +4,7 @@ export default function UserTab({ email, name, photo }) {
   return (
     <TouchableOpacity style={styles.container}>
       <Image source={require("../assets/userPhoto.png")} style={styles.photo} />
-      <View>
+      <View style={styles.textContainer}>
         <Text style={styles.title}>Natali Romanova</Text>
         <Text style={styles.email}>email@example.com</Text>
       </View>
@@ -17,9 +17,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
-    width: 171,
+    // width: "100%",
+    flex:1,
     height: 60,
   },
+  textContainer: { width: "80%" },
   photo: {
     width: 60,
     height: 60,
@@ -33,7 +35,7 @@ const styles = StyleSheet.create({
     lineHeight: 15,
   },
   email: {
-    marginTop: -4,
+    // marginTop: -4,
     color: "#212121cc",
     fontFamily: "Roboto",
     fontWeight: "400",
