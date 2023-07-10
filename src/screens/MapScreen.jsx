@@ -3,13 +3,19 @@ import { Feather } from "@expo/vector-icons";
 import MapView, { Marker } from "react-native-maps";
 import { useEffect, useState } from "react";
 
-export default MapScreen = ({ geoposition }) => {
+export default MapScreen = data => {
   const [location, setLocation] = useState(null);
+  const { params } = data.route;
 
-  useEffect(
-    () => setLocation(geoposition),
-    [],
-  );
+  const geoPlaceName = params.location;
+  const markerTitles = params.title;
+
+  const geo = {
+    latitude: Number(params.coords.longitude),
+    longitude: Number(params.coords.latitude),
+  };
+
+  useEffect(() => setLocation(geo), []);
   return (
     <View style={styles.container}>
       <View style={styles.map}>
@@ -17,8 +23,8 @@ export default MapScreen = ({ geoposition }) => {
           style={styles.mapStyle}
           region={{
             ...location,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            latitudeDelta: 0.04,
+            longitudeDelta: 0.05,
           }}
           showsUserLocation={true}
           mapType="standard"
@@ -26,13 +32,13 @@ export default MapScreen = ({ geoposition }) => {
           // onMapReady={() => console.log("Map is ready")}
           // onRegionChange={() => console.log("Region change")}
         >
-          {location && <Marker title="I am here" coordinate={location} description="Hello" />}
+          {location && <Marker title={markerTitles} coordinate={location} description={geoPlaceName} />}
         </MapView>
       </View>
 
       <View style={styles.barRight}>
         <Feather name="map-pin" size={24} style={styles.pinIcon} />
-        <Text style={styles.barRightText}>Ukraine</Text>
+        <Text style={styles.barRightText}>{geoPlaceName}</Text>
       </View>
     </View>
   );

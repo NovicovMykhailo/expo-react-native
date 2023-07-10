@@ -17,9 +17,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
-    // width: "100%",
-    flex:1,
+    flex: 1,
     height: 60,
+ 
+    backgroundColor: "#FFFFFF",
   },
   textContainer: { width: "80%" },
   photo: {

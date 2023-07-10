@@ -2,27 +2,35 @@ import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
+export default function Card({ image, title, location, comments, coords }) {
 
 
-export default function Card() {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+
 
   return (
     <TouchableOpacity style={styles.container} disabled={true}>
       <View>
-        <Image source={require("../assets/UserRect1.png")} style={styles.photo} />
-        <Text style={styles.title}>Ліс</Text>
+        <Image source={{ uri: `${image}` }} style={styles.photo} />
+        <Text style={styles.title}>{title}</Text>
       </View>
 
       <View style={styles.bottomContainer}>
-        <TouchableOpacity style={styles.barLeft} onPress={() => navigation.navigate("Comments")}>
-          <Feather name="message-circle" size={24} style={styles.messageIcon} />
-          <Text style={styles.barLeftText}>0</Text>
+        <TouchableOpacity style={styles.barLeft} onPress={() => navigation.navigate("Comments", { comments, image })}>
+          <Feather
+            name="message-circle"
+            size={24}
+            style={[styles.messageIcon, comments.length > 0 && styles.activeIcon]}
+          />
+          <Text style={[styles.barLeftText]}>{comments.length}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.barRight} onPress={() => navigation.navigate("Map")}>
+        <TouchableOpacity
+          style={styles.barRight}
+          onPress={() => navigation.navigate("Map", { coords, location, title })}
+        >
           <Feather name="map-pin" size={24} style={styles.pinIcon} />
-          <Text style={styles.barRightText}>Ivano-Frankivs'k Region, Ukraine</Text>
+          <Text style={styles.barRightText}>{location}</Text>
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -32,6 +40,7 @@ export default function Card() {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
+    marginBottom: 32,
   },
 
   photo: {
@@ -87,4 +96,5 @@ const styles = StyleSheet.create({
     transform: [{ rotateY: "-180deg" }],
     color: "#BDBDBD",
   },
+  activeIcon: { color: "#FF6C00" },
 });

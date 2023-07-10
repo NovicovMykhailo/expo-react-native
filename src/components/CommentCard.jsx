@@ -1,22 +1,19 @@
-
 import { View, Text, Image, StyleSheet } from "react-native";
+import { dateFormat } from "../utils/formating";
 
-export default function CommentCard({ name }) {
+export default function CommentCard({ name, user_photo, comment, date }) {
+  let currentName = "Adrian_Stehr91";
 
-  let currentName = 'a';
- 
   return (
     <View style={[styles.container, name === currentName && styles.containerLeft]}>
       <View>
-        <Image source={require("../assets/userPhoto.png")} style={styles.photo} />
+        <Image source={{ uri: `${user_photo}` }} style={styles.photo} />
       </View>
 
       <View style={[styles.commentContainer, name === currentName && styles.commentRight]}>
-        <Text style={styles.comment}>
-          Really love your most recent photo. I’ve been trying to capture the same thing for a few months and would love
-          some tips!
-        </Text>
-        <Text style={[styles.date, name === currentName && styles.dateLeft]}>09 червня, 2020 | 08:40</Text>
+        <Text style={styles.comment}>{comment}</Text>
+
+        <Text style={[styles.date, name === currentName && styles.dateLeft]}>{dateFormat(date)}</Text>
       </View>
     </View>
   );
@@ -27,6 +24,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 16,
     justifyContent: "space-between",
+    marginBottom: 24,
   },
   containerLeft: {
     flexDirection: "row-reverse",

@@ -7,6 +7,9 @@ import UserPhoto from "../components/UserPhoto";
 import StoryCard from "../components/StoryCard";
 import { useNavigation } from "@react-navigation/native";
 
+import data from "../store/test/StoreSampleTest.json";
+const DATA = data[1].posts;
+
 
 
 export default ProfileScreen = () => {
@@ -21,12 +24,9 @@ export default ProfileScreen = () => {
               <ExitBtn />
               <Text style={styles.Name}>Natali Romanova</Text>
             </View>
-            <StoryCard />
-            <StoryCard />
-            <StoryCard />
-            <StoryCard />
-            <StoryCard />
-            <StoryCard />
+            {DATA.map((item) => (
+              <StoryCard key={item.id} item={item}/>
+            ))}
           </View>
         </ScrollView>
       </View>

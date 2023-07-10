@@ -2,30 +2,43 @@ import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
-export default function StoryCard() {
+export default function StoryCard({ item }) {
+  const { image, title, location, comments, coords, likes } = item;
   const navigation = useNavigation();
   return (
     <TouchableOpacity style={styles.container} disabled={true}>
       <View>
-        <Image source={require("../assets/UserRect1.png")} style={styles.photo} />
-        <Text style={styles.title}>Ліс</Text>
+        <Image source={{ uri: `${image}` }} style={styles.photo} />
+        <Text style={styles.title}>{title}</Text>
       </View>
 
       <View style={styles.bottomContainer}>
         <View style={styles.leftSideIcons}>
-          <TouchableOpacity style={styles.barLeft} onPress={() => navigation.navigate("Comments")}>
-            <Feather name="message-circle" size={24} style={styles.messageIcon} />
-            <Text style={styles.barLeftText}>6</Text>
+          <TouchableOpacity style={styles.barLeft} onPress={() => navigation.navigate("Comments", { comments, image })}>
+            <Feather
+              name="message-circle"
+              size={24}
+              style={[styles.messageIcon, comments.length > 0 && styles.activeIcon]}
+            />
+            <Text style={styles.barLeftText}>{comments.length}</Text>
           </TouchableOpacity>
           <View style={styles.barLeft}>
-            <Feather name="thumbs-up" size={24} style={styles.thumbUpIcon} />
-            <Text style={styles.barLeftText}>26</Text>
+            <TouchableOpacity>
+              <Feather name="thumbs-up" size={24} style={[styles.thumbUpIcon, likes > 0 && styles.activeIcon]} />
+            </TouchableOpacity>
+
+            <Text style={styles.barLeftText}>{likes}</Text>
           </View>
         </View>
 
-        <TouchableOpacity style={styles.barRight} onPress={() => navigation.navigate("Map")}>
+        <TouchableOpacity
+          style={styles.barRight}
+          onPress={() => navigation.navigate("Map", { coords, location, title })}
+        >
           <Feather name="map-pin" size={24} style={styles.pinIcon} />
-          <Text style={styles.barRightText}>Ukraine</Text>
+          <Text style={styles.barRightText} numberOfLines={1}>
+            {location}
+          </Text>
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -85,18 +98,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     textDecorationLine: "underline",
+    textAlign: "right",
   },
   messageIcon: {
     marginRight: 4,
-    color: "#FF6C00",
+    color: "#BDBDBD",
     transform: [{ rotateY: "-180deg" }],
   },
   thumbUpIcon: {
     marginRight: 6,
-    color: "#FF6C00",
+    color: "#BDBDBD",
   },
   pinIcon: {
     marginRight: 6,
     color: "#BDBDBD",
   },
+  activeIcon: { color: "#FF6C00" },
 });
