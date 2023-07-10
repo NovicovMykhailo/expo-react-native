@@ -15,7 +15,6 @@
         "coords": { "latitude": "51.5616", "longitude": "54.6732" },
         "likes": 5,
         "image": "https://images.pexels.com/photos/3635300/pexels-photo-3635300.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-
         "comments": [
           {
             "createdAt": "2020-03-11T06:26:58.571Z",
