@@ -1,10 +1,21 @@
 import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
+import { useState } from "react";
 
 export default function StoryCard({ item }) {
-  const { image, title, location, comments, coords, likes } = item;
+
+  const { image, title, location, comments, coords, likes, isLiked } = item;
+  const [wasLiked, setWasLiked] = useState(isLiked);
+  const [likesCount, setLikesCount] = useState(likes)
   const navigation = useNavigation();
+
+  function handleLikes() {
+     setWasLiked(prev => !prev);
+     setLikesCount(prev => (wasLiked === false ? prev + 1 : prev - 1));
+  
+}
+
   return (
     <TouchableOpacity style={styles.container} disabled={true}>
       <View>
@@ -23,11 +34,14 @@ export default function StoryCard({ item }) {
             <Text style={styles.barLeftText}>{comments.length}</Text>
           </TouchableOpacity>
           <View style={styles.barLeft}>
-            <TouchableOpacity>
-              <Feather name="thumbs-up" size={24} style={[styles.thumbUpIcon, likes > 0 && styles.activeIcon]} />
+            <TouchableOpacity style={styles.isRelative} onPress={() => handleLikes()}>
+              {wasLiked && likesCount > 0 && (
+                <Image source={require("./../assets/thumbsUpGg.png")} style={styles.thumbFill} />
+              )}
+              <Feather name="thumbs-up" size={24} style={[styles.thumbUpIcon, likesCount > 0 && styles.activeIcon]} />
             </TouchableOpacity>
 
-            <Text style={styles.barLeftText}>{likes}</Text>
+            <Text style={styles.barLeftText}>{likesCount}</Text>
           </View>
         </View>
 
@@ -113,5 +127,11 @@ const styles = StyleSheet.create({
     marginRight: 6,
     color: "#BDBDBD",
   },
-  activeIcon: { color: "#FF6C00" },
+  isRelative: {
+    position: "relative",
+  },
+  thumbFill: { width: 24, height: 24, position: "absolute", top: 0, left: 0 },
+  activeIcon: {
+    color: "#FF6C00",
+  },
 });

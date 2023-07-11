@@ -1,18 +1,18 @@
-import {SafeAreaView, StyleSheet, FlatList } from "react-native";
+import { SafeAreaView, StyleSheet, FlatList } from "react-native";
 
 import UserTab from "../components/UserTab";
 import Card from "../components/Card";
 
-import data  from "../store/test/StoreSampleTest.json";
-const DATA = data[1].posts
+import { UserData, Auth } from "../store/test/StoreSampleTest.json";
+
 
 export default PostsScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        ListHeaderComponent={<UserTab />}
+        ListHeaderComponent={<UserTab data={Auth} />}
         ListHeaderComponentStyle={styles.hedder}
-        data={DATA}
+        data={UserData.posts}
         renderItem={({ item }) => (
           <Card
             title={item.title}
@@ -36,6 +36,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
   hedder: {
-    marginBottom:32
-  }
+    marginBottom: 32,
+  },
 });

@@ -22,6 +22,7 @@ export default function Card({ image, title, location, comments, coords }) {
             size={24}
             style={[styles.messageIcon, comments.length > 0 && styles.activeIcon]}
           />
+
           <Text style={[styles.barLeftText]}>{comments.length}</Text>
         </TouchableOpacity>
 
@@ -30,6 +31,7 @@ export default function Card({ image, title, location, comments, coords }) {
           onPress={() => navigation.navigate("Map", { coords, location, title })}
         >
           <Feather name="map-pin" size={24} style={styles.pinIcon} />
+
           <Text style={styles.barRightText}>{location}</Text>
         </TouchableOpacity>
       </View>
@@ -93,8 +95,10 @@ const styles = StyleSheet.create({
   },
   messageIcon: {
     marginRight: 4,
+    
+
     transform: [{ rotateY: "-180deg" }],
     color: "#BDBDBD",
   },
-  activeIcon: { color: "#FF6C00" },
+  activeIcon: { color: "#FF6C00", tintColor: "#FF6C00" },
 });

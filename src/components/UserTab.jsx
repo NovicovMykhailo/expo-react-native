@@ -1,12 +1,14 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 
-export default function UserTab({ email, name, photo }) {
+export default function UserTab({ data }) {
+  const { name, email, avatar } = data;
+
   return (
     <TouchableOpacity style={styles.container}>
-      <Image source={require("../assets/userPhoto.png")} style={styles.photo} />
+      <Image source={{ uri: `${avatar}` }} style={styles.photo} />
       <View style={styles.textContainer}>
-        <Text style={styles.title}>Natali Romanova</Text>
-        <Text style={styles.email}>email@example.com</Text>
+        <Text style={styles.title}>{name}</Text>
+        <Text style={styles.email}>{email}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -19,7 +21,7 @@ const styles = StyleSheet.create({
     gap: 8,
     flex: 1,
     height: 60,
- 
+
     backgroundColor: "#FFFFFF",
   },
   textContainer: { width: "80%" },

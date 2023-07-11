@@ -148,8 +148,6 @@ const styles = StyleSheet.create({
   },
   view: {
     backgroundColor: "#ffffff",
-    borderColor: "#ffffff",
-    borderWidth: 5,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     paddingTop: 92,

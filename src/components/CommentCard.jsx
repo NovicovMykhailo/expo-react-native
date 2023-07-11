@@ -1,8 +1,10 @@
 import { View, Text, Image, StyleSheet } from "react-native";
 import { dateFormat } from "../utils/formating";
+import { Auth } from "./../store/test/StoreSampleTest.json";
 
-export default function CommentCard({ name, user_photo, comment, date }) {
-  let currentName = "Adrian_Stehr91";
+export default function CommentCard({ data }) {
+  const { name, user_photo, comment, date } = data;
+  let currentName = Auth.name;
 
   return (
     <View style={[styles.container, name === currentName && styles.containerLeft]}>

@@ -1,16 +1,14 @@
 import { View, StyleSheet, ImageBackground, SafeAreaView, ScrollView, Text, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-
 import image from "../assets/Photo_BG2x.png";
 import UserPhoto from "../components/UserPhoto";
 import StoryCard from "../components/StoryCard";
 import { useNavigation } from "@react-navigation/native";
 
-import data from "../store/test/StoreSampleTest.json";
-const DATA = data[1].posts;
-
-
+import { UserData, Auth } from "../store/test/StoreSampleTest.json";
+const DATA = UserData.posts;
+const { name, avatar } = Auth;
 
 export default ProfileScreen = () => {
   return (
@@ -20,12 +18,12 @@ export default ProfileScreen = () => {
         <ScrollView>
           <View style={styles.view}>
             <View>
-              <UserPhoto />
+              <UserPhoto photo={avatar} />
               <ExitBtn />
-              <Text style={styles.Name}>Natali Romanova</Text>
+              <Text style={styles.Name}>{name}</Text>
             </View>
-            {DATA.map((item) => (
-              <StoryCard key={item.id} item={item}/>
+            {DATA.map(item => (
+              <StoryCard key={item.id} item={item} />
             ))}
           </View>
         </ScrollView>
@@ -33,7 +31,6 @@ export default ProfileScreen = () => {
     </SafeAreaView>
   );
 };
-
 
 function ExitBtn() {
   const navigation = useNavigation();
@@ -81,3 +78,5 @@ const styles = StyleSheet.create({
     color: "#BDBDBD",
   },
 });
+
+

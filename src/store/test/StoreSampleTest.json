@@ -1,18 +1,20 @@
-[
-  {
+{
+  "Auth": {
     "token": "token",
-    "IsAuth": true
-  },
-  {
+    "IsAuth": true,
     "name": "Natali Romanova",
     "email": "email@example.com",
-    "avatar": "https://i.ibb.co/Xzfkqyt/user-Photo.png",
+    "avatar": "https://i.ibb.co/Xzfkqyt/user-Photo.png"
+  },
+  "UserData": {
+   
     "posts": [
       {
         "id": "1",
         "title": "Peak District National Park",
         "location": "United Kingdom",
         "coords": { "latitude": "51.5616", "longitude": "54.6732" },
+        "isLiked": false,
         "likes": 5,
         "image": "https://images.pexels.com/photos/3635300/pexels-photo-3635300.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         "comments": [
@@ -120,7 +122,8 @@
         "id": "2",
         "title": "Shishou Milu Deer National Nature Reserve",
         "location": "Yancheng, China",
-        "coords": { "latitude": "32.991284", "longitude": "120.816019" },
+        "coords": { "latitude": "32.9912", "longitude": "120.8160" },
+        "isLiked": true,
         "likes": 4,
         "image": "https://images.pexels.com/photos/7532428/pexels-photo-7532428.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         "comments": [
@@ -228,7 +231,8 @@
         "id": "3",
         "title": "Centro Ippico Vallenoce",
         "location": "Pereto, Italy",
-        "coords": { "latitude": "42.048284", "longitude": "13.083417" },
+        "coords": { "latitude": "42.0482", "longitude": "13.0834" },
+        "isLiked": false,
         "likes": 15,
         "image": "https://images.pexels.com/photos/17018324/pexels-photo-17018324.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         "comments": [
@@ -336,7 +340,8 @@
         "id": "4",
         "title": "Pic de Néouvielle",
         "location": "Saint-Lary-Soulan, France",
-        "coords": { "latitude": "42.834485", "longitude": "0.116056" },
+        "coords": { "latitude": "42.8344", "longitude": "0.1160" },
+        "isLiked": true,
         "likes": 12,
         "image": "https://images.pexels.com/photos/13713058/pexels-photo-13713058.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         "comments": [
@@ -444,7 +449,8 @@
         "id": "5",
         "title": "Carpathian Mountains",
         "location": "Zakarpattya region, Ukraine",
-        "coords": { "latitude": "47.923327", "longitude": "24.328259" },
+        "coords": { "latitude": "47.9233", "longitude": "24.3282" },
+        "isLiked": false,
         "likes": 0,
         "image": "https://images.pexels.com/photos/13258054/pexels-photo-13258054.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         "comments": [
@@ -552,7 +558,8 @@
         "id": "6",
         "title": "Dalat",
         "location": "Lam Dong, Vietnam",
-        "coords": { "latitude": "11,94042", "longitude": "108,45831" },
+        "coords": { "latitude": "11.9404", "longitude": "108.4583" },
+        "isLiked": false,
         "likes": 16,
         "image": "https://images.pexels.com/photos/12389375/pexels-photo-12389375.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         "comments": [
@@ -660,7 +667,8 @@
         "id": "7",
         "title": "Mount Olympus ",
         "location": "Troodos Mountains of Cyprus",
-        "coords": { "latitude": "34.935846", "longitude": "32.863273" },
+        "coords": { "latitude": "34.9358", "longitude": "32.8632" },
+        "isLiked": false,
         "likes": 8,
         "image": "https://images.pexels.com/photos/8553154/pexels-photo-8553154.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         "comments": [
@@ -768,7 +776,8 @@
         "id": "8",
         "title": "New York City",
         "location": "New York, USA",
-        "coords": { "latitude": "40.558006", "longitude": "-73.915169" },
+        "coords": { "latitude": "40.5580", "longitude": "-73.9151" },
+        "isLiked": false,
         "likes": 6,
         "image": "https://images.pexels.com/photos/12589497/pexels-photo-12589497.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         "comments": [
@@ -876,7 +885,8 @@
         "id": "9",
         "title": "Mombacho Stratovolcano",
         "location": "Granada, Nicaragua",
-        "coords": { "latitude": "11.831979", "longitude": "-85.961662" },
+        "coords": { "latitude": "11.8319", "longitude": "-85.9616" },
+        "isLiked": false,
         "likes": 40,
         "image": "https://images.pexels.com/photos/5275158/pexels-photo-5275158.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         "comments": [
@@ -985,6 +995,7 @@
         "title": "Castle Burg Eltz",
         "location": "Wierschem, Germany",
         "coords": { "latitude": "17.6364", "longitude": "12.1200" },
+        "isLiked": false,
         "likes": 24,
         "image": "https://images.pexels.com/photos/14720919/pexels-photo-14720919.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         "comments": [
@@ -1092,7 +1103,8 @@
         "id": "11",
         "title": "Hungarian Parliament Building",
         "location": "Budapest, Hungary",
-        "coords": { "latitude": "14.99", "longitude": "26.40" },
+        "coords": { "latitude": "47.4979", "longitude": "19.0402" },
+        "isLiked": false,
         "likes": 20,
         "image": "https://images.pexels.com/photos/7512252/pexels-photo-7512252.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
         "comments": [
@@ -1198,4 +1210,4 @@
       }
     ]
   }
-]
+}

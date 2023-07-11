@@ -15,7 +15,7 @@ export default function CommentsScreen(data) {
         ListHeaderComponentStyle={styles.hedder}
         data={comments}
         renderItem={({ item }) => (
-          <CommentCard name={item.name} user_photo={item.user_photo} comment={item.comment} date={item.createdAt} />
+          <CommentCard data={item} />
         )}
         keyExtractor={item => item.id}
       />

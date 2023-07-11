@@ -1,18 +1,21 @@
-import { View, Text, StyleSheet, Dimensions } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
+
 import MapView, { Marker } from "react-native-maps";
 import { useEffect, useState } from "react";
 
 export default MapScreen = data => {
   const [location, setLocation] = useState(null);
+  const [mapType, setMapStyle] = useState("standard");
+
   const { params } = data.route;
 
   const geoPlaceName = params.location;
   const markerTitles = params.title;
 
   const geo = {
-    latitude: Number(params.coords.longitude),
-    longitude: Number(params.coords.latitude),
+    latitude: Number(params.coords.latitude),
+    longitude: Number(params.coords.longitude),
   };
 
   useEffect(() => setLocation(geo), []);
@@ -27,18 +30,24 @@ export default MapScreen = data => {
             longitudeDelta: 0.05,
           }}
           showsUserLocation={true}
-          mapType="standard"
-          minZoomLevel={15}
+          mapType={mapType}
+          provider="google"
+          minZoomLevel={10}
           // onMapReady={() => console.log("Map is ready")}
           // onRegionChange={() => console.log("Region change")}
         >
           {location && <Marker title={markerTitles} coordinate={location} description={geoPlaceName} />}
         </MapView>
       </View>
+      <View style={styles.bar}>
+        <View style={styles.barRight}>
+          <Feather name="map-pin" size={24} style={styles.pinIcon} />
+          <Text style={styles.barRightText}>{markerTitles}</Text>
+        </View>
 
-      <View style={styles.barRight}>
-        <Feather name="map-pin" size={24} style={styles.pinIcon} />
-        <Text style={styles.barRightText}>{geoPlaceName}</Text>
+        <TouchableOpacity onPress={() => setMapStyle(prev => (prev === "hybrid" ? "standard" : "hybrid"))}>
+          <MaterialIcons name="satellite" size={26} style={styles.mapIcon} />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -55,9 +64,7 @@ const styles = StyleSheet.create({
 
   map: {
     width: "100%",
-    minHeight: "85%",
-    // width: Dimensions.get("window").width,
-    // height: Dimensions.get("window").height,
+    minHeight: "88%",
     overflow: "hidden",
     borderWidth: 1,
     borderColor: "grey",
@@ -69,13 +76,18 @@ const styles = StyleSheet.create({
   mapStyle: {
     flex: 1,
   },
-
-  barRight: {
-    marginTop: 20,
-    marginLeft: 10,
-    display: "flex",
+  bar: {
+    marginTop: 16,
     flexDirection: "row",
-    alignSelf: "flex-start",
+    alignItems: "center",
+    textAlign: "center",
+    flex: 1,
+    paddingHorizontal: 16,
+  },
+  barRight: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "row",
     justifyContent: "flex-start",
   },
   barRightText: {
@@ -85,10 +97,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     textDecorationLine: "underline",
+    alignSelf: "flex-start",
   },
   pinIcon: {
     marginRight: 6,
     marginTop: -6,
     color: "#BDBDBD",
+    alignSelf: "flex-start",
+  },
+  mapIcon: {
+    color: "#BDBDBD",
+    transform: [{ scaleX: -1 }],
   },
 });
