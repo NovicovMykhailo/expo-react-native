@@ -1,4 +1,13 @@
-import { View, StyleSheet, ImageBackground, SafeAreaView, ScrollView, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ImageBackground,
+  SafeAreaView,
+  StatusBar,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 import image from "../assets/Photo_BG2x.png";
@@ -13,6 +22,7 @@ const { name, avatar } = Auth;
 export default ProfileScreen = () => {
   return (
     <SafeAreaView>
+      <StatusBar hidden={true} />
       <ImageBackground source={image} style={styles.image} />
       <View>
         <ScrollView>
@@ -76,5 +86,3 @@ const styles = StyleSheet.create({
     color: "#BDBDBD",
   },
 });
-
-
