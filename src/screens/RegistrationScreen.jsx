@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF6C00",
     borderRadius: 100,
     paddingHorizontal: 32,
-    paddingVertical:16,
+    paddingVertical: 16,
     marginTop: 43,
     display: "flex",
     alignItems: "center",

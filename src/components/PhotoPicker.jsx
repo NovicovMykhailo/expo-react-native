@@ -84,7 +84,6 @@ const stylesModal = StyleSheet.create({
     width: "100%",
   },
   title: { width: "100%", fontSize: 24, fontWeight: 500, textAlign: "center", marginVertical: 10 },
-
   basicScroll: {
     flex: 1,
   },

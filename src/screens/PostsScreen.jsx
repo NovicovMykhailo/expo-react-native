@@ -5,7 +5,6 @@ import Card from "../components/Card";
 
 import { UserData, Auth } from "../store/test/StoreSampleTest.json";
 
-
 export default PostsScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
@@ -13,15 +12,7 @@ export default PostsScreen = () => {
         ListHeaderComponent={<UserTab data={Auth} />}
         ListHeaderComponentStyle={styles.hedder}
         data={UserData.posts}
-        renderItem={({ item }) => (
-          <Card
-            title={item.title}
-            image={item.image}
-            location={item.location}
-            comments={item.comments}
-            coords={item.coords}
-          />
-        )}
+        renderItem={({ item }) => <Card data={item} />}
         keyExtractor={item => item.id}
       />
     </SafeAreaView>

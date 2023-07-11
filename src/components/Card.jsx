@@ -2,7 +2,8 @@ import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-export default function Card({ image, title, location, comments, coords }) {
+export default function Card({data}) {
+  const { image, title, location, comments, coords } = data
 
 
   const navigation = useNavigation();
@@ -22,7 +23,6 @@ export default function Card({ image, title, location, comments, coords }) {
             size={24}
             style={[styles.messageIcon, comments.length > 0 && styles.activeIcon]}
           />
-
           <Text style={[styles.barLeftText]}>{comments.length}</Text>
         </TouchableOpacity>
 
@@ -95,8 +95,6 @@ const styles = StyleSheet.create({
   },
   messageIcon: {
     marginRight: 4,
-    
-
     transform: [{ rotateY: "-180deg" }],
     color: "#BDBDBD",
   },

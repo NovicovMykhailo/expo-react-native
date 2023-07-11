@@ -33,8 +33,6 @@ export default MapScreen = data => {
           mapType={mapType}
           provider="google"
           minZoomLevel={10}
-          // onMapReady={() => console.log("Map is ready")}
-          // onRegionChange={() => console.log("Region change")}
         >
           {location && <Marker title={markerTitles} coordinate={location} description={geoPlaceName} />}
         </MapView>
@@ -44,7 +42,6 @@ export default MapScreen = data => {
           <Feather name="map-pin" size={24} style={styles.pinIcon} />
           <Text style={styles.barRightText}>{markerTitles}</Text>
         </View>
-
         <TouchableOpacity onPress={() => setMapStyle(prev => (prev === "hybrid" ? "standard" : "hybrid"))}>
           <MaterialIcons name="satellite" size={26} style={styles.mapIcon} />
         </TouchableOpacity>

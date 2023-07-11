@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
   photo: {
     width: "100%",
     height: 240,
-
     borderRadius: 8,
   },
 
