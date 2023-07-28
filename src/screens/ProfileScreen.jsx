@@ -15,11 +15,12 @@ import UserPhoto from "../components/UserPhoto";
 import StoryCard from "../components/StoryCard";
 import { useNavigation } from "@react-navigation/native";
 
-import { UserData, Auth } from "../store/test/StoreSampleTest.json";
-const DATA = UserData.posts;
-const { name, avatar } = Auth;
+import { posts, Auth } from "../store/test/StoreSampleTest.json";
+const { name, user_photo, _id } = Auth;
 
 export default ProfileScreen = () => {
+    const { _id } = Auth;
+    const userPosts = posts.filter(posts => posts.owner === _id);
   return (
     <SafeAreaView>
       <StatusBar hidden={true} />
@@ -28,12 +29,12 @@ export default ProfileScreen = () => {
         <ScrollView>
           <View style={styles.view}>
             <View>
-              <UserPhoto photo={avatar} />
+              <UserPhoto photo={user_photo} />
               <ExitBtn />
               <Text style={styles.Name}>{name}</Text>
             </View>
-            {DATA.map(item => (
-              <StoryCard key={item.id} item={item} />
+            {userPosts.map(item => (
+              <StoryCard key={item.id} item={item} userId={_id} />
             ))}
           </View>
         </ScrollView>

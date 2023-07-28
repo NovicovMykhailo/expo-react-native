@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import Spinner from "../components/Spinner";
+import Loader from "../components/Loader";
 import * as MediaLibrary from "expo-media-library";
 
 export default CreatePublicationScreen = () => {
@@ -33,6 +34,7 @@ export default CreatePublicationScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
   const [type, _] = useState(Camera.Constants.Type.back);
+  const [isVisible, setIsVisible] = useState(false);
 
   const navigation = useNavigation();
   const isBtnDisabled = !photo;
@@ -54,6 +56,7 @@ export default CreatePublicationScreen = () => {
     return () => setPhoto(null);
   }, []);
 
+
   //Search for  geolication
   useEffect(() => {
     (async () => {
@@ -68,6 +71,7 @@ export default CreatePublicationScreen = () => {
         longitude: foundLocation.coords.longitude,
       };
       setGeoposition(coords);
+      setIsVisible(false);
     })();
   }, []);
 
@@ -89,7 +93,9 @@ export default CreatePublicationScreen = () => {
   }
   //submiting
   const HandleSubmit = async () => {
-    if (photo) {
+    if (!geoposition) setIsVisible(true);
+    else if (photo && geoposition) {
+      setIsVisible(false);
       Alert.alert(
         "FormData: ",
         `• Title:  ${title ? title : null};\n• Location:  ${location ? location : null};\n• Photo: ${
@@ -118,6 +124,11 @@ export default CreatePublicationScreen = () => {
 
   return (
     <View style={styles.container}>
+      {isVisible && (
+        <Loader setVisible={() => setIsVisible(false)}>
+          <Spinner />
+        </Loader>
+      )}
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContainer}>
           <View style={styles.inner}>
@@ -372,7 +383,7 @@ const styles = StyleSheet.create({
   photoIcon: { color: "#BDBDBD" },
   redoIcon: {
     color: "#BDBDBD",
-    transform : [{rotate: '-230deg'}]
+    transform: [{ rotate: "-230deg" }],
   },
   activeField: {
     borderColor: "#FF6C00",

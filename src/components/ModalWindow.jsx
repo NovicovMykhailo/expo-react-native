@@ -2,16 +2,15 @@ import React from "react";
 import { Alert, Modal, StyleSheet, Text, Pressable, View, ScrollView } from "react-native";
 
 const ModalWindow = ({ setVisible, children }) => {
+
+
   return (
     <View style={styles.centeredView}>
       <Modal
         animationType="slide"
         transparent={true}
         statusBarTranslucent={true}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setVisible();
-        }}
+       
       >
         <View style={styles.centeredView}>
           <ScrollView style={styles.modalView} contentContainerStyle={styles.contentContainer}>
@@ -47,7 +46,7 @@ const styles = StyleSheet.create({
     position: "relative",
     top: 0,
     left: 20,
-    marginVertical:20,
+    marginVertical: 20,
     borderRadius: 20,
     padding: 10,
     elevation: 2,

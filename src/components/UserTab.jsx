@@ -1,11 +1,11 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 
 export default function UserTab({ data }) {
-  const { name, email, avatar } = data;
+  const { name, email, user_photo } = data;
 
   return (
     <TouchableOpacity style={styles.container}>
-      <Image source={{ uri: `${avatar}` }} style={styles.photo} />
+      <Image source={{ uri: `${user_photo}` }} style={styles.photo} />
       <View style={styles.textContainer}>
         <Text style={styles.title}>{name}</Text>
         <Text style={styles.email}>{email}</Text>

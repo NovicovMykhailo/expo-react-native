@@ -2,10 +2,8 @@ import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-export default function Card({data}) {
-  const { image, title, location, comments, coords } = data
-
-
+export default function Card({ data }) {
+  const { image, title, location, comments, coords} = data
   const navigation = useNavigation();
 
 
@@ -98,5 +96,8 @@ const styles = StyleSheet.create({
     transform: [{ rotateY: "-180deg" }],
     color: "#BDBDBD",
   },
-  activeIcon: { color: "#FF6C00", tintColor: "#FF6C00" },
+  activeIcon: {
+    color: "#FF6C00",
+    // tintColor: "#FF6C00"
+  },
 });

@@ -1,20 +1,34 @@
 import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function StoryCard({ item }) {
-
-  const { image, title, location, comments, coords, likes, isLiked } = item;
-  const [wasLiked, setWasLiked] = useState(isLiked);
-  const [likesCount, setLikesCount] = useState(likes)
+export default function StoryCard({ item, userId }) {
+  const { image, title, location, comments, coords, likes } = item;
+  const [likesArray, setLikesArray] = useState([]);
+  const [wasLiked, setWasLiked] = useState(true);
   const navigation = useNavigation();
 
+
+  useEffect(() => {
+    setLikesArray(likes);
+  }, []);
+
+  useEffect(() => {
+    const liked = likesArray.find(like => like === userId);
+    setWasLiked(Boolean(liked));
+  }, [likes, likesArray]);
+
+
   function handleLikes() {
-     setWasLiked(prev => !prev);
-     setLikesCount(prev => (wasLiked === false ? prev + 1 : prev - 1));
-  
-}
+    const index = likesArray.indexOf(userId)
+
+    if (index === -1) { setLikesArray(prev => [...prev, userId]) }
+    else {
+      const updatedArray = likesArray.filter(like => like !== userId)
+      setLikesArray(updatedArray);
+    }
+  }
 
   return (
     <TouchableOpacity style={styles.container} disabled={true}>
@@ -35,13 +49,13 @@ export default function StoryCard({ item }) {
           </TouchableOpacity>
           <View style={styles.barLeft}>
             <TouchableOpacity style={styles.isRelative} onPress={() => handleLikes()}>
-              {wasLiked && likesCount > 0 && (
+              {wasLiked && likes.length > 0 && (
                 <Image source={require("./../assets/thumbsUpGg.png")} style={styles.thumbFill} />
               )}
-              <Feather name="thumbs-up" size={24} style={[styles.thumbUpIcon, likesCount > 0 && styles.activeIcon]} />
+              <Feather name="thumbs-up" size={24} style={[styles.thumbUpIcon, likes.length > 0 && styles.activeIcon]} />
             </TouchableOpacity>
 
-            <Text style={styles.barLeftText}>{likesCount}</Text>
+            <Text style={styles.barLeftText}>{likesArray.length}</Text>
           </View>
         </View>
 
