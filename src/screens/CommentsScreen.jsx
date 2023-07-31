@@ -2,26 +2,59 @@ import { View, StyleSheet, SafeAreaView, TextInput, Image, TouchableOpacity, Fla
 import { Feather } from "@expo/vector-icons";
 
 import CommentCard from "../components/CommentCard";
+import commentCreator from "../utils/commentCreator";
+import { useState, useEffect } from "react";
+
+//redux
+import { useDispatch, useSelector } from "react-redux";
+import { addComment } from "../redux/postsSlice";
+import { selectUser } from "../redux/auth/selectors";
+import { refreshUser } from "../redux/auth/slice";
 
 export default function CommentsScreen(data) {
+  const user = useSelector(selectUser);
+
+  const [comment, setComment] = useState(null);
+  const [commentsList, setCommentsList] = useState(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const dispatch = useDispatch();
   const { params } = data.route;
+
+  useEffect(() => {
+    if (!user.name) {
+      dispatch(refreshUser());
+    }
+    setCommentsList(params.comments);
+  }, []);
+
   const photo = params.image;
-  const comments = params.comments;
+  const postId = params.id;
+
+  function handleAddComment() {
+    const commentItem = commentCreator({ comment, ...user });
+    dispatch(addComment({ commentItem, postId }));
+    setCommentsList(prev => [...prev, commentItem]);
+  }
 
   return (
     <SafeAreaView style={styles.box}>
       <FlatList
         ListHeaderComponent={<Image source={{ uri: `${photo}` }} style={styles.photo} />}
         ListHeaderComponentStyle={styles.hedder}
-        data={comments}
-        renderItem={({ item }) => (
-          <CommentCard data={item} />
-        )}
+        data={commentsList}
+        renderItem={({ item }) => <CommentCard data={item} />}
         keyExtractor={item => item.id}
       />
       <View style={styles.footer}>
-        <TextInput placeholder="Коментувати..." style={styles.input} />
-        <TouchableOpacity style={styles.upBtn}>
+        <TextInput
+          placeholder="Коментувати..."
+          style={[styles.input, isFocused && styles.active]}
+          value={comment}
+          onChangeText={setComment}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+        />
+        <TouchableOpacity style={styles.upBtn} onPress={handleAddComment}>
           <Feather name="arrow-up" size={26} style={styles.icon} />
         </TouchableOpacity>
       </View>
@@ -71,5 +104,10 @@ const styles = StyleSheet.create({
   },
   icon: {
     color: "white",
+  },
+  active: {
+    backgroundColor: "#FFFFFF",
+    borderColor: "#FF6C00",
+    color: "#212121",
   },
 });

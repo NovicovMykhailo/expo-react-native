@@ -1,8 +1,13 @@
 import "react-native-gesture-handler";
 
+import { PersistGate } from "redux-persist/integration/react";
+import { Provider } from "react-redux";
+import { store, persistor } from "./src/redux/store";
+
 import { NavigationContainer } from "@react-navigation/native";
-import { useFonts } from "expo-font";
 import { Routes } from "./src/navigation/MainNavigation";
+
+import { useFonts } from "expo-font";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -11,10 +16,14 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
-  
+
   return (
-    <NavigationContainer>
-      <Routes />
-    </NavigationContainer>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <NavigationContainer>
+          <Routes />
+        </NavigationContainer>
+      </PersistGate>
+    </Provider>
   );
 }

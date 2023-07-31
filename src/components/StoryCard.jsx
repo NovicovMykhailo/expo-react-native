@@ -2,31 +2,33 @@ import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { addLike, removeLike } from "../redux/postsSlice";
+
+//redux
 
 export default function StoryCard({ item, userId }) {
-  const { image, title, location, comments, coords, likes } = item;
-  const [likesArray, setLikesArray] = useState([]);
+  const { image, title, location, comments, coords, likes, id } = item;
   const [wasLiked, setWasLiked] = useState(true);
+
   const navigation = useNavigation();
 
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setLikesArray(likes);
-  }, []);
-
-  useEffect(() => {
-    const liked = likesArray.find(like => like === userId);
+    const liked = likes.find(like => like === userId);
     setWasLiked(Boolean(liked));
-  }, [likes, likesArray]);
-
+  }, [likes, handleLikes]);
 
   function handleLikes() {
-    const index = likesArray.indexOf(userId)
+    const index = likes.indexOf(userId);
 
-    if (index === -1) { setLikesArray(prev => [...prev, userId]) }
-    else {
-      const updatedArray = likesArray.filter(like => like !== userId)
-      setLikesArray(updatedArray);
+    if (index === -1) {
+      dispatch(addLike({ id, userId }));
+      setWasLiked(prev => !prev);
+    } else {
+      dispatch(removeLike({ id, userId }));
+      setWasLiked(prev => !prev);
     }
   }
 
@@ -39,7 +41,7 @@ export default function StoryCard({ item, userId }) {
 
       <View style={styles.bottomContainer}>
         <View style={styles.leftSideIcons}>
-          <TouchableOpacity style={styles.barLeft} onPress={() => navigation.navigate("Comments", { comments, image })}>
+          <TouchableOpacity style={styles.barLeft} onPress={() => navigation.navigate("Comments", { comments, image, id })}>
             <Feather
               name="message-circle"
               size={24}
@@ -55,7 +57,7 @@ export default function StoryCard({ item, userId }) {
               <Feather name="thumbs-up" size={24} style={[styles.thumbUpIcon, likes.length > 0 && styles.activeIcon]} />
             </TouchableOpacity>
 
-            <Text style={styles.barLeftText}>{likesArray.length}</Text>
+            <Text style={styles.barLeftText}>{likes.length}</Text>
           </View>
         </View>
 

@@ -13,16 +13,38 @@ import { Feather } from "@expo/vector-icons";
 import image from "../assets/Photo_BG2x.png";
 import UserPhoto from "../components/UserPhoto";
 import StoryCard from "../components/StoryCard";
-import { useNavigation } from "@react-navigation/native";
 
-import { posts, Auth } from "../store/test/StoreSampleTest.json";
-const { name, user_photo, _id } = Auth;
+import { reverseData } from "../utils/formating";
+import { useNavigation } from "@react-navigation/native";
+//redux
+import { useSelector, useDispatch } from "react-redux";
+import { refreshUser } from "../redux/auth/slice";
+//selectors
+import { selectUser } from "../redux/auth/selectors";
+import { selectAllPosts } from "../redux/selectors";
+import { useEffect } from "react";
+
+// import { posts, Auth } from "../store/test/StoreSampleTest.json";
 
 export default ProfileScreen = () => {
-    const { _id } = Auth;
-    const userPosts = posts.filter(posts => posts.owner === _id);
+
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+
+  useEffect(() => {
+
+    ///dispatch on init thunk
+    (async () => {
+      await dispatch(refreshUser());
+    })();
+  }, []);
+
+
+  const { name, user_photo, _id } = user;
+
+  const userPosts = useSelector(selectAllPosts).filter(posts => posts.owner === _id);
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <StatusBar hidden={true} />
       <ImageBackground source={image} style={styles.image} />
       <View>
@@ -33,7 +55,8 @@ export default ProfileScreen = () => {
               <ExitBtn />
               <Text style={styles.Name}>{name}</Text>
             </View>
-            {userPosts.map(item => (
+
+            {reverseData(userPosts).map(item => (
               <StoryCard key={item.id} item={item} userId={_id} />
             ))}
           </View>
@@ -53,6 +76,8 @@ function ExitBtn() {
 }
 
 const styles = StyleSheet.create({
+  container: { flex: 1 },
+
   image: {
     resizeMode: "cover",
     height: 900,
@@ -72,6 +97,7 @@ const styles = StyleSheet.create({
   view: {
     marginTop: 163,
     minHeight: 450,
+
     backgroundColor: "#ffffff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,

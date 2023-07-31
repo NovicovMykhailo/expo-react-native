@@ -3,7 +3,8 @@ import { dateFormat } from "../utils/formating";
 import { Auth } from "./../store/test/StoreSampleTest.json";
 
 export default function CommentCard({ data }) {
-  const { name, user_photo, comment, date } = data;
+  const { name, user_photo, comment, createdAt } = data;
+
   let currentName = Auth.name;
 
   return (
@@ -15,7 +16,7 @@ export default function CommentCard({ data }) {
       <View style={[styles.commentContainer, name === currentName && styles.commentRight]}>
         <Text style={styles.comment}>{comment}</Text>
 
-        <Text style={[styles.date, name === currentName && styles.dateLeft]}>{dateFormat(date)}</Text>
+        <Text style={[styles.date, name === currentName && styles.dateLeft]}>{dateFormat(createdAt)}</Text>
       </View>
     </View>
   );

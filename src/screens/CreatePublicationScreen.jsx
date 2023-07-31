@@ -12,17 +12,23 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 import * as Location from "expo-location";
 
-import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
-import Spinner from "../components/Spinner";
-import Loader from "../components/Loader";
 import * as MediaLibrary from "expo-media-library";
 
+import Spinner from "../components/Spinner";
+import Loader from "../components/Loader";
+import postCreator from "../utils/postCreator";
+//redux
+import { useDispatch, useSelector } from "react-redux";
+import { addPost } from "../redux/postsSlice";
+import { selectUserId } from "../redux/auth/selectors";
+//
 export default CreatePublicationScreen = () => {
   const [photo, setPhoto] = useState(null);
   const [title, setTitle] = useState("");
@@ -37,8 +43,12 @@ export default CreatePublicationScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   const navigation = useNavigation();
+
   const isBtnDisabled = !photo;
   const isActive = Boolean(title || location || photo);
+
+  const dispatch = useDispatch();
+  const ownerId = useSelector(selectUserId);
 
   //camera init
   useEffect(() => {
@@ -55,7 +65,6 @@ export default CreatePublicationScreen = () => {
 
     return () => setPhoto(null);
   }, []);
-
 
   //Search for  geolication
   useEffect(() => {
@@ -96,18 +105,30 @@ export default CreatePublicationScreen = () => {
     if (!geoposition) setIsVisible(true);
     else if (photo && geoposition) {
       setIsVisible(false);
-      Alert.alert(
-        "FormData: ",
-        `• Title:  ${title ? title : null};\n• Location:  ${location ? location : null};\n• Photo: ${
-          photo ? `[object]` : "none"
-        };\n• Geoposition:\n    - Latitude: ${geoposition.latitude},\n    - Longitude: ${geoposition.longitude} `,
-        [
-          {
-            text: "OK",
-            onPress: () => navigation.navigate("Publications"),
-          },
-        ],
-      );
+
+      const post = {
+        title: title ? title : null,
+        location: location ? location : null,
+        image: photo ? photo.uri : null,
+        coords: geoposition,
+        owner: ownerId,
+      };
+
+      dispatch(addPost(postCreator(post)));
+      navigation.navigate("Publications");
+
+      // Alert.alert(
+      //   "FormData: ",
+      //   `• Title:  ${title ? title : null};\n• Location:  ${location ? location : null};\n• Photo: ${
+      //     photo ? `[object]` : "none"
+      //   };\n• Geoposition:\n    - Latitude: ${geoposition.latitude},\n    - Longitude: ${geoposition.longitude} `,
+      //   [
+      //     {
+      //       text: "OK",
+      //       onPress: () => navigation.navigate("Publications"),
+      //     },
+      //   ],
+      // );
       // console.log({ title, location, photo, geoposition });
       setPhoto(null);
       setTitle("");
@@ -126,7 +147,10 @@ export default CreatePublicationScreen = () => {
     <View style={styles.container}>
       {isVisible && (
         <Loader setVisible={() => setIsVisible(false)}>
-          <Spinner />
+          <>
+            <Spinner />
+            <Text style={styles.message}>Waiting for coords...</Text>
+          </>
         </Loader>
       )}
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -390,4 +414,9 @@ const styles = StyleSheet.create({
     color: "#212121",
   },
   activeIcon: { color: "#FF6C00" },
+  message: {
+    fontSize: 24,
+    color: "black",
+    marginBottom: "50%",
+  },
 });

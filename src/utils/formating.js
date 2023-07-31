@@ -11,3 +11,8 @@ function getMonthName(monthNumber) {
   date.setMonth(monthNumber - 1);
   return date.toLocaleString("en-US", { month: "long" });
 }
+
+export function reverseData(array) {
+  return [...array].reverse();
+}
+console.log(dateFormat("2045-03-19T05:25:44.679Z"))
