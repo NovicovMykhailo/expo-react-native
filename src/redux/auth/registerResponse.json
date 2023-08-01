@@ -1,0 +1,29 @@
+{
+  "_tokenResponse": {
+    "email": "mango2@mail.com",
+    "expiresIn": "3600",
+    "idToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjYyM2YzNmM4MTZlZTNkZWQ2YzU0NTkyZTM4ZGFlZjcyZjE1YTBmMTMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vbXlhbmRyb2lkYXBwLTIwMjMiLCJhdWQiOiJteWFuZHJvaWRhcHAtMjAyMyIsImF1dGhfdGltZSI6MTY5MDg5MzAzOCwidXNlcl9pZCI6InhiQkcyN0x3MnpUdUJGZ2VqNGtZZ1J5STVIQTMiLCJzdWIiOiJ4YkJHMjdMdzJ6VHVCRmdlajRrWWdSeUk1SEEzIiwiaWF0IjoxNjkwODkzMDM4LCJleHAiOjE2OTA4OTY2MzgsImVtYWlsIjoibWFuZ28yQG1haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbIm1hbmdvMkBtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.a7PZB29PygKCCub6-sL9tww12oCSLSEfe8vgXd553T-QIzjzOL4ukEeS_VI1wCBp1FP5nyAlqm6ASMmM7HtF4YpaXi6oufOExR4RA5An838ryXY18j2nC9bm4IxHHmrkd1CXGJVKZlYaZbstzdtnRYNd7HIIaqpkbcQW09S6098xTq8ZehiAD9WiuVYoJXADvPbdGWcIaLTz7iBl49xP4moxoUfsipm_JxMyEgBfTazQL2oZpztLNb3ee7Xtf89v9ggCIgAu-dHLn8o4ZShZG60PznyYOGde4SVuXtq7jfrFrZV5VfeaSqT9CidyJfl9xzUy-WKkrSmTjjGy8j3QeQ",
+    "kind": "identitytoolkit#SignupNewUserResponse",
+    "localId": "xbBG27Lw2zTuBFgej4kYgRyI5HA3",
+    "refreshToken": "AMf-vBwROheVGDDhgwk1vtMFKXdAzbquxgyVPu3XKvTZkivw0w6NdXeucq8kbWFK_O0VvdzHBSGnOQiPOKHt8ne-Y5fd0FPVowi23xkUXyEcmFkfgJ-VBPwllOu-B-zCVdtY5E7s-25ijrP7HSGv6hy6-Aw3T0EsMp_95p-aB28pK7Yp7EDWQbduv1YYcy4VepzDQDigEj8dTm4kN8i1E6m5IrJNATeHkQ"
+  },
+  "operationType": "signIn",
+  "providerId": null,
+  "user": {
+    "_redirectEventId": null,
+    "apiKey": "AIzaSyD-gS-Ic8BjB5bMRR1NutRM7AOtZ57q3VU",
+    "appName": "[DEFAULT]",
+    "createdAt": "1690893037963",
+    "displayName": null,
+    "email": "mango2@mail.com",
+    "emailVerified": false,
+    "isAnonymous": false,
+    "lastLoginAt": "1690893037963",
+    "phoneNumber": null,
+    "photoURL": null,
+    "providerData": ["Array"],
+    "stsTokenManager": ["Object"],
+    "tenantId": null,
+    "uid": "xbBG27Lw2zTuBFgej4kYgRyI5HA3"
+  }
+}

@@ -13,14 +13,22 @@ import {
   Alert,
 } from "react-native";
 import { useState, useEffect } from "react";
-import image from "../assets/Photo_BG2x.png";
+import { useDispatch, useSelector } from "react-redux";//redux
+import { register } from "../redux/auth/thunks";//redux
 import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
+import image from "../assets/Photo_BG2x.png";
 import PhotoPicker from "../components/PhotoPicker";
 import PlusStyledButton from "../components/PlusStyledButton";
 
+
+
+
+
 export default RegistrationScreen = () => {
   const navigation = useNavigation();
+
+  const dispatch = useDispatch();
 
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
@@ -52,13 +60,25 @@ export default RegistrationScreen = () => {
     setIsShownPasword(prev => !prev);
   };
 
-  const onLogin = () => {
-    Alert.alert("FormData", `Login: ${login}  Password: ${password} Email: ${email}`);
-    setLogin("");
-    setPassword("");
-    setEmail("");
+  const onRegister = async () => {
 
-    navigation.replace("HomeScreen");
+    try {  
+      const res = await dispatch(register({ email, password, photo, login }));
+
+      navigation.replace("HomeScreen");
+
+      // toast.success("Welcome");c
+    } catch (error) {
+      Alert.alert('message', error.message);
+      // toast.error("Error Login");
+    }
+
+    // Alert.alert("FormData", `Login: ${login}  Password: ${password} Email: ${email}`);
+    // setLogin("");
+    // setPassword("");
+    // setEmail("");
+
+    // navigation.replace("HomeScreen");
   };
 
   return (
@@ -116,7 +136,7 @@ export default RegistrationScreen = () => {
                 </TouchableOpacity>
               </View>
             </KeyboardAvoidingView>
-            <TouchableOpacity style={styles.btn} onPress={onLogin}>
+            <TouchableOpacity style={styles.btn} onPress={onRegister}>
               <Text style={styles.btnText}>Зареєстуватися</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.bottomTextContainer} onPress={() => navigation.navigate("Login")}>

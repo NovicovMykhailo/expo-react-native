@@ -3,7 +3,8 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import authReducer from './auth/slice'
+
+import authReducer from "./auth/slice";
 import postsReducer from "./postsSlice";
 
 const persistConfig = {
@@ -17,19 +18,21 @@ const postConfig = {
   storage: AsyncStorage,
 };
 
-export const store = configureStore({
+export const store = configureStore(
+  {
+    reducer: {
+      auth: persistReducer(persistConfig, authReducer),
+      posts: persistReducer(postConfig, postsReducer),
+    },
 
-  reducer: {
-    auth: persistReducer(persistConfig, authReducer),
-    posts: persistReducer(postConfig, postsReducer),
+    middleware: getDefaultMiddleware =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      }),
   },
-  middleware: getDefaultMiddleware =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }),
-});
+
+);
 
 export const persistor = persistStore(store);
-
