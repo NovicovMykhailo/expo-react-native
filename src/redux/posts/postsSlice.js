@@ -1,6 +1,6 @@
 // import * as API from "./operations";
 const { createSlice } = require("@reduxjs/toolkit");
-import data from "../store/test/StoreSampleTest.json";
+import data from "../../store/test/StoreSampleTest.json";
 
 // {
 //   "id": "1",

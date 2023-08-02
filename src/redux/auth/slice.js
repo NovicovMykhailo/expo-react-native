@@ -2,11 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 import { register, logIn, logOut, refreshUser } from "./thunks";
 import initialState from "./initialState";
 
+
+
+
 const handlePending = state => {
   state.isLoading = true;
   state.isRefreshing = true;
-  state.error = "";
+  state.error = null;
 };
+
+
 
 const handleRejected = (state, { error, payload }) => {
   state.isLoading = false;
@@ -17,40 +22,36 @@ const handleRejected = (state, { error, payload }) => {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  // reducers: {
-  //   refreshUser: (state, action) => {
-  //     state.user = {
-  //       token: "token",
-  //       _id: "e7b46283-070d-4545-be03-230225e9c400",
-  //       IsAuth: true,
-  //       name: "Natali Romanova",
-  //       email: "email@example.com",
-  //       user_photo: "https://i.ibb.co/Xzfkqyt/user-Photo.png",
-  //     };
-  //   },
-  // },
+  reducers: {},
   extraReducers: builder => {
     builder
-
-      .addCase(register.fulfilled, (state, action) => {
-        const { displayName, uid, photoURL, email } = action.payload.user;
-        const user = { email, id: uid, name: displayName, user_photo: photoURL };
-        state.user = user;
-        state.token = action.payload.token;
+      .addCase(register.fulfilled, (state, { payload }) => {
+        // const { user, _tokenResponse } = payload;
+        // const { displayName, uid, photoURL, email } = user;
+        // const userTarget = { name: displayName, _id: uid, user_photo: photoURL, email };
+        // state.user = userTarget;
+        state.token = payload._tokenResponse.refreshToken;
         state.isLoggedIn = true;
         state.error = null;
+        state.isLoading = false;
+        state.isRefreshing = false;
       })
-      .addCase(logIn.fulfilled, (state, action) => {
-        state.user = action.payload.user;
-        state.token = action.payload.token;
+      .addCase(logIn.fulfilled, (state, {payload}) => {
+        // const { user, _tokenResponse } = payload;
+        // const { displayName, uid, photoURL, email } = user;
+        // const userTarget = { name: displayName, _id: uid, user_photo: photoURL, email };
+        // state.user = userTarget;
+        state.token = payload._tokenResponse.refreshToken;
         state.isLoggedIn = true;
+        state.isRefreshing = false;
         state.error = null;
       })
       .addCase(logOut.fulfilled, state => {
-        state.user = { name: null, email: null };
+        // state.user = { name: null, email: null, _id: null, user_photo: null };
         state.token = null;
         state.isLoggedIn = false;
         state.error = null;
+        state.isLoading = false;
       })
       .addCase(refreshUser.fulfilled, (state, action) => {
         state.user = action.payload;

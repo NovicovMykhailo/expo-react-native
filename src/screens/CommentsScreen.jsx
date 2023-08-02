@@ -1,19 +1,14 @@
-import { View, StyleSheet, SafeAreaView, TextInput, Image, TouchableOpacity, FlatList } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { View, StyleSheet, SafeAreaView, TextInput, Image, TouchableOpacity, FlatList } from "react-native"; //native
+import { Feather } from "@expo/vector-icons";  //native
+import { useState, useEffect } from "react";  //react
 
-import CommentCard from "../components/CommentCard";
-import commentCreator from "../utils/commentCreator";
-import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux"; //redux
+import { addComment } from "../redux/posts/postsSlice"; //redux
 
-//redux
-import { useDispatch, useSelector } from "react-redux";
-import { addComment } from "../redux/postsSlice";
-import { selectUser } from "../redux/auth/selectors";
-import { refreshUser } from "../redux/auth/slice";
+import commentCreator from "../utils/commentCreator"; //utils
+import CommentCard from "../components/CommentCard"; //components
 
 export default function CommentsScreen(data) {
-  const user = useSelector(selectUser);
-
   const [comment, setComment] = useState(null);
   const [commentsList, setCommentsList] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -21,9 +16,6 @@ export default function CommentsScreen(data) {
   const { params } = data.route;
 
   useEffect(() => {
-    if (!user.name) {
-      dispatch(refreshUser());
-    }
     setCommentsList(params.comments);
   }, []);
 

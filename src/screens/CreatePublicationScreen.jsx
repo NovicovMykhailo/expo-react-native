@@ -26,7 +26,7 @@ import Loader from "../components/Loader";
 import postCreator from "../utils/postCreator";
 //redux
 import { useDispatch, useSelector } from "react-redux";
-import { addPost } from "../redux/postsSlice";
+import { addPost } from "../redux/posts/postsSlice";
 import { selectUserId } from "../redux/auth/selectors";
 //
 export default CreatePublicationScreen = () => {

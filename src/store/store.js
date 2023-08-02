@@ -4,10 +4,10 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-import authReducer from "./auth/slice";
-import postsReducer from "./postsSlice";
+import authReducer from "../redux/auth/slice";
+import postsReducer from "../redux/posts/postsSlice";
 
-const persistConfig = {
+const authConfig = {
   key: "token",
   storage: AsyncStorage,
   whitelist: ["token"],
@@ -21,15 +21,16 @@ const postConfig = {
 export const store = configureStore(
   {
     reducer: {
-      auth: persistReducer(persistConfig, authReducer),
+      auth: persistReducer(authConfig, authReducer),
       posts: persistReducer(postConfig, postsReducer),
     },
 
     middleware: getDefaultMiddleware =>
       getDefaultMiddleware({
-        serializableCheck: {
-          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-        },
+        // serializableCheck: {
+        //   ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        // },
+        serializableCheck: false,
       }),
   },
 

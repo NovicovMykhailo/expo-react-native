@@ -8,50 +8,60 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
-import image from "../assets/Photo_BG2x.png";
-import UserPhoto from "../components/UserPhoto";
-import StoryCard from "../components/StoryCard";
+import { useSelector, useDispatch } from "react-redux"; // redux
+import { selectAllPosts } from "../redux/posts/selectors"; //redux
+import { useEffect, useState } from "react"; //react
 
-import { reverseData } from "../utils/formating";
-import { useNavigation } from "@react-navigation/native";
-//redux
-import { useSelector, useDispatch } from "react-redux";
-import { refreshUser } from "../redux/auth/slice";
-//selectors
-import { selectUser } from "../redux/auth/selectors";
-import { selectAllPosts } from "../redux/selectors";
-import { useEffect } from "react";
+import UserPhoto from "../components/UserPhoto"; //Components
+import StoryCard from "../components/StoryCard"; //Components
+
+import { reverseData } from "../utils/formating"; //utils
+import getImageUrl from "../utils/getImageUrl";//utils
+import imageBg from "../assets/Photo_BG2x.png"; //bg image
+
+import { auth } from "../../config";
 
 // import { posts, Auth } from "../store/test/StoreSampleTest.json";
 
 export default ProfileScreen = () => {
+  const [userImage, setUserImage] = useState(null)
+  const user = auth.currentUser;
 
-  const dispatch = useDispatch();
-  const user = useSelector(selectUser);
-
+  const name = user.displayName;
+  const user_photo = user.photoURL;
+  if (user === null) {
+    const name = "";
+    const user_photo = null;
+  }
   useEffect(() => {
+    if (user_photo) {
+      (async function () {
+        try {
+          const url = await getImageUrl(user_photo);
+          setUserImage(url);
+        } catch (e) {
+          console.error(e);
+        }
+      })();
+    }
+  });
 
-    ///dispatch on init thunk
-    (async () => {
-      await dispatch(refreshUser());
-    })();
-  }, []);
+
+  const userPosts = useSelector(selectAllPosts).filter(posts => posts.owner === user.uid);
 
 
-  const { name, user_photo, _id } = user;
-
-  const userPosts = useSelector(selectAllPosts).filter(posts => posts.owner === _id);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar hidden={true} />
-      <ImageBackground source={image} style={styles.image} />
+      <ImageBackground source={imageBg} style={styles.image} />
       <View>
         <ScrollView>
           <View style={styles.view}>
             <View>
-              <UserPhoto photo={user_photo} />
+              <UserPhoto photo={{uri:`${userImage}`}} />
               <ExitBtn />
               <Text style={styles.Name}>{name}</Text>
             </View>

@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   updateProfile,
+  signOut
 } from "firebase/auth";
 import { auth, db } from "../../../config";
 import { createAsyncThunk } from "@reduxjs/toolkit";
@@ -15,17 +16,13 @@ import img2Blob from "../../utils/img2Blob";
 const storage = getStorage();
 
 /**
- використовуючи вже готове налаштування Firebase, ми додамо можливість входу за допомогою email.
-
-- createUserWithEmailAndPassword - метод приймає email та password у вигляді рядків і
-         повертає promise про успішну реєстрацію або відмову через помилку (має вбудований валідатор, який перевіряє на мінімальну довжину пароля).
 
 - onAuthStateChanged - метод вішає слухач на зміну стану аутентифікації, приймає коллбек,
           який першим аргументов містить об'єкт користувача або null за відсутності даних
 
-- signInWithEmailAndPassword - метод для входу у вже існуючий акаунт, повертає promise
 
-- auth().currentUser - за допомогою цього методу можна отримати та оновити профайл користувача
+
+а
  */
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -81,46 +78,56 @@ const updateUserProfile = async (update) => {
 //   axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 // };
 
+// await addDoc(collection(db, "users"), { // user to Firebase  DB // users
+//   email: email,
+//   name: login,
+//   id: res.user.uid,
+//   user_photo: storageRef._location.path,
+// });
+
 // const clearAuthHeader = () => {
 //   axios.defaults.headers.common.Authorization = "";
 // };
 
 export const register = createAsyncThunk("auth/register", async (credentials, thunkAPI) => {
   const { email, password, photo, login } = credentials;
-  const [blob, filename] = await img2Blob(photo);
 
   try {
-    const res = await createUserWithEmailAndPassword(auth, email, password);  // register new Firebase  User
-  
-    const storageRef = ref(storage, `userphoto/${res.user.uid}_${filename}`); //loading userPhoto to Firebase Storage
-    await uploadBytes(storageRef, blob);                                      //
-  
-    await addDoc(collection(db, "users"), { // user to Firebase  DB // users
-      email: email,
-      name: login,
-      id: res.user.uid,
-      user_photo: storageRef._location.path,
-    });
-
-    await updateProfile(auth.currentUser, { // update userPhoto and Name
+    // register new Firebase  User
+    const res = await createUserWithEmailAndPassword(auth, email, password);
+   // update currentUser Name
+    await updateProfile(auth.currentUser, {
       displayName: login,
-      photoURL: `${storageRef}`,
     });
+      //loading photo to Firebase Storage and updating current user userPhoto
+    if (photo) { //(if Photo exists)
+      const [blob, filename] = await img2Blob(photo);// photo to blob (util)
+      const storageRef = ref(storage, `userphoto/${res.user.uid}_${filename}`); //make starage url
 
-    // setAuthHeader(res.data.token);
+      await uploadBytes(storageRef, blob); //write file to storage
+      await updateProfile(auth.currentUser, {//update profile photo
+        photoURL: `${storageRef}`,
+      });
+    } else {//(if Photo not exists) save base avatar url from storage
+      const storageRef = ref(storage, `userphoto/base_avatar.jpg`);
 
-    return res; /// вернуть не весть response? а только юзер и токен
+      await updateProfile(auth.currentUser, {
+        photoURL: `${storageRef}`,
+      });
+    }
+    
+
+    return res;
   } catch (error) {
-    // return thunkAPI.rejectWithValue("Oops, a User with this username or email exists");
-    return thunkAPI.rejectWithValue(error.message);
+    return thunkAPI.rejectWithValue("Oops, a User with this username or email exists");
   }
 });
 
 export const logIn = createAsyncThunk("auth/login", async (credentials, thunkAPI) => {
+  const { email, password } = credentials;
   try {
-    const res = await signInWithEmailAndPassword(credentials);
-    // setAuthHeader(res.data.token);
-    return res.data;
+    const res = await signInWithEmailAndPassword(auth, email, password);
+    return res;
   } catch (error) {
     return thunkAPI.rejectWithValue("Ooops, You are not registered yet");
   }
@@ -135,13 +142,14 @@ export const logOut = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
 });
 
 export const refreshUser = createAsyncThunk("auth/refresh", async (_, thunkAPI) => {
-  const state = thunkAPI.getState();
-  const userInfo = state.auth.user;
-  try {
-    onAuthStateChanged(userInfo);
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.message);
-  }
+  const registeredUser = await onAuthStateChanged(auth, authState)
+  // const state = thunkAPI.getState();
+  // const userInfo = state.auth.user;
+  // try {
+  //   onAuthStateChanged(userInfo);
+  // } catch (error) {
+  //   return thunkAPI.rejectWithValue(error.message);
+  // }
 
   //   if (persistedToken === null) {
   //     return thunkAPI.rejectWithValue("Ooops, You are not registered yet");

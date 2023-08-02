@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { addLike, removeLike } from "../redux/postsSlice";
+import { addLike, removeLike } from "../redux/posts/postsSlice";
 
 //redux
 

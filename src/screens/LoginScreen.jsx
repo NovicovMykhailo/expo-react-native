@@ -12,22 +12,36 @@ import {
   Keyboard,
   Alert,
 } from "react-native";
-import { useState } from "react";
 import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
 
+import { useState, useEffect } from "react"; //react
+import { useDispatch, useSelector } from "react-redux"; //redux
+import { logIn } from "../redux/auth/thunks"; //redux
+import { selectError, selectIsLoading } from "../redux/auth/selectors"; //redux
 
+import validateEmail from "../utils/validateEmail"; //util
+import Loader from "../components/Loader";
+import Spinner from "../components/Spinner";
 
-import image from "../assets/Photo_BG2x.png";
+import image from "../assets/Photo_BG2x.png"; //bgImage
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+  const error = useSelector(selectError);
+  const isLoading = useSelector(selectIsLoading);
+  const navigation = useNavigation();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isShownPasword, setIsShownPasword] = useState(true);
   const [isFocused, setIsFocused] = useState(null);
 
-  const navigation = useNavigation();
+  const isBtnDisabled = Boolean(!email || !password);
 
+  useEffect(() => {
+    if (error) Alert.alert("message", error);
+  }, [error]);
 
   const showPassword = () => {
     setIsShownPasword(prev => !prev);
@@ -40,12 +54,17 @@ const LoginScreen = () => {
   if (!fontsLoaded) {
     return null;
   }
-  const onLogin = () => {
-    Alert.alert("FormData: ", `pass:  ${password}  email:  ${email}`);
-    setEmail("");
-    setPassword("");
-    navigation.replace("HomeScreen");
-    
+
+  const onLogin = async () => {
+    if (validateEmail(email)) {
+      try {
+        await dispatch(logIn({ email, password })).then(() => {
+          navigation.replace("HomeScreen");
+        });
+      } catch (error) {
+        Alert.alert("message", error.message);
+      }
+    }
   };
 
   return (
@@ -54,13 +73,13 @@ const LoginScreen = () => {
       <View style={styles.box}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.view}>
-            <KeyboardAvoidingView style={styles.keyView} behavior={Platform.OS == "ios" ? "padding" : "height"}>
+            <KeyboardAvoidingView style={styles.keyView} behavior={Platform.OS === "ios" ? "padding" : "height"}>
               <Text style={styles.title}>Увійти</Text>
               <TextInput
                 onFocus={() => setIsFocused("email")}
                 onBlur={() => setIsFocused(null)}
                 placeholder="Адреса електронної пошти"
-                style={[styles.input, isFocused === 'email' && styles.active]}
+                style={[styles.input, isFocused === "email" && styles.active]}
                 onChangeText={setEmail}
                 value={email}
                 inputMode="email"
@@ -71,7 +90,7 @@ const LoginScreen = () => {
                   onFocus={() => setIsFocused("password")}
                   onBlur={() => setIsFocused(null)}
                   placeholder="Пароль"
-                  style={[styles.input, isFocused === 'password' && styles.active]}
+                  style={[styles.input, isFocused === "password" && styles.active]}
                   onChangeText={setPassword}
                   value={password}
                   textContentType="password"
@@ -83,8 +102,13 @@ const LoginScreen = () => {
                 </TouchableOpacity>
               </View>
             </KeyboardAvoidingView>
-            <TouchableOpacity style={styles.btn} onPress={onLogin}>
+            <TouchableOpacity
+              style={styles.btn}
+              disabled={isBtnDisabled}
+              onPress={onLogin}
+            >
               <Text style={styles.btnText}>Увійти</Text>
+              {/* {isLoading && <Loader><Spinner/></Loader>} */}
             </TouchableOpacity>
             <TouchableOpacity style={styles.bottomTextContainer}>
               <Text style={styles.bottomText} onPress={() => navigation.replace("Registration")}>
@@ -99,8 +123,6 @@ const LoginScreen = () => {
 };
 
 export default LoginScreen;
-
-
 
 const styles = StyleSheet.create({
   image: {
@@ -198,5 +220,5 @@ const styles = StyleSheet.create({
   },
   underlinedText: {
     textDecorationLine: "underline",
-  },
+  }
 });
