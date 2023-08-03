@@ -11,31 +11,31 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   Alert,
-} from "react-native";
-import { useFonts } from "expo-font";
-import { useNavigation } from "@react-navigation/native";
+} from "react-native"; //native
+import { useFonts } from "expo-font"; //fonts
+import { useFocusEffect, useNavigation } from "@react-navigation/native"; //navigator
 
-import { useState, useEffect } from "react";//react
+import { useState, useEffect, useCallback } from "react"; //react
 import { useDispatch, useSelector } from "react-redux"; //redux
 import { register } from "../redux/auth/thunks"; //redux
 import { selectError, selectIsLoading } from "../redux/auth/selectors"; //redux
 
-import PhotoPicker from "../components/PhotoPicker";//Components
-import PlusStyledButton from "../components/PlusStyledButton";//Components
-import Loader from "../components/Loader";//Components
-import Spinner from "../components/Spinner";//Components
+import PhotoPicker from "../components/PhotoPicker"; //Components
+import PlusStyledButton from "../components/PlusStyledButton"; //Components
+import Loader from "../components/Loader"; //Components
+import Spinner from "../components/Spinner"; //Components
 
-import validateEmail from "../utils/validateEmail";//util
-import image from "../assets/Photo_BG2x.png";// bg Image
-
+import validateEmail from "../utils/validateEmail"; //util
+import validatePassLength from "../utils/validatePassLength"; //util
+import image from "../assets/Photo_BG2x.png"; // bg Image
 
 export default RegistrationScreen = () => {
+  const [fontsLoaded] = useFonts({ Roboto: require("../assets/fonts/Roboto-Regular.ttf") });
+
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const error = useSelector(selectError);
-  const isLoading = useSelector(selectIsLoading)
-
-  ///         !!!!! сделать loader на кнопку при пендинг
+  const isLoading = useSelector(selectIsLoading);
 
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
@@ -49,23 +49,27 @@ export default RegistrationScreen = () => {
   const isBtnDisabled = Boolean(!email || !password || !login);
 
   useEffect(() => {
+    // isActiveButton
     if (photo) setIsBtnActive(true);
     else setIsBtnActive(false);
   }, [photo]);
 
   useEffect(() => {
+    // handle Errors
     if (error) Alert.alert("message", error);
   }, [error]);
 
-  const [fontsLoaded] = useFonts({
-    Roboto: require("../assets/fonts/Roboto-Regular.ttf"),
-  });
+  useFocusEffect(
+    // reseting form on change Screen
+    useCallback(() => {
+      return () => {
+        setEmail(""), setLogin(""), setPassword("");
+      };
+    }, []),
+  );
 
-  if (!fontsLoaded) {
-    return null;
-  }
-
-  const showModal = () => {
+ 
+  const showModal = () => { 
     setModalVisible(prev => !prev);
   };
 
@@ -73,8 +77,12 @@ export default RegistrationScreen = () => {
     setIsShownPasword(prev => !prev);
   };
 
-  const onRegister = async () => {
-    if (validateEmail(email)) {
+  if (!fontsLoaded) {
+    return null;
+  }
+
+  const onRegister = async () => { // dispatching Form
+    if (validateEmail(email) && validatePassLength(password)) {
       try {
         await dispatch(register({ email, password, photo, login }));
       } catch (error) {
@@ -83,6 +91,7 @@ export default RegistrationScreen = () => {
     }
   };
 
+ 
   return (
     <SafeAreaView style={styles.base}>
       <ImageBackground source={image} style={styles.image} />
@@ -138,13 +147,13 @@ export default RegistrationScreen = () => {
                 </TouchableOpacity>
               </View>
             </KeyboardAvoidingView>
-            <TouchableOpacity
-              style={styles.btn}
-              disabled={isBtnDisabled}
-              onPress={onRegister}
-            >
+            <TouchableOpacity style={styles.btn} disabled={isBtnDisabled} onPress={onRegister}>
               <Text style={styles.btnText}>Зареєстуватися</Text>
-              {isLoading && <Loader><Spinner/></Loader>}
+              {isLoading && (
+                <Loader>
+                  <Spinner />
+                </Loader>
+              )}
             </TouchableOpacity>
             <TouchableOpacity style={styles.bottomTextContainer} onPress={() => navigation.navigate("Login")}>
               <Text style={styles.bottomText}>Вже є акаунт? Увійти</Text>
@@ -282,5 +291,5 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-  }
+  },
 });

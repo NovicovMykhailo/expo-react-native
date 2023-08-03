@@ -11,18 +11,19 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   Alert,
-} from "react-native";
-import { useFonts } from "expo-font";
-import { useNavigation } from "@react-navigation/native";
+} from "react-native"; //native
+import { useFonts } from "expo-font"; //fonts
+import { useFocusEffect, useNavigation } from "@react-navigation/native"; //navigator
 
-import { useState, useEffect } from "react"; //react
+import { useState, useEffect, useCallback } from "react"; //react
 import { useDispatch, useSelector } from "react-redux"; //redux
 import { logIn } from "../redux/auth/thunks"; //redux
 import { selectError, selectIsLoading } from "../redux/auth/selectors"; //redux
 
 import validateEmail from "../utils/validateEmail"; //util
-import Loader from "../components/Loader";
-import Spinner from "../components/Spinner";
+import validatePassLength from "../utils/validatePassLength"; //util
+import Loader from "../components/Loader"; //components
+import Spinner from "../components/Spinner"; //components
 
 import image from "../assets/Photo_BG2x.png"; //bgImage
 
@@ -39,9 +40,18 @@ const LoginScreen = () => {
 
   const isBtnDisabled = Boolean(!email || !password);
 
-  useEffect(() => {
+  useEffect(() => { // handle Errors
     if (error) Alert.alert("message", error);
   }, [error]);
+
+  useFocusEffect( // reseting form on change Screen
+    useCallback(() => {
+      return () => {
+        setEmail(""), 
+        setPassword("");
+      };
+    }, []),
+  );
 
   const showPassword = () => {
     setIsShownPasword(prev => !prev);
@@ -56,9 +66,9 @@ const LoginScreen = () => {
   }
 
   const onLogin = async () => {
-    if (validateEmail(email)) {
+    if (validateEmail(email) && validatePassLength(password)) {
       try {
-        await dispatch(logIn({ email, password }))
+        await dispatch(logIn({ email, password }));
       } catch (error) {
         Alert.alert("message", error.message);
       }
@@ -100,13 +110,13 @@ const LoginScreen = () => {
                 </TouchableOpacity>
               </View>
             </KeyboardAvoidingView>
-            <TouchableOpacity
-              style={styles.btn}
-              disabled={isBtnDisabled}
-              onPress={onLogin}
-            >
+            <TouchableOpacity style={styles.btn} disabled={isBtnDisabled} onPress={onLogin}>
               <Text style={styles.btnText}>Увійти</Text>
-              {/* {isLoading && <Loader><Spinner/></Loader>} */}
+              {isLoading && (
+                <Loader>
+                  <Spinner />
+                </Loader>
+              )}
             </TouchableOpacity>
             <TouchableOpacity style={styles.bottomTextContainer}>
               <Text style={styles.bottomText} onPress={() => navigation.replace("Registration")}>
@@ -218,5 +228,5 @@ const styles = StyleSheet.create({
   },
   underlinedText: {
     textDecorationLine: "underline",
-  }
+  },
 });

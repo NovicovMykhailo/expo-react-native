@@ -8,7 +8,7 @@ export default function CommentCard({ data }) {
 
 const user = auth.currentUser;
 const userUid = user.uid;
-console.log(data)
+
 
 
 

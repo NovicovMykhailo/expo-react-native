@@ -6,6 +6,6 @@ export const selectUserPhoto = state => state.auth.user.user_photo;
 
 export const selectCurrentToken = state => state.auth.token;
 
-export const selectIsLoading = state => state.auth.isLoading;
-
 export const selectError = state => state.auth.error;
+
+export const selectIsLoading = state => state.auth.isLoading;
