@@ -1,36 +1,30 @@
-import { View, StyleSheet, ImageBackground } from "react-native";//native
+import { View, StyleSheet, ImageBackground } from "react-native"; //native
 
-import { useState, useEffect } from "react";//react
-import { auth, storage } from "../../config";//firebase
-import { ref, uploadBytes } from "firebase/storage";//firebase
-import { updateProfile } from "firebase/auth";//firebase
-import img2Blob from "../utils/img2Blob";//utils
-import getImageUrl from "../utils/getImageUrl";//utils
+import { useState, useEffect } from "react"; //react
+import { auth, storage } from "../../config"; //firebase
+import { ref, uploadBytes } from "firebase/storage"; //firebase
+import { updateProfile } from "firebase/auth"; //firebase
+import img2Blob from "../utils/img2Blob"; //utils
+import getImageUrl from "../utils/getImageUrl"; //utils
 
-import PlusStyledButton from "./PlusStyledButton";//Components
-import PhotoPicker from "./PhotoPicker";//Components
+import PlusStyledButton from "./PlusStyledButton"; //Components
+import PhotoPicker from "./PhotoPicker"; //Components
+import Spinner from "../components/Spinner";
 
-
-// avatarSkeleton
-
-export default function UserPhoto({ photo }) {
+export default function UserPhoto() {
   const [isBtnActive, setIsBtnActive] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState();
 
   const user = auth.currentUser;
 
-  if (user === null) {
-    const user_photo = null;
-  }
-  const user_photo = user.photoURL;
-
   useEffect(() => {
-    if (user_photo) {
+    if (user.photoURL) {
       (async function () {
         try {
-          const url = await getImageUrl(user_photo);
+          const url = await getImageUrl(user.photoURL);
           setImage(url);
         } catch (e) {
           console.error(e);
@@ -39,7 +33,7 @@ export default function UserPhoto({ photo }) {
     } else {
       setImage(null);
     }
-  },[image]);
+  }, []);
 
   useEffect(() => {
     if (image) setIsBtnActive(true);
@@ -51,20 +45,21 @@ export default function UserPhoto({ photo }) {
   };
 
   const updatePhoto = async uri => {
+    setIsUpdating(true);
     const [blob, filename] = await img2Blob(uri); // photo to blob (util)
     const storageRef = ref(storage, `userphoto/${user.uid}_${filename}`); //make starage url
-
     await uploadBytes(storageRef, blob); //write file to storage
-    await updateProfile(auth.currentUser, {//update profile photo
-      photoURL: `${storageRef}`,
-    });
+    await updateProfile(auth.currentUser, { photoURL: `${storageRef}` }); //update profile photo
+    const url = await getImageUrl(storageRef);
+    setImage(url);
+    setIsUpdating(false);
   };
 
   return (
     <>
       {modalVisible && <PhotoPicker showModal={showModal} setPhoto={updatePhoto} />}
       <View style={styles.userPhoto}>
-        <ImageBackground source={{ uri: `${image}` }} style={styles.photo} />
+        {isUpdating ? <Spinner /> : <ImageBackground source={{ uri: `${image}` }} style={styles.photo} />}
         <PlusStyledButton isActive={isBtnActive} onPress={() => (image ? setImage(null) : showModal())} />
       </View>
     </>

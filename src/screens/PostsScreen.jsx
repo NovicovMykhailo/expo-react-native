@@ -1,28 +1,32 @@
-import { SafeAreaView, StyleSheet, FlatList } from "react-native";
+import { SafeAreaView, StyleSheet, FlatList } from "react-native";//react-native
+import { useCallback } from "react";//react
+import { useFocusEffect} from '@react-navigation/native'//react-navigation
 
-import UserTab from "../components/UserTab";
-import Card from "../components/Card";
+import UserTab from "../components/UserTab";// Components
+import Card from "../components/Card";// Components
 
-import { reverseData } from "../utils/formating";
+import { reverseData } from "../utils/formating";//utils
 
 import { useSelector, useDispatch } from "react-redux"; //redux
-import { getAllPosts } from "../redux/posts/postsSlice";
-import { selectAllPosts } from "../redux/posts/selectors";
-import { useEffect } from "react";
+import { getAllPosts } from "../redux/posts/postsSlice";//redux
+import { selectAllPosts } from "../redux/posts/selectors";//redux
 
-import { Auth } from "../store/test/StoreSampleTest.json";
+
+import { Auth } from "../store/test/StoreSampleTest.json";//demo data
 
 export default PostsScreen = () => {
   const dispatch = useDispatch();
+
   const data = useSelector(selectAllPosts);
 
 
-
-  useEffect(() => {
+  useFocusEffect(useCallback(() => {
     if (data.length === 0) {
       dispatch(getAllPosts());
     }
-  }, []);
+  }));
+
+
 
 
   return (

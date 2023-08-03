@@ -50,7 +50,8 @@ export default ProfileScreen = () => {
   });
 
 
-  const userPosts = useSelector(selectAllPosts).filter(posts => posts.owner === user.uid);
+  const userPosts = useSelector(selectAllPosts).filter(posts => posts.user_id === user.uid);
+  // const userPosts = useSelector(selectAllPosts)
 
 
   return (
@@ -67,7 +68,7 @@ export default ProfileScreen = () => {
             </View>
 
             {reverseData(userPosts).map(item => (
-              <StoryCard key={item.id} item={item} userId={_id} />
+              <StoryCard key={item.id} item={item} userId={user.uid} />
             ))}
           </View>
         </ScrollView>

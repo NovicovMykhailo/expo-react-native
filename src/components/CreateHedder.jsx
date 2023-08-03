@@ -28,7 +28,7 @@ export function PublicationsHedder({ navigation, route, options }) {
         size={24}
         color="#BDBDBD"
         onPress={() => {
-          dispatch(logOut()), navigation.replace("Login");
+          dispatch(logOut());
         }}
         style={styles.exitBtn}
       />

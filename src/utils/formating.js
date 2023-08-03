@@ -15,4 +15,3 @@ function getMonthName(monthNumber) {
 export function reverseData(array) {
   return [...array].reverse();
 }
-console.log(dateFormat("2045-03-19T05:25:44.679Z"))

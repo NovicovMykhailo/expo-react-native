@@ -1,12 +1,14 @@
 import { View, StyleSheet, SafeAreaView, TextInput, Image, TouchableOpacity, FlatList } from "react-native"; //native
-import { Feather } from "@expo/vector-icons";  //native
-import { useState, useEffect } from "react";  //react
+import { Feather } from "@expo/vector-icons"; //native
+import { useState, useEffect } from "react"; //react
 
-import { useDispatch, useSelector } from "react-redux"; //redux
+import { useDispatch } from "react-redux"; //redux
 import { addComment } from "../redux/posts/postsSlice"; //redux
+
 
 import commentCreator from "../utils/commentCreator"; //utils
 import CommentCard from "../components/CommentCard"; //components
+import { auth } from "../../config";
 
 export default function CommentsScreen(data) {
   const [comment, setComment] = useState(null);
@@ -14,13 +16,15 @@ export default function CommentsScreen(data) {
   const [isFocused, setIsFocused] = useState(false);
   const dispatch = useDispatch();
   const { params } = data.route;
+  const photo = params.image;
+  const postId = params.id;
+
+  const user = auth.currentUser;
 
   useEffect(() => {
     setCommentsList(params.comments);
   }, []);
 
-  const photo = params.image;
-  const postId = params.id;
 
   function handleAddComment() {
     const commentItem = commentCreator({ comment, ...user });

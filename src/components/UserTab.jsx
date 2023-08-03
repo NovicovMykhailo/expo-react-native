@@ -1,39 +1,40 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
-import { useState, useEffect } from "react";
-import getImageUrl from "../utils/getImageUrl";
-import {auth} from "../../config"
+import { useCallback, useState } from "react"; //react
+import { useFocusEffect } from "@react-navigation/native"; //react-navigation
 
+import getImageUrl from "../utils/getImageUrl";
+import { auth } from "../../config";
 
 export default function UserTab() {
   const [image, setImage] = useState();
+  const user = auth.currentUser;
+  if (user === null) {
+    const name = "";
+    const email = "";
 
-  const user = auth.currentUser
-
-  if(user === null){
-    const name = ''
-    const email = ''
-    const user_photo = null
   }
 
-  const name = user.displayName
-  const email = user.email
-  const user_photo = user.photoURL
 
-  
-  useEffect(() => {
-    if (user_photo) {
-      (async function () {
-        try {
-          const url = await getImageUrl(user_photo);
-          setImage(url);
-        } catch (e) {
-          console.error(e);
-        }
-      })();
-    }
-  },[user_photo]);
+  const name = user.displayName;
+  const email = user.email;
 
 
+
+  useFocusEffect(
+    useCallback(() => {
+
+      if (user.photoURL) {
+        (async function () {
+          try {
+            const url = await getImageUrl(user.photoURL);
+            setImage(url);
+          } catch (e) {
+            console.error(e);
+          }
+        })();
+      }
+    }),
+  );
 
   return (
     <TouchableOpacity style={styles.container}>

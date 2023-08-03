@@ -1,22 +1,27 @@
 import { View, Text, Image, StyleSheet } from "react-native";
 import { dateFormat } from "../utils/formating";
-import { Auth } from "./../store/test/StoreSampleTest.json";
+// import { Auth } from "./../store/test/StoreSampleTest.json";
+import { auth } from "../../config";
 
 export default function CommentCard({ data }) {
-  const { name, user_photo, comment, createdAt } = data;
+  const { user_id, photoURL, comment, createdAt } = data;
 
-  let currentName = Auth.name;
+const user = auth.currentUser;
+const userUid = user.uid;
+console.log(data)
+
+
 
   return (
-    <View style={[styles.container, name === currentName && styles.containerLeft]}>
+    <View style={[styles.container, user_id === userUid && styles.containerLeft]}>
       <View>
-        <Image source={{ uri: `${user_photo}` }} style={styles.photo} />
+        <Image source={{ uri: `${photoURL}` }} style={styles.photo} />
       </View>
 
-      <View style={[styles.commentContainer, name === currentName && styles.commentRight]}>
+      <View style={[styles.commentContainer, user_id === userUid && styles.commentRight]}>
         <Text style={styles.comment}>{comment}</Text>
 
-        <Text style={[styles.date, name === currentName && styles.dateLeft]}>{dateFormat(createdAt)}</Text>
+        <Text style={[styles.date, user_id === userUid && styles.dateLeft]}>{dateFormat(createdAt)}</Text>
       </View>
     </View>
   );

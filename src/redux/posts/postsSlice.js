@@ -41,11 +41,12 @@ export const postsSlice = createSlice({
   initialState,
   reducers: {
     addPost(state, { payload }) {
-      // state.posts = []
+      state.posts = []
       state.posts.push(payload);
     },
     getAllPosts(state, action) {
       state.posts = [...data.posts];
+      // state.posts = []
     },
     addLike(state, { payload }) {
       const foundPost = state.posts.find(post => post.id === payload.id);
@@ -58,6 +59,8 @@ export const postsSlice = createSlice({
       foundPost.likes = updatedArray;
     },
     addComment(state, { payload }) {
+      // state.posts = []
+
       const { postId, commentItem } = payload;
       const foundPost = state.posts.filter(post => post.id === postId);
       foundPost[0].comments.push(commentItem);

@@ -1,12 +1,14 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import CreatePublicationScreen from "../screens/CreatePublicationScreen";
-import PostsScreen from "../screens/PostsScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"; //navigator
+import CreatePublicationScreen from "../screens/CreatePublicationScreen"; //screens
+import PostsScreen from "../screens/PostsScreen"; //screens
+import ProfileScreen from "../screens/ProfileScreen"; //screens
 
-import { CreateHedder, PublicationsHedder } from "../components/CreateHedder";
+import { CreateHedder, PublicationsHedder } from "../components/CreateHedder";//components
 
-import { Feather, MaterialIcons } from "@expo/vector-icons";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native"; //react-native
+import { Feather, MaterialIcons } from "@expo/vector-icons";  //icons
+
+
 
 const Tabs = createBottomTabNavigator();
 
