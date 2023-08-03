@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux"; //redux
 import { auth } from "../../config"; //firebase
 
 

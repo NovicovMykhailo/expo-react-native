@@ -7,14 +7,15 @@ import MapScreen from "../screens/MapScreen"; //screens
 import HomeScreenRoutes from "../navigation/HomeNavigation"; // stacks navigation
 
 import { CreateHedder } from "../components/CreateHedder"; // hedder Creator (util)
-import { useSelector } from "react-redux"; //redux
+import { useSelector } from "react-redux";  //redux
+import { selectCurrentToken } from "../redux/auth/selectors"; //redux
 
 // =========  Main Navigation
 
 const MainStack = createStackNavigator();
 
 const getIsSignedIn = () => {   //check for token
-  const token = useSelector(state => state.auth.token);
+  const token = useSelector(selectCurrentToken);
   return Boolean(token);
 };
 

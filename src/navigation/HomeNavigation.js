@@ -2,6 +2,7 @@ import { View, StyleSheet } from "react-native"; //react-native
 import { useCallback } from "react"; //react
 import { useSelector, useDispatch } from "react-redux"; //redux
 import { logOut } from "../redux/auth/thunks"; //redux
+import { selectCurrentToken } from "../redux/auth/selectors"; //redux
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"; //navigator
 import { useFocusEffect } from "@react-navigation/native"; // navigator
@@ -20,7 +21,7 @@ const Tabs = createBottomTabNavigator();
 let isAuth;
 const HomeScreenRoutes = () => {
   const dispatch = useDispatch();
-  const currentToken = useSelector(state => state.auth.token);
+  const currentToken = useSelector(selectCurrentToken);
   useFocusEffect(
     useCallback(() => {
       isAuth = isStillAuthCheck(currentToken);
