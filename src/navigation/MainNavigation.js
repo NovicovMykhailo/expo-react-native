@@ -37,8 +37,8 @@ export const Routes = () => {
         </>
       ) : (
         <>
-          <MainStack.Screen name="Registration" component={RegistrationScreen} />
           <MainStack.Screen name="Login" component={LoginScreen} />
+          <MainStack.Screen name="Registration" component={RegistrationScreen} />
         </>
       )}
     </MainStack.Navigator>

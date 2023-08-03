@@ -12,7 +12,8 @@ import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
 import { useSelector, useDispatch } from "react-redux"; // redux
-import { selectAllPosts } from "../redux/posts/selectors"; //redux
+import { selectAllPosts } from "../redux/posts/selectors"; //redux action
+import { logOut } from "../redux/auth/thunks";// redux action
 import { useEffect, useState } from "react"; //react
 
 import UserPhoto from "../components/UserPhoto"; //Components
@@ -28,6 +29,7 @@ import { auth } from "../../config";
 
 export default ProfileScreen = () => {
   const [userImage, setUserImage] = useState(null)
+
   const user = auth.currentUser;
 
   const name = user.displayName;
@@ -79,9 +81,10 @@ export default ProfileScreen = () => {
 
 function ExitBtn() {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   return (
     <TouchableOpacity>
-      <Feather name="log-out" size={24} style={styles.exitBtn} onPress={() => navigation.navigate("Login")} />
+      <Feather name="log-out" size={24} style={styles.exitBtn} onPress={() =>  dispatch(logOut())} />
     </TouchableOpacity>
   );
 }
