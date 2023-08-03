@@ -68,8 +68,7 @@ export default RegistrationScreen = () => {
     }, []),
   );
 
- 
-  const showModal = () => { 
+   const showModal = () => { 
     setModalVisible(prev => !prev);
   };
 
@@ -91,8 +90,7 @@ export default RegistrationScreen = () => {
     }
   };
 
- 
-  return (
+  return ( 
     <SafeAreaView style={styles.base}>
       <ImageBackground source={image} style={styles.image} />
       {modalVisible && <PhotoPicker showModal={showModal} setPhoto={setPhoto} />}

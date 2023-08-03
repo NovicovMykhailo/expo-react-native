@@ -22,12 +22,15 @@ import { selectError, selectIsLoading } from "../redux/auth/selectors"; //redux
 
 import validateEmail from "../utils/validateEmail"; //util
 import validatePassLength from "../utils/validatePassLength"; //util
+
 import Loader from "../components/Loader"; //components
 import Spinner from "../components/Spinner"; //components
 
 import image from "../assets/Photo_BG2x.png"; //bgImage
 
 const LoginScreen = () => {
+  const [fontsLoaded] = useFonts({ Roboto: require("../assets/fonts/Roboto-Regular.ttf") });
+
   const dispatch = useDispatch();
   const error = useSelector(selectError);
   const isLoading = useSelector(selectIsLoading);
@@ -40,15 +43,16 @@ const LoginScreen = () => {
 
   const isBtnDisabled = Boolean(!email || !password);
 
-  useEffect(() => { // handle Errors
+  useEffect(() => {
+    // handle Errors
     if (error) Alert.alert("message", error);
   }, [error]);
 
-  useFocusEffect( // reseting form on change Screen
+  useFocusEffect(
+    // reseting form on change Screen
     useCallback(() => {
       return () => {
-        setEmail(""), 
-        setPassword("");
+        setEmail(""), setPassword("");
       };
     }, []),
   );
@@ -57,15 +61,12 @@ const LoginScreen = () => {
     setIsShownPasword(prev => !prev);
   };
 
-  const [fontsLoaded] = useFonts({
-    Roboto: require("../assets/fonts/Roboto-Regular.ttf"),
-  });
-
   if (!fontsLoaded) {
     return null;
   }
 
   const onLogin = async () => {
+    // dispatching form data
     if (validateEmail(email) && validatePassLength(password)) {
       try {
         await dispatch(logIn({ email, password }));
