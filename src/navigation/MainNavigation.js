@@ -6,17 +6,15 @@ import CommentsScreen from "../screens/CommentsScreen"; //screens
 import MapScreen from "../screens/MapScreen"; //screens
 import HomeScreenRoutes from "../navigation/HomeNavigation"; // stacks navigation
 
-import { CreateHedder } from "../components/CreateHedder"; // hedder Creator
-import { useSelector } from "react-redux";
+import { CreateHedder } from "../components/CreateHedder"; // hedder Creator (util)
+import { useSelector } from "react-redux"; //redux
 
 // =========  Main Navigation
 
 const MainStack = createStackNavigator();
 
-const getIsSignedIn = () => {
-  // isSignedIn
+const getIsSignedIn = () => {   //check for token
   const token = useSelector(state => state.auth.token);
-  // сравнить токен с актуальным и потом буль
   return Boolean(token);
 };
 
