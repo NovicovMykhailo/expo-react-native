@@ -1,32 +1,51 @@
+import { View, StyleSheet } from "react-native"; //react-native
+import { useCallback } from "react"; //react
+import { useSelector, useDispatch } from "react-redux"; //redux
+import { logOut } from "../redux/auth/thunks"; //redux
+
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"; //navigator
+import { useFocusEffect } from "@react-navigation/native"; // navigator
+
 import CreatePublicationScreen from "../screens/CreatePublicationScreen"; //screens
 import PostsScreen from "../screens/PostsScreen"; //screens
 import ProfileScreen from "../screens/ProfileScreen"; //screens
 
-import { CreateHedder, PublicationsHedder } from "../components/CreateHedder";//components
-
-import { View, StyleSheet } from "react-native"; //react-native
-import { Feather, MaterialIcons } from "@expo/vector-icons";  //icons
-
-
+import { CreateHedder, PublicationsHedder } from "../components/CreateHedder"; //components
+import isStillAuthCheck from "../utils/isStillAuthCheck"; //util
+import { Feather, MaterialIcons } from "@expo/vector-icons"; //icons
 
 const Tabs = createBottomTabNavigator();
+// verifying token
 
- const HomeScreenRoutes = () => (
-  <Tabs.Navigator screenOptions={homeScreenOptions}>
-    <Tabs.Screen
-      name="Publications"
-      component={PostsScreen}
-      options={{ title: "Публікації", ...PublicationsHeaderOption }}
-    />
-    <Tabs.Screen
-      name="Create"
-      component={CreatePublicationScreen}
-      options={{ title: "Створити публікацію", ...CreateHeaderOption, tabBarStyle:  styles.tabBarHidden  }}
-    />
-    <Tabs.Screen name="User" component={ProfileScreen} options={{ title: "Користувачі", headerShown: false }} />
-  </Tabs.Navigator>
-);
+let isAuth;
+const HomeScreenRoutes = () => {
+  const dispatch = useDispatch();
+  const currentToken = useSelector(state => state.auth.token);
+  useFocusEffect(
+    useCallback(() => {
+      isAuth = isStillAuthCheck(currentToken);
+    }),
+  );
+  if (isAuth === false) dispatch(logOut);
+
+  // navigation stack
+
+  return (
+    <Tabs.Navigator screenOptions={homeScreenOptions}>
+      <Tabs.Screen
+        name="Publications"
+        component={PostsScreen}
+        options={{ title: "Публікації", ...PublicationsHeaderOption }}
+      />
+      <Tabs.Screen
+        name="Create"
+        component={CreatePublicationScreen}
+        options={{ title: "Створити публікацію", ...CreateHeaderOption, tabBarStyle: styles.tabBarHidden }}
+      />
+      <Tabs.Screen name="User" component={ProfileScreen} options={{ title: "Користувачі", headerShown: false }} />
+    </Tabs.Navigator>
+  );
+};
 
 const CreateHeaderOption = {
   headerShown: true,

@@ -8,36 +8,31 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native"; // native
+import { Feather } from "@expo/vector-icons"; // icons
 
 import { useSelector, useDispatch } from "react-redux"; // redux
 import { selectAllPosts } from "../redux/posts/selectors"; //redux action
-import { logOut } from "../redux/auth/thunks";// redux action
+import { logOut } from "../redux/auth/thunks"; // redux action
 import { useEffect, useState } from "react"; //react
+import { auth } from "../../config"; //firebase
 
 import UserPhoto from "../components/UserPhoto"; //Components
 import StoryCard from "../components/StoryCard"; //Components
 
 import { reverseData } from "../utils/formating"; //utils
-import getImageUrl from "../utils/getImageUrl";//utils
+import getImageUrl from "../utils/getImageUrl"; //utils
 import imageBg from "../assets/Photo_BG2x.png"; //bg image
 
-import { auth } from "../../config";
 
-// import { posts, Auth } from "../store/test/StoreSampleTest.json";
 
 export default ProfileScreen = () => {
-  const [userImage, setUserImage] = useState(null)
+  const [userImage, setUserImage] = useState(null);
 
   const user = auth.currentUser;
-
   const name = user.displayName;
   const user_photo = user.photoURL;
-  if (user === null) {
-    const name = "";
-    const user_photo = null;
-  }
+
   useEffect(() => {
     if (user_photo) {
       (async function () {
@@ -51,10 +46,7 @@ export default ProfileScreen = () => {
     }
   });
 
-
   const userPosts = useSelector(selectAllPosts).filter(posts => posts.user_id === user.uid);
-  // const userPosts = useSelector(selectAllPosts)
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -64,7 +56,7 @@ export default ProfileScreen = () => {
         <ScrollView>
           <View style={styles.view}>
             <View>
-              <UserPhoto photo={{uri:`${userImage}`}} />
+              <UserPhoto photo={{ uri: `${userImage}` }} />
               <ExitBtn />
               <Text style={styles.Name}>{name}</Text>
             </View>
@@ -84,7 +76,7 @@ function ExitBtn() {
   const dispatch = useDispatch();
   return (
     <TouchableOpacity>
-      <Feather name="log-out" size={24} style={styles.exitBtn} onPress={() =>  dispatch(logOut())} />
+      <Feather name="log-out" size={24} style={styles.exitBtn} onPress={() => dispatch(logOut())} />
     </TouchableOpacity>
   );
 }
