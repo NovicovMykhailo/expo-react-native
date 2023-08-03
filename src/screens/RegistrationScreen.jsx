@@ -76,7 +76,7 @@ export default RegistrationScreen = () => {
   const onRegister = async () => {
     if (validateEmail(email)) {
       try {
-        await dispatch(register({ email, password, photo, login })).then(() => {navigation.replace("HomeScreen")});
+        await dispatch(register({ email, password, photo, login }));
       } catch (error) {
         Alert.alert("message", error.message);
       }

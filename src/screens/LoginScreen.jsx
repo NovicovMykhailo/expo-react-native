@@ -58,9 +58,7 @@ const LoginScreen = () => {
   const onLogin = async () => {
     if (validateEmail(email)) {
       try {
-        await dispatch(logIn({ email, password })).then(() => {
-          navigation.replace("HomeScreen");
-        });
+        await dispatch(logIn({ email, password }))
       } catch (error) {
         Alert.alert("message", error.message);
       }

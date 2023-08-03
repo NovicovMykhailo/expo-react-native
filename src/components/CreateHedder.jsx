@@ -1,8 +1,11 @@
 import { View, Text, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import { getHeaderTitle } from "@react-navigation/elements";
 import { useDispatch } from "react-redux"; //redux
 import { logOut } from "../redux/auth/thunks";// redux action
+
+
 
 
 
@@ -19,6 +22,7 @@ export function CreateHedder({ navigation, route, options, to }) {
 export function PublicationsHedder({ navigation, route, options }) {
   const dispatch = useDispatch();
   const title = getHeaderTitle(options, route.name);
+  // const navigation = useNavigation()
 
   return (
     <View style={styles.hedder}>
@@ -28,7 +32,8 @@ export function PublicationsHedder({ navigation, route, options }) {
         size={24}
         color="#BDBDBD"
         onPress={() => {
-          dispatch(logOut());
+          // dispatch(logOut()), navigation.replace("Login");
+          dispatch(logOut())
         }}
         style={styles.exitBtn}
       />

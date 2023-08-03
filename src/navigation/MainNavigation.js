@@ -13,23 +13,19 @@ import { useSelector } from "react-redux";
 
 const MainStack = createStackNavigator();
 
-const getIsSignedIn = () => { // isSignedIn
+const getIsSignedIn = () => {
+  // isSignedIn
   const token = useSelector(state => state.auth.token);
+  // сравнить токен с актуальным и потом буль
   return Boolean(token);
 };
 
 export const Routes = () => {
   const isSignedIn = getIsSignedIn();
 
-
   return (
-    <MainStack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
-      {!isSignedIn ? (
-        <>
-          <MainStack.Screen name="Registration" component={RegistrationScreen} />
-          <MainStack.Screen name="Login" component={LoginScreen} />
-        </>
-      ) : (
+    <MainStack.Navigator screenOptions={{ headerShown: false }}>
+      {isSignedIn ? (
         <>
           <MainStack.Screen name="HomeScreen" component={HomeScreenRoutes} />
           <MainStack.Screen
@@ -38,6 +34,11 @@ export const Routes = () => {
             options={{ title: "Коментарі", ...CommentsScreenHeaderOption }}
           />
           <MainStack.Screen name="Map" component={MapScreen} options={{ title: "Мапа", ...mapScreenHeaderOption }} />
+        </>
+      ) : (
+        <>
+          <MainStack.Screen name="Registration" component={RegistrationScreen} />
+          <MainStack.Screen name="Login" component={LoginScreen} />
         </>
       )}
     </MainStack.Navigator>

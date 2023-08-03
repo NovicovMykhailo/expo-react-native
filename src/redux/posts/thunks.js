@@ -1,6 +1,44 @@
 // import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
+
+
+/* WORK WITH DB
+
+ const registerDB = async ({ email, password }) => {
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const loginDB = async ({ email, password }) => {
+  try {
+    const credentials = await signInWithEmailAndPassword(auth, email, password);
+        return credentials.user;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+// await addDoc(collection(db, "users"), { // user to Firebase  DB // users
+//   email: email,
+//   name: login,
+//   id: res.user.uid,
+//   user_photo: storageRef._location.path,
+// });
+
+ */
+
+
+
+
+
+
+
+
 export const fetchAll = createAsyncThunk(
   "posts/getAllPosts",
 

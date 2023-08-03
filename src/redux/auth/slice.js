@@ -26,28 +26,18 @@ const authSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(register.fulfilled, (state, { payload }) => {
-        // const { user, _tokenResponse } = payload;
-        // const { displayName, uid, photoURL, email } = user;
-        // const userTarget = { name: displayName, _id: uid, user_photo: photoURL, email };
-        // state.user = userTarget;
-        state.token = payload._tokenResponse.refreshToken;
-        // state.isLoggedIn = true;
+        state.token = payload._tokenResponse.idToken;
         state.error = null;
         state.isLoading = false;
         state.isRefreshing = false;
       })
       .addCase(logIn.fulfilled, (state, {payload}) => {
-        // const { user, _tokenResponse } = payload;
-        // const { displayName, uid, photoURL, email } = user;
-        // const userTarget = { name: displayName, _id: uid, user_photo: photoURL, email };
-        // state.user = userTarget;
-        // state.isLoggedIn = true;
-        state.token = payload._tokenResponse.refreshToken;
+
+        state.token = payload._tokenResponse.idToken;
         state.isRefreshing = false;
         state.error = null;
       })
       .addCase(logOut.fulfilled, state => {
-        // state.user = { name: null, email: null, _id: null, user_photo: null };
         state.token = null;
         state.isLoggedIn = false;
         state.error = null;

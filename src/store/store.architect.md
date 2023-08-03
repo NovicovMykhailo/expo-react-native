@@ -1,18 +1,10 @@
 ```js
 
 const StoreMarkup = {
-  "auth": {//???
+  "auth": {
     "error": null,
-    "isLoggedIn": false,
-    "isLoading": false,
-    "isRefreshing": false,
+    "user": {},  //from firebase
     "token": null, //from firebase
-    // "user": {
-    //   "email": null, // from firebace
-    //   "id": null, // from firebace
-    //   "name": null, // from firebace
-    //   "user_photo": null // from firebace
-    // }
   },
   "posts": {
     "error": null,

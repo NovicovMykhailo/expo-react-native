@@ -8,22 +8,12 @@
     "refreshToken": "AMf-vBwROheVGDDhgwk1vtMFKXdAzbquxgyVPu3XKvTZkivw0w6NdXeucq8kbWFK_O0VvdzHBSGnOQiPOKHt8ne-Y5fd0FPVowi23xkUXyEcmFkfgJ-VBPwllOu-B-zCVdtY5E7s-25ijrP7HSGv6hy6-Aw3T0EsMp_95p-aB28pK7Yp7EDWQbduv1YYcy4VepzDQDigEj8dTm4kN8i1E6m5IrJNATeHkQ"
   },
   "operationType": "signIn",
-  "providerId": null,
   "user": {
-    "_redirectEventId": null,
     "apiKey": "AIzaSyD-gS-Ic8BjB5bMRR1NutRM7AOtZ57q3VU",
-    "appName": "[DEFAULT]",
     "createdAt": "1690893037963",
-    "displayName": null,
     "email": "mango2@mail.com",
-    "emailVerified": false,
-    "isAnonymous": false,
-    "lastLoginAt": "1690893037963",
-    "phoneNumber": null,
+    "displayName": null,
     "photoURL": null,
-    "providerData": ["Array"],
-    "stsTokenManager": ["Object"],
-    "tenantId": null,
     "uid": "xbBG27Lw2zTuBFgej4kYgRyI5HA3"
   }
 }
