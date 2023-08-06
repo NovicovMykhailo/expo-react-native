@@ -8,7 +8,6 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native"; // native
 import { Feather } from "@expo/vector-icons"; // icons
 
 import { useSelector, useDispatch } from "react-redux"; // redux
@@ -22,6 +21,7 @@ import StoryCard from "../components/StoryCard"; //Components
 
 import { reverseData } from "../utils/formating"; //utils
 import getImageUrl from "../utils/getImageUrl"; //utils
+import toast from "../utils/toast";
 import imageBg from "../assets/Photo_BG2x.png"; //bg image
 
 
@@ -40,7 +40,7 @@ export default ProfileScreen = () => {
           const url = await getImageUrl(user_photo);
           setUserImage(url);
         } catch (e) {
-          console.error(e);
+          toast.error({ message: e });
         }
       })();
     }
@@ -72,7 +72,6 @@ export default ProfileScreen = () => {
 };
 
 function ExitBtn() {
-  const navigation = useNavigation();
   const dispatch = useDispatch();
   return (
     <TouchableOpacity>

@@ -6,6 +6,7 @@ import { store, persistor } from "./src/store/store"
 
 import { NavigationContainer } from "@react-navigation/native";
 import { Routes } from "./src/navigation/MainNavigation";
+import Toast from "./src/components/Toast";
 
 import { useFonts } from "expo-font";
 
@@ -20,6 +21,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
+        <Toast/>
         <NavigationContainer>
           <Routes />
         </NavigationContainer>

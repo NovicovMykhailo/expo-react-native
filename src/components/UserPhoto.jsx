@@ -6,6 +6,7 @@ import { ref, uploadBytes } from "firebase/storage"; //firebase
 import { updateProfile } from "firebase/auth"; //firebase
 import img2Blob from "../utils/img2Blob"; //utils
 import getImageUrl from "../utils/getImageUrl"; //utils
+import toast from "../utils/toast";//utils
 
 import PlusStyledButton from "./PlusStyledButton"; //Components
 import PhotoPicker from "./PhotoPicker"; //Components
@@ -27,7 +28,7 @@ export default function UserPhoto() {
           const url = await getImageUrl(user.photoURL);
           setImage(url);
         } catch (e) {
-          console.error(e);
+          toast.error({message: `${e.message}`});
         }
       })();
     } else {

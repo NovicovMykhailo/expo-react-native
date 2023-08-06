@@ -2,8 +2,9 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { useCallback, useState } from "react"; //react
 import { useFocusEffect } from "@react-navigation/native"; //react-navigation
 
-import getImageUrl from "../utils/getImageUrl";
-import { auth } from "../../config";
+import getImageUrl from "../utils/getImageUrl"; //utils
+import toast from "../utils/toast"; // utils
+import { auth } from "../../config"; // firebase
 
 export default function UserTab() {
   const [image, setImage] = useState();
@@ -29,7 +30,7 @@ export default function UserTab() {
             const url = await getImageUrl(user.photoURL);
             setImage(url);
           } catch (e) {
-            console.error(e);
+            toast.error({message: `${e.message}`});
           }
         })();
       }

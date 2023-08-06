@@ -10,7 +10,6 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Keyboard,
-  Alert,
 } from "react-native"; //native
 import { useFonts } from "expo-font"; //fonts
 import { useFocusEffect, useNavigation } from "@react-navigation/native"; //navigator
@@ -27,6 +26,7 @@ import Spinner from "../components/Spinner"; //Components
 
 import validateEmail from "../utils/validateEmail"; //util
 import validatePassLength from "../utils/validatePassLength"; //util
+import toast from "../utils/toast"; //toast
 import image from "../assets/Photo_BG2x.png"; // bg Image
 
 export default RegistrationScreen = () => {
@@ -56,7 +56,7 @@ export default RegistrationScreen = () => {
 
   useEffect(() => {
     // handle Errors
-    if (error) Alert.alert("message", error);
+    if (error) toast.error({ message: `${error}` });
   }, [error]);
 
   useFocusEffect(
@@ -68,7 +68,7 @@ export default RegistrationScreen = () => {
     }, []),
   );
 
-   const showModal = () => { 
+  const showModal = () => {
     setModalVisible(prev => !prev);
   };
 
@@ -80,17 +80,18 @@ export default RegistrationScreen = () => {
     return null;
   }
 
-  const onRegister = async () => { // dispatching Form
+  const onRegister = async () => {
+    // dispatching Form
     if (validateEmail(email) && validatePassLength(password)) {
       try {
         await dispatch(register({ email, password, photo, login }));
       } catch (error) {
-        Alert.alert("message", error.message);
+        toast.error({ message: `${error.message}` });
       }
     }
   };
 
-  return ( 
+  return (
     <SafeAreaView style={styles.base}>
       <ImageBackground source={image} style={styles.image} />
       {modalVisible && <PhotoPicker showModal={showModal} setPhoto={setPhoto} />}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Modal, StyleSheet, Text, Pressable, View, ScrollView } from "react-native";
+import { Modal, StyleSheet, Text, Pressable, View, ScrollView } from "react-native";
 
 const ModalWindow = ({ setVisible, children }) => {
 

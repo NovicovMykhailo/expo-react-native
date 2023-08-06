@@ -16,7 +16,6 @@ import { Auth } from "../store/test/StoreSampleTest.json";//demo data
 
 export default PostsScreen = () => {
   const dispatch = useDispatch();
-
   const data = useSelector(selectAllPosts);
 
 

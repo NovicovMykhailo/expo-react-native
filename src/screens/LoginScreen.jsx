@@ -10,7 +10,6 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Keyboard,
-  Alert,
 } from "react-native"; //native
 import { useFonts } from "expo-font"; //fonts
 import { useFocusEffect, useNavigation } from "@react-navigation/native"; //navigator
@@ -25,6 +24,7 @@ import validatePassLength from "../utils/validatePassLength"; //util
 
 import Loader from "../components/Loader"; //components
 import Spinner from "../components/Spinner"; //components
+import toast from "../utils/toast";//toast
 
 import image from "../assets/Photo_BG2x.png"; //bgImage
 
@@ -43,13 +43,12 @@ const LoginScreen = () => {
 
   const isBtnDisabled = Boolean(!email || !password);
 
-  useEffect(() => {
-    // handle Errors
-    if (error) Alert.alert("message", error);
+  useEffect(() => {     // handle Errors
+    if (error) toast.error({ message: `${error}` });
   }, [error]);
 
-  useFocusEffect(
-    // reseting form on change Screen
+  useFocusEffect(     // reseting form on change Screen
+
     useCallback(() => {
       return () => {
         setEmail(""), setPassword("");
@@ -65,13 +64,14 @@ const LoginScreen = () => {
     return null;
   }
 
-  const onLogin = async () => {
-    // dispatching form data
+  const onLogin = async () => {  // dispatching form data
+   
     if (validateEmail(email) && validatePassLength(password)) {
       try {
         await dispatch(logIn({ email, password }));
       } catch (error) {
-        Alert.alert("message", error.message);
+        toast.error({message: `${error.message}`})
+
       }
     }
   };

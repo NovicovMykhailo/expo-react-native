@@ -24,6 +24,7 @@ import * as MediaLibrary from "expo-media-library";
 import Spinner from "../components/Spinner";
 import Loader from "../components/Loader";
 import postCreator from "../utils/postCreator";
+import toast from '../utils/toast';
 //redux
 import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../redux/posts/postsSlice";
@@ -59,7 +60,7 @@ export default CreatePublicationScreen = () => {
         checkCameraPermission();
       } catch (error) {
         setHasPermission(null);
-        Alert.alert(`${error.message}`);
+        toast.error({message:`${error.message}`})
       }
     })();
 
@@ -71,7 +72,7 @@ export default CreatePublicationScreen = () => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        Alert.error("Message: ", "Permission to access location was denied");
+        toast.error({message:"Permission to access location was denied"})
       }
       let foundLocation = await Location.getCurrentPositionAsync();
 
