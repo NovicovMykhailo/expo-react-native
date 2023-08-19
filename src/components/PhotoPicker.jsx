@@ -55,9 +55,12 @@ const PhotoPicker = ({ showModal, setPhoto }) => {
                   <Pressable
                     key={item.id}
                     onPress={async e => {
-                      const target = e._dispatchInstances.child.memoizedProps.source.uri;
-                      const asset = await MediaLibrary.createAssetAsync(target);
-                      setPhoto(asset);
+                      const perm = await MediaLibrary.requestPermissionsAsync();
+                      if (perm.granted) {
+                        const target = e._targetInst.child.memoizedProps.source.uri;
+                        const asset = await MediaLibrary.createAssetAsync(target);
+                        setPhoto(asset);
+                      }
                       showModal();
                     }}
                   >

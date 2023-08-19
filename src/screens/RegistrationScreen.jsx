@@ -21,8 +21,10 @@ import { selectError, selectIsLoading } from "../redux/auth/selectors"; //redux
 
 import PhotoPicker from "../components/PhotoPicker"; //Components
 import PlusStyledButton from "../components/PlusStyledButton"; //Components
-import Loader from "../components/Loader"; //Components
-import Spinner from "../components/Spinner"; //Components
+import LoadingScreen from "../components/LoadingScreen"; // component
+
+
+
 
 import validateEmail from "../utils/validateEmail"; //util
 import validatePassLength from "../utils/validatePassLength"; //util
@@ -30,10 +32,9 @@ import toast from "../utils/toast"; //toast
 import image from "../assets/Photo_BG2x.png"; // bg Image
 
 export default RegistrationScreen = () => {
-  const [fontsLoaded] = useFonts({ Roboto: require("../assets/fonts/Roboto-Regular.ttf") });
-
-  const navigation = useNavigation();
   const dispatch = useDispatch();
+  const [fontsLoaded] = useFonts({ Roboto: require("../assets/fonts/Roboto-Regular.ttf") });
+  const navigation = useNavigation();
   const error = useSelector(selectError);
   const isLoading = useSelector(selectIsLoading);
 
@@ -84,7 +85,7 @@ export default RegistrationScreen = () => {
     // dispatching Form
     if (validateEmail(email) && validatePassLength(password)) {
       try {
-        await dispatch(register({ email, password, photo, login }));
+        dispatch(register({ email, password, photo, login }));
       } catch (error) {
         toast.error({ message: `${error.message}` });
       }
@@ -95,6 +96,7 @@ export default RegistrationScreen = () => {
     <SafeAreaView style={styles.base}>
       <ImageBackground source={image} style={styles.image} />
       {modalVisible && <PhotoPicker showModal={showModal} setPhoto={setPhoto} />}
+      {isLoading && <LoadingScreen/>}
       <View style={styles.box}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.view}>
@@ -148,11 +150,6 @@ export default RegistrationScreen = () => {
             </KeyboardAvoidingView>
             <TouchableOpacity style={styles.btn} disabled={isBtnDisabled} onPress={onRegister}>
               <Text style={styles.btnText}>Зареєстуватися</Text>
-              {isLoading && (
-                <Loader>
-                  <Spinner />
-                </Loader>
-              )}
             </TouchableOpacity>
             <TouchableOpacity style={styles.bottomTextContainer} onPress={() => navigation.navigate("Login")}>
               <Text style={styles.bottomText}>Вже є акаунт? Увійти</Text>

@@ -14,6 +14,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
+
+
 import * as Location from "expo-location";
 
 import { useEffect, useState } from "react";
@@ -24,11 +26,12 @@ import * as MediaLibrary from "expo-media-library";
 import Spinner from "../components/Spinner";
 import Loader from "../components/Loader";
 import postCreator from "../utils/postCreator";
-import toast from '../utils/toast';
+import toast from "../utils/toast";
 //redux
-import { useDispatch, useSelector } from "react-redux";
-import { addPost } from "../redux/posts/postsSlice";
-import { selectUserId } from "../redux/auth/selectors";
+import { auth } from "../../config";
+import * as DB_Api from "../db/api";
+import imageUploadUtil from "../utils/imageUploadUtil";
+
 //
 export default CreatePublicationScreen = () => {
   const [photo, setPhoto] = useState(null);
@@ -48,9 +51,6 @@ export default CreatePublicationScreen = () => {
   const isBtnDisabled = !photo;
   const isActive = Boolean(title || location || photo);
 
-  const dispatch = useDispatch();
-  const ownerId = useSelector(selectUserId);
-
   //camera init
   useEffect(() => {
     setPhoto(null);
@@ -60,7 +60,7 @@ export default CreatePublicationScreen = () => {
         checkCameraPermission();
       } catch (error) {
         setHasPermission(null);
-        toast.error({message:`${error.message}`})
+        toast.error({ message: `${error.message}` });
       }
     })();
 
@@ -72,7 +72,7 @@ export default CreatePublicationScreen = () => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        toast.error({message:"Permission to access location was denied"})
+        toast.error({ message: "Permission to access location was denied" });
       }
       let foundLocation = await Location.getCurrentPositionAsync();
 
@@ -101,36 +101,31 @@ export default CreatePublicationScreen = () => {
     });
     setHasPermission(status === "granted");
   }
+
   //submiting
   const HandleSubmit = async () => {
+    //make post
     if (!geoposition) setIsVisible(true);
     else if (photo && geoposition) {
       setIsVisible(false);
-
+      // uploadPhoto and get url
+      const url = await imageUploadUtil(photo);
+      //create post
       const post = {
         title: title ? title : null,
         location: location ? location : null,
-        image: photo ? photo.uri : null,
+        image: url,
         coords: geoposition,
-        owner: ownerId,
+        owner: auth?.currentUser.uid,
       };
+      // add post to db
+      try {
+        await DB_Api.addPost(postCreator(post));
+        navigation.navigate("Publications");
+      } catch (error) {
+        console.log(error)
+      }
 
-      dispatch(addPost(postCreator(post)));
-      navigation.navigate("Publications");
-
-      // Alert.alert(
-      //   "FormData: ",
-      //   `• Title:  ${title ? title : null};\n• Location:  ${location ? location : null};\n• Photo: ${
-      //     photo ? `[object]` : "none"
-      //   };\n• Geoposition:\n    - Latitude: ${geoposition.latitude},\n    - Longitude: ${geoposition.longitude} `,
-      //   [
-      //     {
-      //       text: "OK",
-      //       onPress: () => navigation.navigate("Publications"),
-      //     },
-      //   ],
-      // );
-      // console.log({ title, location, photo, geoposition });
       setPhoto(null);
       setTitle("");
       setLocation("");

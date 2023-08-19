@@ -1,8 +1,8 @@
 import { View, StyleSheet } from "react-native"; //react-native
-import { useCallback } from "react"; //react
+import { useCallback, useEffect } from "react"; //react
 import { useSelector, useDispatch } from "react-redux"; //redux
-import { logOut } from "../redux/auth/thunks"; //redux
-import { selectCurrentToken } from "../redux/auth/selectors"; //redux
+import { logOut, refreshUser, showLoaderPage } from "../redux/auth/thunks"; //redux
+import { selectCurrentToken, selectIsLoading } from "../redux/auth/selectors"; //redux
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"; //navigator
 import { useFocusEffect } from "@react-navigation/native"; // navigator
@@ -18,18 +18,27 @@ import { Feather, MaterialIcons } from "@expo/vector-icons"; //icons
 const Tabs = createBottomTabNavigator();
 // verifying token
 
-let isAuth;
+// let isAuth;
 const HomeScreenRoutes = () => {
-  const dispatch = useDispatch();
-  const currentToken = useSelector(selectCurrentToken);
-  useFocusEffect(
-    useCallback(() => {
-      isAuth = isStillAuthCheck(currentToken);
-    }),
-  );
-  if (isAuth === false) dispatch(logOut);
+  // const dispatch = useDispatch();
+  // const currentToken = useSelector(selectCurrentToken);
+  // const isLoading = useSelector(selectIsLoading);
 
-  // navigation stack
+  // useEffect(() => {
+  //   (async () => {
+  //     dispatch(refreshUser());
+  //   })();
+  // }, []);
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     setTimeout(() => {
+  //       isAuth = isStillAuthCheck(currentToken);
+  //       // if (isAuth) dispatch(showLoaderPage(false));
+  //       if (!isAuth) dispatch(logOut());
+  //     }, 3000);
+  //   }),
+  // );
 
   return (
     <Tabs.Navigator screenOptions={homeScreenOptions}>
@@ -90,7 +99,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
   },
   focusedOverlay: {
-    backgroundColor: "#FF6C00", //orange
+    backgroundColor: "#FF6C00", 
   },
   plusIcon: {
     color: "#212121cc",
@@ -99,7 +108,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
 
-  icon: { color: "#212121cc" }, //grey
+  icon: { color: "#212121cc" }, 
   focusedIcon: {
     color: "#FF6C00",
   },

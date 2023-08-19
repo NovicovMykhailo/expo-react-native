@@ -6,9 +6,6 @@ import { useDispatch } from "react-redux"; //redux
 import { logOut } from "../redux/auth/thunks";// redux action
 
 
-
-
-
 export function CreateHedder({ navigation, route, options, to }) {
   const title = getHeaderTitle(options, route.name);
   return (
@@ -22,7 +19,6 @@ export function CreateHedder({ navigation, route, options, to }) {
 export function PublicationsHedder({ navigation, route, options }) {
   const dispatch = useDispatch();
   const title = getHeaderTitle(options, route.name);
-  // const navigation = useNavigation()
 
   return (
     <View style={styles.hedder}>
@@ -32,7 +28,6 @@ export function PublicationsHedder({ navigation, route, options }) {
         size={24}
         color="#BDBDBD"
         onPress={() => {
-          // dispatch(logOut()), navigation.replace("Login");
           dispatch(logOut())
         }}
         style={styles.exitBtn}

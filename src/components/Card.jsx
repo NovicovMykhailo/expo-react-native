@@ -3,8 +3,10 @@ import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 export default function Card({ data }) {
-  const { image, title, location, comments, coords, id} = data
+  const { image, title, location, comments, coords, id: postId} = data
   const navigation = useNavigation();
+
+
 
 
   return (
@@ -15,7 +17,7 @@ export default function Card({ data }) {
       </View>
 
       <View style={styles.bottomContainer}>
-        <TouchableOpacity style={styles.barLeft} onPress={() => navigation.navigate("Comments", { comments, image, id })}>
+        <TouchableOpacity style={styles.barLeft} onPress={() => navigation.navigate("Comments", { comments, image, postId })}>
           <Feather
             name="message-circle"
             size={24}

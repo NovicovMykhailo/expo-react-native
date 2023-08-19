@@ -2,33 +2,42 @@ import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { addLike, removeLike } from "../redux/posts/postsSlice";
+import * as DB_API from "../db/api";
+
+import { getAuth } from "firebase/auth";
 
 //redux
 
-export default function StoryCard({ item, userId }) {
-  const { image, title, location, comments, coords, likes, id } = item;
+export default function StoryCard({ item }) {
+  const { image, title, location, comments, coords, likes: likesProps, id: postId } = item;
   const [wasLiked, setWasLiked] = useState(true);
+  const [likes, setLikes] = useState(likesProps);
 
   const navigation = useNavigation();
-
-  const dispatch = useDispatch();
+  const auth = getAuth();
+ 
 
   useEffect(() => {
-    const liked = likes.find(like => like === userId);
+    const { uid } = auth.currentUser;
+
+    const liked = likes.find(like => like === uid);
     setWasLiked(Boolean(liked));
   }, [likes, handleLikes]);
 
-  function handleLikes() {
-    const index = likes.indexOf(userId);
+  async function handleLikes() {
+    const { uid } = auth.currentUser;
+    
+    let refreshedLikes;
 
+    const index = likes.indexOf(uid);
     if (index === -1) {
-      dispatch(addLike({ id, userId }));
-      setWasLiked(prev => !prev);
+      DB_API.addLike({ postId, uid });
+      refreshedLikes = await DB_API.getLikes(postId);
+      setLikes(refreshedLikes);
     } else {
-      dispatch(removeLike({ id, userId }));
-      setWasLiked(prev => !prev);
+      DB_API.removeLike({ postId, uid });
+      refreshedLikes = await DB_API.getLikes(postId);
+      setLikes(refreshedLikes);
     }
   }
 
@@ -41,7 +50,10 @@ export default function StoryCard({ item, userId }) {
 
       <View style={styles.bottomContainer}>
         <View style={styles.leftSideIcons}>
-          <TouchableOpacity style={styles.barLeft} onPress={() => navigation.navigate("Comments", { comments, image, id })}>
+          <TouchableOpacity
+            style={styles.barLeft}
+            onPress={() => navigation.navigate("Comments", { comments, image, postId })}
+          >
             <Feather
               name="message-circle"
               size={24}

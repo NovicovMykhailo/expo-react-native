@@ -1,32 +1,19 @@
-// import axios from "axios";
-
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   updateProfile,
   signOut,
+  getAuth,
 } from "firebase/auth";
-import { auth, db } from "../../../config";
+import { auth } from "../../../config";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { collection, addDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
-import img2Blob from "../../utils/img2Blob";
+import getImageUrl from "../../utils/getImageUrl";
 
 const storage = getStorage();
 
-/*
-
-- onAuthStateChanged - метод вішає слухач на зміну стану аутентифікації, приймає коллбек,
-          який першим аргументов містить об'єкт користувача або null за відсутності дани
-
-const authStateChanged = async (onChange = () => {}) => {
-        onAuthStateChanged((user) => {
-                onChange(user);
-        });
-};
-*/
-
+//register
 export const register = createAsyncThunk("auth/register", async (credentials, thunkAPI) => {
   const { email, password, photo, login } = credentials;
 
@@ -36,26 +23,30 @@ export const register = createAsyncThunk("auth/register", async (credentials, th
 
     //loading photo to Firebase Storage and updating current user userPhoto
 
-    if (photo) {      //(if Photo exists)
-
+    if (photo) {
+      //(if Photo exists)
       const [blob, filename] = await img2Blob(photo); // photo to blob (util)
       const storageRef = ref(storage, `userphoto/${res.user.uid}_${filename}`); //make starage url
       const metadata = { contentType: "image/jpeg" }; //metadata to jpg
+      const url = await getImageUrl(storageRef);
       await uploadBytes(storageRef, blob, metadata); //write file to storage
-      await updateProfile(auth.currentUser, { photoURL: `${storageRef}` }); //update profile photo
+      await updateProfile(auth.currentUser, { photoURL: `${url}` }); //update profile photo
+    } else {
+      //(if Photo not exists) save base avatar url from storage
 
-    } else {  //(if Photo not exists) save base avatar url from storage
-     
       const storageRef = ref(storage, `userphoto/base_avatar.jpg`);
-      await updateProfile(auth.currentUser, { photoURL: `${storageRef}` });
+      const url = await getImageUrl(storageRef);
+      await updateProfile(auth.currentUser, { photoURL: `${url}` });
     }
 
     return res;
   } catch (error) {
+    // return thunkAPI.rejectWithValue(error.message)
     return thunkAPI.rejectWithValue("Oops, a User with this username or email exists");
   }
 });
 
+//login
 export const logIn = createAsyncThunk("auth/login", async (credentials, thunkAPI) => {
   const { email, password } = credentials;
   try {
@@ -66,6 +57,7 @@ export const logIn = createAsyncThunk("auth/login", async (credentials, thunkAPI
   }
 });
 
+//logout
 export const logOut = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
   try {
     await signOut(auth);
@@ -74,25 +66,22 @@ export const logOut = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
   }
 });
 
-export const refreshUser = createAsyncThunk("auth/refresh", async (_, thunkAPI) => {
-  const registeredUser = await onAuthStateChanged(auth, authState);
-  // const state = thunkAPI.getState();
-  // const userInfo = state.auth.user;
-  // try {
-  //   onAuthStateChanged(userInfo);
-  // } catch (error) {
-  //   return thunkAPI.rejectWithValue(error.message);
-  // }
+// refresh
+export const refreshUserPhoto = createAsyncThunk("auth/refresh", async (_, thunkAPI) => {
+  try {
+    const auth = getAuth();
+    return auth.currentUser;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
 
-  //   if (persistedToken === null) {
-  //     return thunkAPI.rejectWithValue("Ooops, You are not registered yet");
-  //   }
-
-  //   try {
-  //     setAuthHeader(persistedToken);
-  //     const res = await axios.get("/users/current");
-  //     return res.data;
-  //   } catch (error) {
-  //     return thunkAPI.rejectWithValue(error.message);
-  //   }
+//show Loader
+export const showLoaderPage = createAsyncThunk("auth/showLoader", (credentials, thunkAPI) => {
+  try {
+    const showLoader = Boolean(credentials);
+    return showLoader;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
 });

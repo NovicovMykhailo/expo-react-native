@@ -1,50 +1,55 @@
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
-import { useCallback, useState } from "react"; //react
+import { View, Text, Image, StyleSheet } from "react-native";
+import { useCallback, useState, useEffect } from "react"; //react
 import { useFocusEffect } from "@react-navigation/native"; //react-navigation
-
-import getImageUrl from "../utils/getImageUrl"; //utils
-import toast from "../utils/toast"; // utils
-import { auth } from "../../config"; // firebase
+import { getAuth } from "firebase/auth";
+import UserBarPlaceholder from "./PlaceHolders/UserBarPlaceholder";
+import { useSelector } from "react-redux";
+import { selectUserPhoto, selectUser } from "../redux/auth/selectors";
 
 export default function UserTab() {
   const [image, setImage] = useState();
-  const user = auth.currentUser;
-  if (user === null) {
-    const name = "";
-    const email = "";
+  const [user, setUser] = useState();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const userInfo = useSelector(selectUser);
 
-  }
-
-
-  const name = user.displayName;
-  const email = user.email;
-
-
+  useEffect(() => {
+    if (!userInfo) {
+      setIsRefreshing(true);
+      const auth = getAuth();
+      const user = auth.currentUser;
+      const photo = auth.currentUser.photoURL;
+      setUser(user);
+      setImage(photo);
+      setIsRefreshing(false);
+    } else {
+      setImage(userInfo.photoURL);
+      setUser(userInfo);
+      setIsRefreshing(false);
+    }
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
-
-      if (user.photoURL) {
-        (async function () {
-          try {
-            const url = await getImageUrl(user.photoURL);
-            setImage(url);
-          } catch (e) {
-            toast.error({message: `${e.message}`});
-          }
-        })();
+      const auth = getAuth();
+      if (userInfo && auth?.currentUser.photoURL !== userInfo?.photoURL) {
+        setImage(auth.currentUser.photoURL);
       }
-    }),
+    }, []),
   );
 
   return (
-    <TouchableOpacity style={styles.container}>
-      <Image source={{ uri: `${image}` }} style={styles.photo} />
-      <View style={styles.textContainer}>
-        <Text style={styles.title}>{name}</Text>
-        <Text style={styles.email}>{email}</Text>
-      </View>
-    </TouchableOpacity>
+    <View style={styles.container}>
+      {isRefreshing && <UserBarPlaceholder />}
+      {!isRefreshing && user && (
+        <>
+          <Image source={{ uri: `${image}` }} style={styles.photo} />
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>{user.displayName}</Text>
+            <Text style={styles.email}>{user.email}</Text>
+          </View>
+        </>
+      )}
+    </View>
   );
 }
 const styles = StyleSheet.create({

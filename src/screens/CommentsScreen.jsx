@@ -2,8 +2,10 @@ import { View, StyleSheet, SafeAreaView, TextInput, Image, TouchableOpacity, Fla
 import { Feather } from "@expo/vector-icons"; //native
 import { useState, useEffect } from "react"; //react
 
-import { useDispatch } from "react-redux"; //redux
-import { addComment } from "../redux/posts/postsSlice"; //redux
+import * as DB_API from "../db/api";
+
+import toast from "../utils/toast";
+
 
 
 import commentCreator from "../utils/commentCreator"; //utils
@@ -14,22 +16,24 @@ export default function CommentsScreen(data) {
   const [comment, setComment] = useState(null);
   const [commentsList, setCommentsList] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
-  const dispatch = useDispatch();
   const { params } = data.route;
   const photo = params.image;
-  const postId = params.id;
-
+  const postId = params.postId;
   const user = auth.currentUser;
 
   useEffect(() => {
     setCommentsList(params.comments);
+ 
   }, []);
 
-
-  function handleAddComment() {
+  async function handleAddComment() {
     const commentItem = commentCreator({ comment, ...user });
-    dispatch(addComment({ commentItem, postId }));
-    setCommentsList(prev => [...prev, commentItem]);
+    await DB_API.addComment({ commentItem, postId });
+    const res = await DB_API.getComments(postId);
+    setComment('')
+    setCommentsList(res)
+    
+   
   }
 
   return (

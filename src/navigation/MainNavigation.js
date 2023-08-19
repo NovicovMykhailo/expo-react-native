@@ -9,10 +9,9 @@ import HomeScreenRoutes from "../navigation/HomeNavigation"; // stacks navigatio
 
 import { CreateHedder } from "../components/CreateHedder"; // hedder Creator (util)
 import isStillAuthCheck from "../utils/isStillAuthCheck"; //utils
-import { useDispatch, useSelector } from "react-redux";  //redux
+import { useDispatch, useSelector } from "react-redux"; //redux
 import { selectCurrentToken } from "../redux/auth/selectors"; //redux
-import { logOut } from "../redux/auth/thunks"; //redux
-
+import { logOut, showLoaderPage } from "../redux/auth/thunks"; //redux
 
 // =========  Main Navigation
 
@@ -20,16 +19,19 @@ const MainStack = createStackNavigator();
 
 let isAuth;
 
-const getIsSignedIn = () => {   //check for token
+const getIsSignedIn = () => {
+  //check for token
   const token = useSelector(selectCurrentToken);
   isAuth = isStillAuthCheck(token);
-  return Boolean(token)
+  return Boolean(token);
 };
 
 export const Routes = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const isSignedIn = getIsSignedIn();
-  if(isSignedIn && !isAuth) dispatch(logOut())
+
+  if (!isSignedIn && !isAuth) dispatch(logOut());
+  if (isSignedIn) dispatch(showLoaderPage(true));
 
   return (
     <MainStack.Navigator screenOptions={{ headerShown: false }}>

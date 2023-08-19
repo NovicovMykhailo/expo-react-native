@@ -1,8 +1,7 @@
-import { auth } from "../../config"; //firebase
+import { getAuth } from "firebase/auth";
 
-
-const isStillAuthCheck = (currentToken) => {
-
+const isStillAuthCheck = currentToken => {
+  const auth = getAuth();
   const user = auth.currentUser;
   if (currentToken && user) {
     const validToken = user.stsTokenManager.accessToken;

@@ -18,23 +18,28 @@ import { useState, useEffect, useCallback } from "react"; //react
 import { useDispatch, useSelector } from "react-redux"; //redux
 import { logIn } from "../redux/auth/thunks"; //redux
 import { selectError, selectIsLoading } from "../redux/auth/selectors"; //redux
+import LoadingScreen from "../components/LoadingScreen"; // component
+
+
 
 import validateEmail from "../utils/validateEmail"; //util
 import validatePassLength from "../utils/validatePassLength"; //util
 
-import Loader from "../components/Loader"; //components
-import Spinner from "../components/Spinner"; //components
-import toast from "../utils/toast";//toast
+
+import toast from "../utils/toast"; //toast
 
 import image from "../assets/Photo_BG2x.png"; //bgImage
 
+
 const LoginScreen = () => {
   const [fontsLoaded] = useFonts({ Roboto: require("../assets/fonts/Roboto-Regular.ttf") });
+
 
   const dispatch = useDispatch();
   const error = useSelector(selectError);
   const isLoading = useSelector(selectIsLoading);
   const navigation = useNavigation();
+  const user = useSelector(state => state.auth.token);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,11 +48,13 @@ const LoginScreen = () => {
 
   const isBtnDisabled = Boolean(!email || !password);
 
-  useEffect(() => {     // handle Errors
+  useEffect(() => {
+    // handle Errors
     if (error) toast.error({ message: `${error}` });
   }, [error]);
 
-  useFocusEffect(     // reseting form on change Screen
+  useFocusEffect(
+    // reseting form on change Screen
 
     useCallback(() => {
       return () => {
@@ -64,18 +71,17 @@ const LoginScreen = () => {
     return null;
   }
 
-  const onLogin = async () => {  // dispatching form data
-   
+  const onLogin = async () => {
+    // dispatching form data
+
     if (validateEmail(email) && validatePassLength(password)) {
       try {
-        await dispatch(logIn({ email, password }));
+        dispatch(logIn({ email, password }));
       } catch (error) {
-        toast.error({message: `${error.message}`})
-
+        toast.error({ message: `${error.message}` });
       }
     }
   };
-
   return (
     <SafeAreaView>
       <ImageBackground source={image} style={styles.image} />
@@ -113,11 +119,6 @@ const LoginScreen = () => {
             </KeyboardAvoidingView>
             <TouchableOpacity style={styles.btn} disabled={isBtnDisabled} onPress={onLogin}>
               <Text style={styles.btnText}>Увійти</Text>
-              {isLoading && (
-                <Loader>
-                  <Spinner />
-                </Loader>
-              )}
             </TouchableOpacity>
             <TouchableOpacity style={styles.bottomTextContainer}>
               <Text style={styles.bottomText} onPress={() => navigation.replace("Registration")}>
@@ -126,6 +127,7 @@ const LoginScreen = () => {
             </TouchableOpacity>
           </View>
         </TouchableWithoutFeedback>
+        {isLoading && <LoadingScreen/>}
       </View>
     </SafeAreaView>
   );

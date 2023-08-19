@@ -1,7 +1,7 @@
 const initialState = {
-  user: null,
   token: null,
   error: null,
+  user:[]
 };
 
 

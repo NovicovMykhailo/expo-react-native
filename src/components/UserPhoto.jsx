@@ -1,39 +1,35 @@
-import { View, StyleSheet, ImageBackground } from "react-native"; //native
+import { View, StyleSheet, ImageBackground, Pressable } from "react-native"; //native
 
 import { useState, useEffect } from "react"; //react
-import { auth, storage } from "../../config"; //firebase
-import { ref, uploadBytes } from "firebase/storage"; //firebase
-import { updateProfile } from "firebase/auth"; //firebase
-import img2Blob from "../utils/img2Blob"; //utils
-import getImageUrl from "../utils/getImageUrl"; //utils
-import toast from "../utils/toast";//utils
+import { getAuth } from "firebase/auth";
+import updateUserPhotoUrl from "../utils/updateUserPhotoUrl"; //utils
 
 import PlusStyledButton from "./PlusStyledButton"; //Components
 import PhotoPicker from "./PhotoPicker"; //Components
 import Spinner from "../components/Spinner";
+import { useSelector, useDispatch  } from "react-redux";
+import { refreshUserPhoto } from "../redux/auth/thunks";
+import { selectUserPhoto } from "../redux/auth/selectors";
 
 export default function UserPhoto() {
   const [isBtnActive, setIsBtnActive] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState();
 
-  const user = auth.currentUser;
+  const userPhoto = useSelector(selectUserPhoto);
+  const dispatch = useDispatch()
+
 
   useEffect(() => {
-    if (user.photoURL) {
-      (async function () {
-        try {
-          const url = await getImageUrl(user.photoURL);
-          setImage(url);
-        } catch (e) {
-          toast.error({message: `${e.message}`});
-        }
-      })();
-    } else {
-      setImage(null);
-    }
+    setImage(userPhoto);
+    setTimeout(() => {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        setImage(user.photoURL);
+      }
+    }, 2000);
   }, []);
 
   useEffect(() => {
@@ -45,13 +41,9 @@ export default function UserPhoto() {
     setModalVisible(prev => !prev);
   };
 
-  const updatePhoto = async uri => {
+  const updatePhoto = async data => {
     setIsUpdating(true);
-    const [blob, filename] = await img2Blob(uri); // photo to blob (util)
-    const storageRef = ref(storage, `userphoto/${user.uid}_${filename}`); //make starage url
-    await uploadBytes(storageRef, blob); //write file to storage
-    await updateProfile(auth.currentUser, { photoURL: `${storageRef}` }); //update profile photo
-    const url = await getImageUrl(storageRef);
+    const url = await updateUserPhotoUrl(data);
     setImage(url);
     setIsUpdating(false);
   };
@@ -62,6 +54,7 @@ export default function UserPhoto() {
       <View style={styles.userPhoto}>
         {isUpdating ? <Spinner /> : <ImageBackground source={{ uri: `${image}` }} style={styles.photo} />}
         <PlusStyledButton isActive={isBtnActive} onPress={() => (image ? setImage(null) : showModal())} />
+        {/* <Pressable style={{width: 30, height: 30, backgroundColor: "red"}} onPress={()=>dispatch(refreshUserPhoto())}/> */}
       </View>
     </>
   );

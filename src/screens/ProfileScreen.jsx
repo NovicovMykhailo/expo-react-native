@@ -10,34 +10,50 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons"; // icons
 
-import { useSelector, useDispatch } from "react-redux"; // redux
-import { selectAllPosts } from "../redux/posts/selectors"; //redux action
+import { useDispatch } from "react-redux"; // redux
 import { logOut } from "../redux/auth/thunks"; // redux action
-import { useEffect, useState } from "react"; //react
+import { useCallback, useEffect, useState } from "react"; //react
 import { auth } from "../../config"; //firebase
 
 import UserPhoto from "../components/UserPhoto"; //Components
 import StoryCard from "../components/StoryCard"; //Components
+import PostsPlaceholder from "../components/PlaceHolders/PostsPlaceholder"; //Components
 
-import { reverseData } from "../utils/formating"; //utils
 import getImageUrl from "../utils/getImageUrl"; //utils
 import toast from "../utils/toast";
 import imageBg from "../assets/Photo_BG2x.png"; //bg image
 
-
+import * as DB_API from "../db/api";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default ProfileScreen = () => {
   const [userImage, setUserImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [posts, setPosts] = useState(null);
 
   const user = auth.currentUser;
   const name = user.displayName;
-  const user_photo = user.photoURL;
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsLoading(true);
+      (async () => {
+        const res = await DB_API.getUserPostsLength(user.uid);
+        if (res !== posts) {
+          setPosts(res);
+          setIsLoading(false);
+        } else {
+          return;
+        }
+      })();
+    }, []),
+  );
 
   useEffect(() => {
-    if (user_photo) {
+    if (user.photoURL) {
       (async function () {
         try {
-          const url = await getImageUrl(user_photo);
+          const url = await getImageUrl(user.photoURL);
           setUserImage(url);
         } catch (e) {
           toast.error({ message: e });
@@ -46,7 +62,14 @@ export default ProfileScreen = () => {
     }
   });
 
-  const userPosts = useSelector(selectAllPosts).filter(posts => posts.user_id === user.uid);
+  useEffect(() => {
+    setIsLoading(true);
+    (async () => {
+      const data = await DB_API.getUserPostsLength(user.uid);
+      setPosts(data);
+      setIsLoading(false);
+    })();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -60,10 +83,8 @@ export default ProfileScreen = () => {
               <ExitBtn />
               <Text style={styles.Name}>{name}</Text>
             </View>
-
-            {reverseData(userPosts).map(item => (
-              <StoryCard key={item.id} item={item} userId={user.uid} />
-            ))}
+            {isLoading && <PostsPlaceholder />}
+            {!isLoading && posts?.map(item => <StoryCard key={item.id} item={item} userId={user.uid} />)}
           </View>
         </ScrollView>
       </View>

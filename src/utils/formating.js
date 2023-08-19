@@ -1,8 +1,8 @@
 export function dateFormat(date) {
-  const newDate = new Date(date);
+  const newDate = new Date(date.seconds*1000);
   const formatedDate = `${newDate.getDate().toString().padStart(2, "0")} ${getMonthName(
     newDate.getMonth(),
-  )}, ${newDate.getFullYear()}  |  ${newDate.getHours()}:${newDate.getMinutes()}`;
+  )}, ${newDate.getFullYear()}  |  ${newDate.getHours().toString().padStart(2, "0")}:${newDate.getMinutes().toString().padStart(2, "0")}:${newDate.getSeconds().toString().padStart(2, "0")}`;
   return formatedDate;
 }
 
