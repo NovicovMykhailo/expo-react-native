@@ -102,7 +102,7 @@ export const getPostsLength = async () => {
   return length;
 };
 
-export const getUserPostsLength = async (userId) => {
+export const getUserPosts = async (userId) => {
   const q = query(collection(db, "posts") , where("owner", "==", userId));
   const snapshot = await getDocs(q);
   const userPosts = snapshot.docs.map(doc => {

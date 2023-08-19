@@ -3,13 +3,14 @@ import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 
 const colorMode = "light";
+const colors = [ "#dbdbdb", "#ece9dfab"]
 
 const UserBar = () => (
   <MotiView style={styles.userBar}>
-    <Skeleton colorMode={colorMode} radius={16} height={60} width={60} />
+    <Skeleton colorMode={colorMode} radius={16} height={60} width={60} colors={colors}/>
     <View style={styles.userBarTextContainer}>
-      <Skeleton colorMode={colorMode} width={150} height={15} styles={{ marginBottom: 15 }} radius={4} />
-      <Skeleton colorMode={colorMode} width={100} height={15} radius={4} />
+      <Skeleton colorMode={colorMode} width={150} height={15} styles={{ marginBottom: 15 }} radius={4} colors={colors}/>
+      <Skeleton colorMode={colorMode} width={100} height={15} radius={4} colors={colors}/>
     </View>
   </MotiView>
 );

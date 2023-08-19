@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, FlatList } from "react-native"; //react-native
+import { SafeAreaView, StyleSheet, FlatList, ScrollView, View } from "react-native"; //react-native
 import { useState, useCallback } from "react"; //react
 import { useFocusEffect } from "@react-navigation/native"; //react-navigation'
 
@@ -6,16 +6,14 @@ import toast from "../utils/toast";
 
 import UserTab from "../components/UserTab"; // Components
 import Card from "../components/Card"; // Components
-import PostsPlaceholder from "../components/PlaceHolders/PostsPlaceholder"; // Components
+import PostsPlaceholder, { Spacer } from "../components/PlaceHolders/PostsPlaceholder"; // Components
+import UserBarPlaceholder from "../components/PlaceHolders/UserBarPlaceholder"; // Components
 
 import * as DB_API from "../db/api"; // POSTS_DB_API
 
-
-
-
 export default PostsScreen = () => {
   const [posts, setPosts] = useState([]);
-  const [isFetching, setIsFetching] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -25,14 +23,21 @@ export default PostsScreen = () => {
         // как то сравнить массивы
         if (posts !== data) setPosts(data);
         if (posts) setIsFetching(false);
-
       })();
     }, []),
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      {isFetching && <PostsPlaceholder />}
+      {isFetching && (
+        <ScrollView>
+          <Spacer height={32} />
+          <UserBarPlaceholder />
+          <Spacer />
+          <Spacer />
+          <PostsPlaceholder />
+        </ScrollView>
+      )}
       {!isFetching && (
         <FlatList
           ListHeaderComponent={<UserTab />}

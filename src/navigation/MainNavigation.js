@@ -31,7 +31,6 @@ export const Routes = () => {
   const isSignedIn = getIsSignedIn();
 
   if (!isSignedIn && !isAuth) dispatch(logOut());
-  if (isSignedIn) dispatch(showLoaderPage(true));
 
   return (
     <MainStack.Navigator screenOptions={{ headerShown: false }}>

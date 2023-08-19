@@ -38,7 +38,7 @@ export default ProfileScreen = () => {
     useCallback(() => {
       setIsLoading(true);
       (async () => {
-        const res = await DB_API.getUserPostsLength(user.uid);
+        const res = await DB_API.getUserPosts(user.uid);
         if (res !== posts) {
           setPosts(res);
           setIsLoading(false);
@@ -65,7 +65,7 @@ export default ProfileScreen = () => {
   useEffect(() => {
     setIsLoading(true);
     (async () => {
-      const data = await DB_API.getUserPostsLength(user.uid);
+      const data = await DB_API.getUserPosts(user.uid);
       setPosts(data);
       setIsLoading(false);
     })();

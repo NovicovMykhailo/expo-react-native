@@ -42,6 +42,7 @@ export default function UserPhoto() {
   };
 
   const updatePhoto = async data => {
+
     setIsUpdating(true);
     const url = await updateUserPhotoUrl(data);
     setImage(url);

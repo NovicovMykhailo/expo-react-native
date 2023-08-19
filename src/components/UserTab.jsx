@@ -1,12 +1,15 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";// native
 import { useCallback, useState, useEffect } from "react"; //react
 import { useFocusEffect } from "@react-navigation/native"; //react-navigation
 import { getAuth } from "firebase/auth";
-import UserBarPlaceholder from "./PlaceHolders/UserBarPlaceholder";
-import { useSelector } from "react-redux";
-import { selectUserPhoto, selectUser } from "../redux/auth/selectors";
+
+import { useSelector, useDispatch } from "react-redux";//redux
+import { selectUser } from "../redux/auth/selectors";//redux
+import {refreshUserPhoto}from '../redux/auth/thunks'
+import UserBarPlaceholder from "./PlaceHolders/UserBarPlaceholder";//component
 
 export default function UserTab() {
+  const dispatch = useDispatch()
   const [image, setImage] = useState();
   const [user, setUser] = useState();
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -30,10 +33,14 @@ export default function UserTab() {
 
   useFocusEffect(
     useCallback(() => {
-      const auth = getAuth();
-      if (userInfo && auth?.currentUser.photoURL !== userInfo?.photoURL) {
-        setImage(auth.currentUser.photoURL);
-      }
+      setTimeout(() => {
+        const auth = getAuth();
+        const serverUserPhoto = auth.currentUser.photoURL;
+        if (userInfo && userInfo.photoURL !== serverUserPhoto) {
+          setImage(serverUserPhoto);
+          dispatch(refreshUserPhoto())
+        }
+      }, 3000);
     }, []),
   );
 

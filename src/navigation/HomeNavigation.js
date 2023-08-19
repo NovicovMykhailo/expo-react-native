@@ -1,44 +1,31 @@
 import { View, StyleSheet } from "react-native"; //react-native
-import { useCallback, useEffect } from "react"; //react
-import { useSelector, useDispatch } from "react-redux"; //redux
-import { logOut, refreshUser, showLoaderPage } from "../redux/auth/thunks"; //redux
-import { selectCurrentToken, selectIsLoading } from "../redux/auth/selectors"; //redux
+import { useDispatch } from "react-redux"; //redux
+import { logOut } from "../redux/auth/thunks"; //redux
+
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"; //navigator
-import { useFocusEffect } from "@react-navigation/native"; // navigator
+
 
 import CreatePublicationScreen from "../screens/CreatePublicationScreen"; //screens
 import PostsScreen from "../screens/PostsScreen"; //screens
 import ProfileScreen from "../screens/ProfileScreen"; //screens
 
 import { CreateHedder, PublicationsHedder } from "../components/CreateHedder"; //components
-import isStillAuthCheck from "../utils/isStillAuthCheck"; //util
 import { Feather, MaterialIcons } from "@expo/vector-icons"; //icons
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const Tabs = createBottomTabNavigator();
-// verifying token
+
 
 // let isAuth;
 const HomeScreenRoutes = () => {
-  // const dispatch = useDispatch();
-  // const currentToken = useSelector(selectCurrentToken);
-  // const isLoading = useSelector(selectIsLoading);
+  const dispatch = useDispatch();
+  const auth = getAuth();
 
-  // useEffect(() => {
-  //   (async () => {
-  //     dispatch(refreshUser());
-  //   })();
-  // }, []);
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     setTimeout(() => {
-  //       isAuth = isStillAuthCheck(currentToken);
-  //       // if (isAuth) dispatch(showLoaderPage(false));
-  //       if (!isAuth) dispatch(logOut());
-  //     }, 3000);
-  //   }),
-  // );
+// verifying user is authenticated
+  onAuthStateChanged(auth, user => {
+    if (!user) dispatch(logOut());
+  });
 
   return (
     <Tabs.Navigator screenOptions={homeScreenOptions}>
@@ -99,7 +86,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
   },
   focusedOverlay: {
-    backgroundColor: "#FF6C00", 
+    backgroundColor: "#FF6C00",
   },
   plusIcon: {
     color: "#212121cc",
@@ -108,7 +95,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
 
-  icon: { color: "#212121cc" }, 
+  icon: { color: "#212121cc" },
   focusedIcon: {
     color: "#FF6C00",
   },
