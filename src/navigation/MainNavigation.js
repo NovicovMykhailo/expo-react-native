@@ -8,29 +8,29 @@ import MapScreen from "../screens/MapScreen"; //screens
 import HomeScreenRoutes from "../navigation/HomeNavigation"; // stacks navigation
 
 import { CreateHedder } from "../components/CreateHedder"; // hedder Creator (util)
-import isStillAuthCheck from "../utils/isStillAuthCheck"; //utils
-import { useDispatch, useSelector } from "react-redux"; //redux
-import { selectCurrentToken } from "../redux/auth/selectors"; //redux
-import { logOut, showLoaderPage } from "../redux/auth/thunks"; //redux
+import { useDispatch } from "react-redux"; //redux
+import { logOut } from "../redux/auth/thunks"; //redux
+import { getAuth, onAuthStateChanged } from "firebase/auth"; // firebase
+import { useState } from "react"; // feact
 
 // =========  Main Navigation
 
 const MainStack = createStackNavigator();
 
-let isAuth;
-
-const getIsSignedIn = () => {
-  //check for token
-  const token = useSelector(selectCurrentToken);
-  isAuth = isStillAuthCheck(token);
-  return Boolean(token);
-};
-
 export const Routes = () => {
   const dispatch = useDispatch();
-  const isSignedIn = getIsSignedIn();
+  const auth = getAuth();
+  const [isSignedIn, setIsSignedIn] = useState();
 
-  if (!isSignedIn && !isAuth) dispatch(logOut());
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      setIsSignedIn(true);
+    }
+    if (!user) {
+      setIsSignedIn(false);
+      dispatch(logOut());
+    }
+  });
 
   return (
     <MainStack.Navigator screenOptions={{ headerShown: false }}>
