@@ -12,7 +12,7 @@ const colors = {
 const Toast = () => {
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState(null);
-  const [timeout, setTimeout] = useState(5000);
+  const [timeout, setTimeout] = useState(3000);
 
   const timeoutRef = useRef(null);
 
@@ -34,7 +34,7 @@ const Toast = () => {
   const closeToast = useCallback(() => {
     setMessage(null);
     setMessageType(null);
-    setTimeout(5000);
+    setTimeout(2000);
     animOpacity.value = withTiming(0);
     clearInterval(timeoutRef.current);
   }, [animOpacity]);
@@ -52,7 +52,7 @@ const Toast = () => {
   }, [closeToast, message, timeout]);
 
   useEffect(() => {
-    if (message) animOpacity.value = withTiming(1, { duration: 500 });
+    if (message) animOpacity.value = withTiming(1, { duration: 1500 });
   }, [message, animOpacity]);
 
   useEffect(() => {
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     right: "8%",
     backgroundColor: "white",
     borderRadius: 10,
-    padding: 15,
+    padding: 8,
     shadowColor: "#171717",
     shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.2,

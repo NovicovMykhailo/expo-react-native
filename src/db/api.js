@@ -11,13 +11,26 @@ import {
   doc,
   arrayUnion,
   getDoc,
-  where
+  where,
+  onSnapshot,
 } from "firebase/firestore";
+
 
 export const getPosts = async () => {
   try {
     const snapshot = await getDocs(query(collection(db, "posts"), orderBy("createdAt", "desc")));
-    console.warn("fetching posts");
+
+    /// add snapshotListener for not refetching manually
+
+    // const q = query(collection(db, "cities"), orderBy("createdAt", "desc"))
+    // const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    //   const cities = [];
+    //   querySnapshot.forEach((doc) => {
+    //       cities.push(doc.data().name);
+    //   });
+    //   console.log("Current cities in CA: ", cities.join(", "));
+    // });
+    console.log("fetching posts");
     const posts = snapshot.docs.map(doc => {
       return { ...doc.data(), id: doc.id };
     });
@@ -32,7 +45,7 @@ export const getPosts = async () => {
 export const addPost = async data => {
   try {
     const res = await addDoc(collection(db, "posts"), { ...data });
-    console.warn("adding posts");
+    console.log("adding posts");
     return res;
   } catch (error) {
     console.log(error.message);
@@ -42,7 +55,7 @@ export const addPost = async data => {
 export const addComment = async ({ postId, commentItem }) => {
   try {
     const Ref = doc(db, "posts", `${postId}`);
-    console.warn("adding comment");
+    console.log("adding comment");
     await updateDoc(Ref, {
       comments: arrayUnion(commentItem),
     });
@@ -54,7 +67,7 @@ export const addComment = async ({ postId, commentItem }) => {
 export const addLike = async ({ postId, uid }) => {
   try {
     const Ref = doc(db, "posts", `${postId}`);
-    console.warn("adding Like");
+    console.log("adding Like");
 
     await updateDoc(Ref, {
       likes: arrayUnion(uid),
@@ -67,7 +80,7 @@ export const addLike = async ({ postId, uid }) => {
 export const removeLike = async ({ postId, uid }) => {
   try {
     const Ref = doc(db, "posts", `${postId}`);
-    console.warn("removing Like");
+    console.log("removing Like");
     await updateDoc(Ref, {
       likes: arrayRemove(uid),
     });
@@ -80,7 +93,7 @@ export const getLikes = async postId => {
   const Ref = doc(db, "posts", `${postId}`);
 
   const docSnap = await getDoc(Ref);
-  console.warn("getting Likes");
+  console.log("getting Likes");
   const likes = docSnap.data().likes;
   return likes;
 };
@@ -88,22 +101,22 @@ export const getLikes = async postId => {
 export const getComments = async postId => {
   const Ref = doc(db, "posts", `${postId}`);
   const docSnap = await getDoc(Ref);
-  console.warn("getting Comments");
+  console.log("getting Comments");
   const posts = docSnap.data().comments;
+
 
   return posts;
 };
 
 export const getPostsLength = async () => {
-
   const coll = collection(db, "posts");
   const snapshot = await getCountFromServer(coll);
-  const length = snapshot.data().count
+  const length = snapshot.data().count;
   return length;
 };
 
-export const getUserPosts = async (userId) => {
-  const q = query(collection(db, "posts") , where("owner", "==", userId));
+export const getUserPosts = async userId => {
+  const q = query(collection(db, "posts"), where("owner", "==", userId));
   const snapshot = await getDocs(q);
   const userPosts = snapshot.docs.map(doc => {
     return { ...doc.data(), id: doc.id };

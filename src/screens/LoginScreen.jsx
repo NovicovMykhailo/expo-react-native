@@ -20,20 +20,15 @@ import { logIn } from "../redux/auth/thunks"; //redux
 import { selectError, selectIsLoading } from "../redux/auth/selectors"; //redux
 import LoadingScreen from "../components/LoadingScreen"; // component
 
-
-
 import validateEmail from "../utils/validateEmail"; //util
 import validatePassLength from "../utils/validatePassLength"; //util
-
 
 import toast from "../utils/toast"; //toast
 
 import image from "../assets/Photo_BG2x.png"; //bgImage
 
-
 const LoginScreen = () => {
   const [fontsLoaded] = useFonts({ Roboto: require("../assets/fonts/Roboto-Regular.ttf") });
-
 
   const dispatch = useDispatch();
   const error = useSelector(selectError);
@@ -77,6 +72,7 @@ const LoginScreen = () => {
     if (validateEmail(email) && validatePassLength(password)) {
       try {
         dispatch(logIn({ email, password }));
+        toast.info({ message: `Welcome! To Phonygramm` })
       } catch (error) {
         toast.error({ message: `${error.message}` });
       }
@@ -127,7 +123,7 @@ const LoginScreen = () => {
             </TouchableOpacity>
           </View>
         </TouchableWithoutFeedback>
-        {isLoading && <LoadingScreen/>}
+        {isLoading && <LoadingScreen />}
       </View>
     </SafeAreaView>
   );

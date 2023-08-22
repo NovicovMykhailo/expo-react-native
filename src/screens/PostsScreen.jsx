@@ -1,6 +1,5 @@
 import { SafeAreaView, StyleSheet, FlatList, ScrollView, View } from "react-native"; //react-native
-import { useState, useCallback } from "react"; //react
-import { useFocusEffect } from "@react-navigation/native"; //react-navigation'
+import { useState, useEffect } from "react"; //react
 
 import toast from "../utils/toast";
 
@@ -10,22 +9,27 @@ import PostsPlaceholder, { Spacer } from "../components/PlaceHolders/PostsPlaceh
 import UserBarPlaceholder from "../components/PlaceHolders/UserBarPlaceholder"; // Components
 
 import * as DB_API from "../db/api"; // POSTS_DB_API
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback } from "react";
 
-export default PostsScreen = () => {
+export default PostsScreen = data => {
   const [posts, setPosts] = useState([]);
-  const [isFetching, setIsFetching] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
       (async () => {
-        if (posts.length === 0) setIsFetching(true);
-        const data = await DB_API.getPosts();
-        // как то сравнить массивы
-        if (posts !== data) setPosts(data);
-        if (posts) setIsFetching(false);
+         await GetPosts();
       })();
     }, []),
   );
+
+  const GetPosts = async () => {
+    const data = await DB_API.getPosts();
+    if (posts !== data) setPosts(data);
+  };
+
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -45,6 +49,8 @@ export default PostsScreen = () => {
           data={posts}
           renderItem={({ item }) => <Card data={item} />}
           keyExtractor={item => item.id}
+          onRefresh={GetPosts}
+          refreshing={isFetching}
         />
       )}
     </SafeAreaView>

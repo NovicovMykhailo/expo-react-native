@@ -6,8 +6,6 @@ import * as DB_API from "../db/api";
 
 import toast from "../utils/toast";
 
-
-
 import commentCreator from "../utils/commentCreator"; //utils
 import CommentCard from "../components/CommentCard"; //components
 import { auth } from "../../config";
@@ -23,18 +21,19 @@ export default function CommentsScreen(data) {
 
   useEffect(() => {
     setCommentsList(params.comments);
- 
   }, []);
+
+
 
   async function handleAddComment() {
     const commentItem = commentCreator({ comment, ...user });
     await DB_API.addComment({ commentItem, postId });
     const res = await DB_API.getComments(postId);
-    setComment('')
-    setCommentsList(res)
-    
-   
+    toast.info({ message: "comment added" });
+    setComment("");
+    setCommentsList(res);
   }
+
 
   return (
     <SafeAreaView style={styles.box}>
@@ -44,6 +43,13 @@ export default function CommentsScreen(data) {
         data={commentsList}
         renderItem={({ item }) => <CommentCard data={item} />}
         keyExtractor={item => item.id}
+        ref={ref => this.flatList = ref}
+        onContentSizeChange={() => {
+          if(commentsList?.length > 0) this.flatList.scrollToEnd({animated: true})          
+        }}
+        ListEmptyComponent={<View/>}
+  
+
       />
       <View style={styles.footer}>
         <TextInput

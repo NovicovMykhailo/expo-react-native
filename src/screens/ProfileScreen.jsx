@@ -7,6 +7,7 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
+  RefreshControl
 } from "react-native";
 import { Feather } from "@expo/vector-icons"; // icons
 
@@ -26,25 +27,29 @@ import imageBg from "../assets/Photo_BG2x.png"; //bg image
 import * as DB_API from "../db/api";
 import { useFocusEffect } from "@react-navigation/native";
 
+
 export default ProfileScreen = () => {
   const [userImage, setUserImage] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [posts, setPosts] = useState(null);
 
   const user = auth.currentUser;
   const name = user.displayName;
 
+  const GetUserPosts = async () => {
+    const res = await DB_API.getUserPosts(user.uid);
+    if (res !== posts) {
+      setPosts(res);
+      setIsLoading(false);
+    } else {
+      return;
+    }
+  };
+
   useFocusEffect(
     useCallback(() => {
-      setIsLoading(true);
       (async () => {
-        const res = await DB_API.getUserPosts(user.uid);
-        if (res !== posts) {
-          setPosts(res);
-          setIsLoading(false);
-        } else {
-          return;
-        }
+        await GetUserPosts();
       })();
     }, []),
   );
@@ -64,11 +69,7 @@ export default ProfileScreen = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    (async () => {
-      const data = await DB_API.getUserPosts(user.uid);
-      setPosts(data);
-      setIsLoading(false);
-    })();
+    (async () => await GetUserPosts())();
   }, []);
 
   return (
@@ -76,7 +77,7 @@ export default ProfileScreen = () => {
       <StatusBar hidden={true} />
       <ImageBackground source={imageBg} style={styles.image} />
       <View>
-        <ScrollView>
+        <ScrollView refreshControl={<RefreshControl refreshing={isLoading} onRefresh={GetUserPosts} horizontal={false} />}>
           <View style={styles.view}>
             <View>
               <UserPhoto photo={{ uri: `${userImage}` }} />

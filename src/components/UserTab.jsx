@@ -40,7 +40,7 @@ export default function UserTab() {
           setImage(serverUserPhoto);
           dispatch(refreshUserPhoto())
         }
-      }, 3000);
+      }, 1500);
     }, []),
   );
 

@@ -14,8 +14,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
-
-
 import * as Location from "expo-location";
 
 import { useEffect, useState } from "react";
@@ -121,9 +119,10 @@ export default CreatePublicationScreen = () => {
       // add post to db
       try {
         await DB_Api.addPost(postCreator(post));
+        toast.info({ message: "Post created successfully" });
         navigation.navigate("Publications");
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
 
       setPhoto(null);
@@ -149,8 +148,9 @@ export default CreatePublicationScreen = () => {
           </>
         </Loader>
       )}
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContainer}>
+
+      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContainer}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.inner}>
             {/* photoBar */}
             {hasPermission ? (
@@ -167,6 +167,7 @@ export default CreatePublicationScreen = () => {
                           const asset = await MediaLibrary.createAssetAsync(uri);
                           setPhoto(asset);
                           setLoadingStatus("fullfield");
+                          toast.info({ message: "Photo added successfully" });
                         }
                       }}
                     >
@@ -241,8 +242,8 @@ export default CreatePublicationScreen = () => {
               <Text style={[styles.btnText, isBtnDisabled && styles.btnTextActive]}>Опубліковати</Text>
             </TouchableOpacity>
           </View>
-        </ScrollView>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </ScrollView>
 
       <View style={styles.trashBtnContainer}>
         <TouchableOpacity style={[styles.trashBtn, isActive && styles.trashBtnPresed]} onPress={onDelete}>
