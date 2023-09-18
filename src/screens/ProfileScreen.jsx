@@ -7,7 +7,7 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  RefreshControl
+  RefreshControl,
 } from "react-native";
 import { Feather } from "@expo/vector-icons"; // icons
 
@@ -20,39 +20,21 @@ import UserPhoto from "../components/UserPhoto"; //Components
 import StoryCard from "../components/StoryCard"; //Components
 import PostsPlaceholder from "../components/PlaceHolders/PostsPlaceholder"; //Components
 
+import { useFetchUserPostsQuery } from "../services/posts";
+
 import getImageUrl from "../utils/getImageUrl"; //utils
 import toast from "../utils/toast";
 import imageBg from "../assets/Photo_BG2x.png"; //bg image
 
-import * as DB_API from "../db/api";
 import { useFocusEffect } from "@react-navigation/native";
 
-
 export default ProfileScreen = () => {
-  const [userImage, setUserImage] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [posts, setPosts] = useState(null);
-
   const user = auth.currentUser;
   const name = user.displayName;
+  const [userImage, setUserImage] = useState(null);
+  const { isLoading, refetch, data: posts, error } = useFetchUserPostsQuery(user.uid);
 
-  const GetUserPosts = async () => {
-    const res = await DB_API.getUserPosts(user.uid);
-    if (res !== posts) {
-      setPosts(res);
-      setIsLoading(false);
-    } else {
-      return;
-    }
-  };
-
-  useFocusEffect(
-    useCallback(() => {
-      (async () => {
-        await GetUserPosts();
-      })();
-    }, []),
-  );
+  useFocusEffect(useCallback(() => () => !isLoading && refetch(), []));
 
   useEffect(() => {
     if (user.photoURL) {
@@ -61,23 +43,20 @@ export default ProfileScreen = () => {
           const url = await getImageUrl(user.photoURL);
           setUserImage(url);
         } catch (e) {
-          toast.error({ message: e });
+          toast.error({ message: `${e}` });
         }
       })();
     }
   });
 
-  useEffect(() => {
-    setIsLoading(true);
-    (async () => await GetUserPosts())();
-  }, []);
+  error && toast.error({ message: `${error}` });
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar hidden={true} />
       <ImageBackground source={imageBg} style={styles.image} />
       <View>
-        <ScrollView refreshControl={<RefreshControl refreshing={isLoading} onRefresh={GetUserPosts} horizontal={false} />}>
+        <ScrollView refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} horizontal={false} />}>
           <View style={styles.view}>
             <View>
               <UserPhoto photo={{ uri: `${userImage}` }} />
@@ -86,6 +65,7 @@ export default ProfileScreen = () => {
             </View>
             {isLoading && <PostsPlaceholder />}
             {!isLoading && posts?.map(item => <StoryCard key={item.id} item={item} userId={user.uid} />)}
+            {error && toast.error({ message: `${error}` })}
           </View>
         </ScrollView>
       </View>

@@ -26,15 +26,12 @@ const Toast = () => {
   function onNewToast(data) {
     setMessage(data.message);
     setMessageType(data.type);
-    if (data.durration) {
-      setTimeout(data.durration);
-    }
   }
 
   const closeToast = useCallback(() => {
     setMessage(null);
     setMessageType(null);
-    setTimeout(2000);
+    setTimeout(3000);
     animOpacity.value = withTiming(0);
     clearInterval(timeoutRef.current);
   }, [animOpacity]);
@@ -52,7 +49,7 @@ const Toast = () => {
   }, [closeToast, message, timeout]);
 
   useEffect(() => {
-    if (message) animOpacity.value = withTiming(1, { duration: 1500 });
+    if (message) animOpacity.value = withTiming(1, { duration: 1000 });
   }, [message, animOpacity]);
 
   useEffect(() => {

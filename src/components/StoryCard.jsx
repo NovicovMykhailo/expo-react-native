@@ -2,7 +2,7 @@ import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
-import * as DB_API from "../db/api";
+import { useRemoveLikeMutation, useAddLikeMutation, useFetchLikesQuery } from "../services/posts";
 
 import { getAuth } from "firebase/auth";
 
@@ -12,32 +12,31 @@ export default function StoryCard({ item }) {
   const { image, title, location, comments, coords, likes: likesProps, id: postId } = item;
   const [wasLiked, setWasLiked] = useState(true);
   const [likes, setLikes] = useState(likesProps);
-
+  const [addLike] = useAddLikeMutation();
+  const [removeLike] = useRemoveLikeMutation();
+  const { data, refresh } = useFetchLikesQuery(postId);
   const navigation = useNavigation();
   const auth = getAuth();
- 
 
   useEffect(() => {
     const { uid } = auth.currentUser;
-
     const liked = likes.find(like => like === uid);
     setWasLiked(Boolean(liked));
   }, [likes, handleLikes]);
 
-  async function handleLikes() {
+ const  handleLikes = () => {
     const { uid } = auth.currentUser;
-    
-    let refreshedLikes;
 
     const index = likes.indexOf(uid);
+
     if (index === -1) {
-      DB_API.addLike({ postId, uid });
-      refreshedLikes = await DB_API.getLikes(postId);
-      setLikes(refreshedLikes);
+      addLike({ postId, uid });
+      refresh();
+      data && setLikes(data);
     } else {
-      DB_API.removeLike({ postId, uid });
-      refreshedLikes = await DB_API.getLikes(postId);
-      setLikes(refreshedLikes);
+      removeLike({ postId, uid });
+      refresh();
+      data && setLikes(data);
     }
   }
 

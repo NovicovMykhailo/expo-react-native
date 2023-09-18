@@ -1,5 +1,5 @@
-import { SafeAreaView, StyleSheet, FlatList, ScrollView, View } from "react-native"; //react-native
-import { useState, useEffect } from "react"; //react
+import { SafeAreaView, StyleSheet, FlatList, ScrollView } from "react-native"; //react-native
+import { useFetchPostsQuery } from "../services/posts";
 
 import toast from "../utils/toast";
 
@@ -8,32 +8,16 @@ import Card from "../components/Card"; // Components
 import PostsPlaceholder, { Spacer } from "../components/PlaceHolders/PostsPlaceholder"; // Components
 import UserBarPlaceholder from "../components/PlaceHolders/UserBarPlaceholder"; // Components
 
-import * as DB_API from "../db/api"; // POSTS_DB_API
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
 
-export default PostsScreen = data => {
-  const [posts, setPosts] = useState([]);
-  const [isFetching, setIsFetching] = useState(false);
-
-  useFocusEffect(
-    useCallback(() => {
-      (async () => {
-         await GetPosts();
-      })();
-    }, []),
-  );
-
-  const GetPosts = async () => {
-    const data = await DB_API.getPosts();
-    if (posts !== data) setPosts(data);
-  };
-
-
+export default PostsScreen = () => {
+  const { data, error, refetch, isLoading } = useFetchPostsQuery();
+  useFocusEffect(useCallback(() => () => !isLoading && refetch(), []));
 
   return (
     <SafeAreaView style={styles.container}>
-      {isFetching && (
+      {isLoading && (
         <ScrollView>
           <Spacer height={32} />
           <UserBarPlaceholder />
@@ -42,17 +26,18 @@ export default PostsScreen = data => {
           <PostsPlaceholder />
         </ScrollView>
       )}
-      {!isFetching && (
+      {!isLoading && (
         <FlatList
           ListHeaderComponent={<UserTab />}
           ListHeaderComponentStyle={styles.hedder}
-          data={posts}
+          data={data}
           renderItem={({ item }) => <Card data={item} />}
           keyExtractor={item => item.id}
-          onRefresh={GetPosts}
-          refreshing={isFetching}
+          onRefresh={refetch}
+          refreshing={isLoading}
         />
       )}
+      { error && toast.error({ message: `${error}` })}
     </SafeAreaView>
   );
 };

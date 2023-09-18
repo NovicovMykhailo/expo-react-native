@@ -12,25 +12,11 @@ import {
   arrayUnion,
   getDoc,
   where,
-  onSnapshot,
 } from "firebase/firestore";
-
 
 export const getPosts = async () => {
   try {
     const snapshot = await getDocs(query(collection(db, "posts"), orderBy("createdAt", "desc")));
-
-    /// add snapshotListener for not refetching manually
-
-    // const q = query(collection(db, "cities"), orderBy("createdAt", "desc"))
-    // const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    //   const cities = [];
-    //   querySnapshot.forEach((doc) => {
-    //       cities.push(doc.data().name);
-    //   });
-    //   console.log("Current cities in CA: ", cities.join(", "));
-    // });
-    console.log("fetching posts");
     const posts = snapshot.docs.map(doc => {
       return { ...doc.data(), id: doc.id };
     });
@@ -55,7 +41,7 @@ export const addPost = async data => {
 export const addComment = async ({ postId, commentItem }) => {
   try {
     const Ref = doc(db, "posts", `${postId}`);
-    console.log("adding comment");
+    // console.log("adding comment");
     await updateDoc(Ref, {
       comments: arrayUnion(commentItem),
     });
@@ -101,18 +87,10 @@ export const getLikes = async postId => {
 export const getComments = async postId => {
   const Ref = doc(db, "posts", `${postId}`);
   const docSnap = await getDoc(Ref);
-  console.log("getting Comments");
+  // console.log("getting Comments");
   const posts = docSnap.data().comments;
 
-
   return posts;
-};
-
-export const getPostsLength = async () => {
-  const coll = collection(db, "posts");
-  const snapshot = await getCountFromServer(coll);
-  const length = snapshot.data().count;
-  return length;
 };
 
 export const getUserPosts = async userId => {

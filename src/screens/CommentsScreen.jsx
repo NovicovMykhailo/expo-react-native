@@ -1,39 +1,39 @@
-import { View, StyleSheet, SafeAreaView, TextInput, Image, TouchableOpacity, FlatList } from "react-native"; //native
+import { View, StyleSheet, SafeAreaView, TextInput, Image, TouchableOpacity, FlatList, Keyboard } from "react-native"; //native
 import { Feather } from "@expo/vector-icons"; //native
 import { useState, useEffect } from "react"; //react
 
-import * as DB_API from "../db/api";
+import { useFetchCommentsQuery, useAddCommentMutation } from "../services/posts";
 
 import toast from "../utils/toast";
 
 import commentCreator from "../utils/commentCreator"; //utils
 import CommentCard from "../components/CommentCard"; //components
 import { auth } from "../../config";
+import LoadingDots from "../components/LoadingDots";
 
 export default function CommentsScreen(data) {
-  const [comment, setComment] = useState(null);
-  const [commentsList, setCommentsList] = useState(null);
-  const [isFocused, setIsFocused] = useState(false);
   const { params } = data.route;
   const photo = params.image;
   const postId = params.postId;
   const user = auth.currentUser;
+  const { data: comments, refetch } = useFetchCommentsQuery(postId);
+  const [addComment, { isSuccess, isLoading }] = useAddCommentMutation();
+
+  const [comment, setComment] = useState(null);
+  const [commentsList, setCommentsList] = useState(params.comments);
+  const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
-    setCommentsList(params.comments);
-  }, []);
+    isSuccess && comments && setCommentsList(comments);
+  }, [comments, isSuccess]);
 
-
-
-  async function handleAddComment() {
+  const handleAddComment = async () => {
+    Keyboard.dismiss();
     const commentItem = commentCreator({ comment, ...user });
-    await DB_API.addComment({ commentItem, postId });
-    const res = await DB_API.getComments(postId);
-    toast.info({ message: "comment added" });
+    await addComment({ commentItem, postId });
+    refetch();
     setComment("");
-    setCommentsList(res);
-  }
-
+  };
 
   return (
     <SafeAreaView style={styles.box}>
@@ -43,14 +43,16 @@ export default function CommentsScreen(data) {
         data={commentsList}
         renderItem={({ item }) => <CommentCard data={item} />}
         keyExtractor={item => item.id}
-        ref={ref => this.flatList = ref}
+        ref={ref => (this.flatList = ref)}
         onContentSizeChange={() => {
-          if(commentsList?.length > 0) this.flatList.scrollToEnd({animated: true})          
+          if (commentsList?.length > 0) this.flatList.scrollToEnd({ animated: true });
         }}
-        ListEmptyComponent={<View/>}
-  
-
+        ListEmptyComponent={<View />}
+        onRefresh={refetch}
+        refreshing={isLoading}
       />
+      {isLoading && <LoadingDots />}
+      {isSuccess && toast.info({ message: "comment added" })}
       <View style={styles.footer}>
         <TextInput
           placeholder="Коментувати..."
