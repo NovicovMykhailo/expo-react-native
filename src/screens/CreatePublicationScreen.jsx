@@ -27,8 +27,8 @@ import postCreator from "../utils/postCreator";
 import toast from "../utils/toast";
 //redux
 import { auth } from "../../config";
-import * as DB_Api from "../db/api";
 import imageUploadUtil from "../utils/imageUploadUtil";
+import { useAddPostMutation } from "../redux/posts/posts";
 
 //
 export default CreatePublicationScreen = () => {
@@ -38,6 +38,7 @@ export default CreatePublicationScreen = () => {
   const [geoposition, setGeoposition] = useState("");
   const [isFocused, setIsFocused] = useState(null);
   const [loadingStatus, setLoadingStatus] = useState("idle");
+  const [addPost] = useAddPostMutation();
 
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
@@ -118,7 +119,7 @@ export default CreatePublicationScreen = () => {
       };
       // add post to db
       try {
-        await DB_Api.addPost(postCreator(post));
+        addPost(postCreator(post));
         toast.info({ message: "Post created successfully" });
         navigation.navigate("Publications");
       } catch (error) {

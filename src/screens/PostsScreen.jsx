@@ -1,5 +1,5 @@
 import { SafeAreaView, StyleSheet, FlatList, ScrollView } from "react-native"; //react-native
-import { useFetchPostsQuery } from "../services/posts";
+import { useFetchPostsQuery } from "../redux/posts/posts";
 
 import toast from "../utils/toast";
 

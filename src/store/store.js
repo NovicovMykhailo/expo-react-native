@@ -4,7 +4,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import authReducer from "../redux/auth/slice";
-import { postsApi } from "../services/posts";
+import { postsApi } from "../redux/posts/posts";
 
 const authConfig = {
   key: "token",

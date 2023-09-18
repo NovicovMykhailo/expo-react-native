@@ -2,14 +2,14 @@ import { View, StyleSheet, SafeAreaView, TextInput, Image, TouchableOpacity, Fla
 import { Feather } from "@expo/vector-icons"; //native
 import { useState, useEffect } from "react"; //react
 
-import { useFetchCommentsQuery, useAddCommentMutation } from "../services/posts";
+import { useFetchCommentsQuery, useAddCommentMutation } from "../redux/posts/posts";
 
 import toast from "../utils/toast";
 
 import commentCreator from "../utils/commentCreator"; //utils
 import CommentCard from "../components/CommentCard"; //components
 import { auth } from "../../config";
-import LoadingDots from "../components/LoadingDots";
+
 
 export default function CommentsScreen(data) {
   const { params } = data.route;
@@ -49,9 +49,7 @@ export default function CommentsScreen(data) {
         }}
         ListEmptyComponent={<View />}
         onRefresh={refetch}
-        refreshing={isLoading}
       />
-      {isLoading && <LoadingDots />}
       {isSuccess && toast.info({ message: "comment added" })}
       <View style={styles.footer}>
         <TextInput

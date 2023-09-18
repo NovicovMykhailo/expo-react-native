@@ -20,7 +20,7 @@ import UserPhoto from "../components/UserPhoto"; //Components
 import StoryCard from "../components/StoryCard"; //Components
 import PostsPlaceholder from "../components/PlaceHolders/PostsPlaceholder"; //Components
 
-import { useFetchUserPostsQuery } from "../services/posts";
+import { useFetchUserPostsQuery } from "../redux/posts/posts";
 
 import getImageUrl from "../utils/getImageUrl"; //utils
 import toast from "../utils/toast";

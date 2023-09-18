@@ -1,5 +1,5 @@
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
-import * as API from "../db/api";
+import * as API from "../../db/api";
 
 export const postsApi = createApi({
   reducerPath: "posts",
@@ -102,7 +102,6 @@ export const {
   useFetchUserPostsQuery,
   useFetchCommentsQuery,
   useFetchLikesQuery,
-  useFetchPostsLengthQuery,
   useAddPostMutation,
   useAddCommentMutation,
   useAddLikeMutation,

@@ -42,7 +42,6 @@ export default function UserPhoto() {
   };
 
   const updatePhoto = async data => {
-
     setIsUpdating(true);
     const url = await updateUserPhotoUrl(data);
     setImage(url);
@@ -55,7 +54,6 @@ export default function UserPhoto() {
       <View style={styles.userPhoto}>
         {isUpdating ? <Spinner /> : <ImageBackground source={{ uri: `${image}` }} style={styles.photo} />}
         <PlusStyledButton isActive={isBtnActive} onPress={() => (image ? setImage(null) : showModal())} />
-        {/* <Pressable style={{width: 30, height: 30, backgroundColor: "red"}} onPress={()=>dispatch(refreshUserPhoto())}/> */}
       </View>
     </>
   );

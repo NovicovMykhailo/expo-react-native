@@ -1,10 +1,10 @@
-import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { Feather } from "@expo/vector-icons";
-import { useState, useEffect } from "react";
-import { useRemoveLikeMutation, useAddLikeMutation, useFetchLikesQuery } from "../services/posts";
+import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native"
+import { useNavigation } from "@react-navigation/native"
+import { Feather } from "@expo/vector-icons"
+import { useState, useEffect } from "react"
+import { useRemoveLikeMutation, useAddLikeMutation, useFetchLikesQuery } from "../redux/posts/posts"
 
-import { getAuth } from "firebase/auth";
+import { getAuth } from "firebase/auth"
 
 //redux
 
@@ -14,7 +14,7 @@ export default function StoryCard({ item }) {
   const [likes, setLikes] = useState(likesProps);
   const [addLike] = useAddLikeMutation();
   const [removeLike] = useRemoveLikeMutation();
-  const { data, refresh } = useFetchLikesQuery(postId);
+  const { data, refresh } = useFetchLikesQuery(postId, {skip : true});
   const navigation = useNavigation();
   const auth = getAuth();
 
@@ -24,11 +24,9 @@ export default function StoryCard({ item }) {
     setWasLiked(Boolean(liked));
   }, [likes, handleLikes]);
 
- const  handleLikes = () => {
+ const handleLikes = () => {
     const { uid } = auth.currentUser;
-
     const index = likes.indexOf(uid);
-
     if (index === -1) {
       addLike({ postId, uid });
       refresh();
@@ -61,7 +59,7 @@ export default function StoryCard({ item }) {
             <Text style={styles.barLeftText}>{comments.length}</Text>
           </TouchableOpacity>
           <View style={styles.barLeft}>
-            <TouchableOpacity style={styles.isRelative} onPress={() => handleLikes()}>
+            <TouchableOpacity style={styles.isRelative} onPress={handleLikes}>
               {wasLiked && likes.length > 0 && (
                 <Image source={require("./../assets/thumbsUpGg.png")} style={styles.thumbFill} />
               )}
