@@ -73,10 +73,12 @@ export const postsApi = createApi({
       invalidatesTags: ["Post"],
     }),
     addLike: builder.mutation({
-      async queryFn(postId, uid) {
+      async queryFn(data) {
+
         try {
-          await API.addLike(postId, uid);
-          return { data: true };
+          const res = await API.addLike(data);
+
+          return { data: res };
         } catch (error) {
           return { error };
         }
@@ -84,10 +86,11 @@ export const postsApi = createApi({
       providesTags: ["Post"],
     }),
     removeLike: builder.mutation({
-      async queryFn(postId, uid) {
+      async queryFn(data) {
+
         try {
-          await API.removeLike(postId, uid);
-          return { data: true };
+          const res =  await API.removeLike(data);
+          return { data: res };
         } catch (error) {
           return { error };
         }

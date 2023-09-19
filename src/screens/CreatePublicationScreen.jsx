@@ -21,8 +21,8 @@ import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 
-import Spinner from "../components/Spinner";
-import Loader from "../components/Loader";
+import Spinner from "../components/Loaders/Spinner";
+import Loader from "../components/Loaders/Loader";
 import postCreator from "../utils/postCreator";
 import toast from "../utils/toast";
 //redux

@@ -10,10 +10,11 @@ import UserBarPlaceholder from "./PlaceHolders/UserBarPlaceholder";//component
 
 export default function UserTab() {
   const dispatch = useDispatch()
-  const [image, setImage] = useState();
-  const [user, setUser] = useState();
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const userInfo = useSelector(selectUser);
+  const [image, setImage] = useState();
+  const [user, setUser] = useState(userInfo);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
 
   useEffect(() => {
     if (!userInfo) {

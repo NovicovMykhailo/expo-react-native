@@ -3,10 +3,7 @@ import { dateFormat } from "../utils/formating";
 import { auth } from "../../config";
 
 export default function CommentCard({ data }) {
-  const {user_id,  photoURL, comment, createdAt, owner } = data;
-
-
-
+const {  photoURL, comment, createdAt, owner } = data;
 
 const user = auth.currentUser;
 const userUid = user.uid;

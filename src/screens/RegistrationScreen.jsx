@@ -21,7 +21,7 @@ import { selectError, selectIsLoading } from "../redux/auth/selectors"; //redux
 
 import PhotoPicker from "../components/PhotoPicker"; //Components
 import PlusStyledButton from "../components/PlusStyledButton"; //Components
-import LoadingScreen from "../components/LoadingScreen"; // component
+import LoadingScreen from "../components/Loaders/LoadingScreen"; // component
 
 
 

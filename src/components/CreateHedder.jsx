@@ -1,5 +1,4 @@
 import { View, Text, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import { getHeaderTitle } from "@react-navigation/elements";
 import { useDispatch } from "react-redux"; //redux
@@ -16,7 +15,7 @@ export function CreateHedder({ navigation, route, options, to }) {
   );
 }
 
-export function PublicationsHedder({ navigation, route, options }) {
+export function PublicationsHedder({ route, options }) {
   const dispatch = useDispatch();
   const title = getHeaderTitle(options, route.name);
 

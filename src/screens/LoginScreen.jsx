@@ -18,7 +18,7 @@ import { useState, useEffect, useCallback } from "react"; //react
 import { useDispatch, useSelector } from "react-redux"; //redux
 import { logIn } from "../redux/auth/thunks"; //redux
 import { selectError, selectIsLoading } from "../redux/auth/selectors"; //redux
-import LoadingScreen from "../components/LoadingScreen"; // component
+import LoadingScreen from "../components/Loaders/LoadingScreen"; // component
 
 import validateEmail from "../utils/validateEmail"; //util
 import validatePassLength from "../utils/validatePassLength"; //util

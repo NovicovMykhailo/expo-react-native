@@ -1,42 +1,47 @@
-import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native"
-import { useNavigation } from "@react-navigation/native"
-import { Feather } from "@expo/vector-icons"
-import { useState, useEffect } from "react"
-import { useRemoveLikeMutation, useAddLikeMutation, useFetchLikesQuery } from "../redux/posts/posts"
+import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { Feather } from "@expo/vector-icons";
+import { useState, useEffect } from "react";
+import {getLikes} from "../db/api";
+import { useRemoveLikeMutation, useAddLikeMutation } from "../redux/posts/posts";
 
-import { getAuth } from "firebase/auth"
+import { getAuth } from "firebase/auth";
 
 //redux
 
 export default function StoryCard({ item }) {
   const { image, title, location, comments, coords, likes: likesProps, id: postId } = item;
-  const [wasLiked, setWasLiked] = useState(true);
+  const auth = getAuth();
+  const { uid } = auth.currentUser;
+
+  const [userId, _] = useState(uid);
+  const [wasLiked, setWasLiked] = useState();
   const [likes, setLikes] = useState(likesProps);
+
   const [addLike] = useAddLikeMutation();
   const [removeLike] = useRemoveLikeMutation();
-  const { data, refresh } = useFetchLikesQuery(postId, {skip : true});
+
   const navigation = useNavigation();
-  const auth = getAuth();
 
   useEffect(() => {
-    const { uid } = auth.currentUser;
-    const liked = likes.find(like => like === uid);
+    const liked = likes.find(like => like === userId);
     setWasLiked(Boolean(liked));
-  }, [likes, handleLikes]);
+  }, [likes]);
 
- const handleLikes = () => {
-    const { uid } = auth.currentUser;
-    const index = likes.indexOf(uid);
+  const handleLikes = async () => {
+    const index = likes.indexOf(userId);
+    let refreshedLikes;
+
     if (index === -1) {
-      addLike({ postId, uid });
-      refresh();
-      data && setLikes(data);
+      await addLike({ postId, userId });
+      refreshedLikes = await getLikes(postId);
+      setLikes(refreshedLikes);
     } else {
-      removeLike({ postId, uid });
-      refresh();
-      data && setLikes(data);
+      await removeLike({ postId, userId });
+      refreshedLikes = await getLikes(postId);
+      setLikes(refreshedLikes);
     }
-  }
+  };
 
   return (
     <TouchableOpacity style={styles.container} disabled={true}>

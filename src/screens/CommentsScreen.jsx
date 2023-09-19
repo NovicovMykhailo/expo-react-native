@@ -2,13 +2,13 @@ import { View, StyleSheet, SafeAreaView, TextInput, Image, TouchableOpacity, Fla
 import { Feather } from "@expo/vector-icons"; //native
 import { useState, useEffect } from "react"; //react
 
-import { useFetchCommentsQuery, useAddCommentMutation } from "../redux/posts/posts";
+import { useFetchCommentsQuery, useAddCommentMutation } from "../redux/posts/posts";//RTK
 
-import toast from "../utils/toast";
+import toast from "../utils/toast";//toast
 
 import commentCreator from "../utils/commentCreator"; //utils
 import CommentCard from "../components/CommentCard"; //components
-import { auth } from "../../config";
+import { auth } from "../../config";//auth
 
 
 export default function CommentsScreen(data) {
@@ -16,8 +16,8 @@ export default function CommentsScreen(data) {
   const photo = params.image;
   const postId = params.postId;
   const user = auth.currentUser;
-  const { data: comments, refetch } = useFetchCommentsQuery(postId);
-  const [addComment, { isSuccess, isLoading }] = useAddCommentMutation();
+  const { data: comments, refetch, isFetching } = useFetchCommentsQuery(postId);
+  const [addComment, { isSuccess}] = useAddCommentMutation();
 
   const [comment, setComment] = useState(null);
   const [commentsList, setCommentsList] = useState(params.comments);
@@ -48,6 +48,7 @@ export default function CommentsScreen(data) {
           if (commentsList?.length > 0) this.flatList.scrollToEnd({ animated: true });
         }}
         ListEmptyComponent={<View />}
+        refreshing={isFetching}
         onRefresh={refetch}
       />
       {isSuccess && toast.info({ message: "comment added" })}

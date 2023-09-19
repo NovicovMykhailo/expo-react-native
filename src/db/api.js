@@ -50,26 +50,31 @@ export const addComment = async ({ postId, commentItem }) => {
   }
 };
 
-export const addLike = async ({ postId, uid }) => {
+export const addLike = async ({ postId, userId: uid }) => {
+
+
   try {
     const Ref = doc(db, "posts", `${postId}`);
     console.log("adding Like");
 
-    await updateDoc(Ref, {
+   await updateDoc(Ref, {
       likes: arrayUnion(uid),
     });
+    return true
   } catch (error) {
     console.log(error.message);
   }
 };
 
-export const removeLike = async ({ postId, uid }) => {
+export const removeLike = async ({ postId, userId: uid }) => {
+  
   try {
     const Ref = doc(db, "posts", `${postId}`);
     console.log("removing Like");
     await updateDoc(Ref, {
       likes: arrayRemove(uid),
     });
+    return true
   } catch (error) {
     console.log(error.message);
   }

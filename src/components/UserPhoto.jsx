@@ -6,7 +6,7 @@ import updateUserPhotoUrl from "../utils/updateUserPhotoUrl"; //utils
 
 import PlusStyledButton from "./PlusStyledButton"; //Components
 import PhotoPicker from "./PhotoPicker"; //Components
-import Spinner from "../components/Spinner";
+import Spinner from "../components/Loaders/Spinner";
 import { useSelector, useDispatch  } from "react-redux";
 import { refreshUserPhoto } from "../redux/auth/thunks";
 import { selectUserPhoto } from "../redux/auth/selectors";
