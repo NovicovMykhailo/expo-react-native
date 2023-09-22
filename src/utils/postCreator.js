@@ -1,5 +1,7 @@
-import { Timestamp } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore"; // firebase
 
+
+//Post Model Generator
 export default function postCreator(data) {
   const { title, location, coords, image, owner } = data;
   const post = {

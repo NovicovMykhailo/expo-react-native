@@ -1,6 +1,6 @@
-import { StyleSheet, View } from "react-native";
-import { MotiView } from "moti";
-import { Skeleton } from "moti/skeleton";
+import { StyleSheet} from "react-native";// native
+import { Skeleton } from "moti/skeleton"; // Moti
+import { MotiView } from "moti"; // Moti
 
 const colorMode = "light";
 const colors = ["#dbdbdb", "#ece9dfab"];

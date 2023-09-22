@@ -9,42 +9,42 @@ import {
   ScrollView,
   Alert,
   ImageBackground,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { EvilIcons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
+} from "react-native"; // native
+import { useNavigation } from "@react-navigation/native"; // native
+import Spinner from "../components/Loaders/Spinner"; //Component
+import Loader from "../components/Loaders/Loader"; //Component
+import { Ionicons } from "@expo/vector-icons"; // icon
+import { EvilIcons } from "@expo/vector-icons"; // icon
+import { Feather } from "@expo/vector-icons"; // icon
 
-import * as Location from "expo-location";
+import * as MediaLibrary from "expo-media-library"; //expo
+import * as Location from "expo-location"; // expo
+import { Camera } from "expo-camera"; // expo
 
-import { useEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { Camera } from "expo-camera";
-import * as MediaLibrary from "expo-media-library";
+import { useAddPostMutation } from "../redux/posts/posts"; //redux
+import { useEffect, useState } from "react"; // react
+import { auth } from "../../config";// firebase
 
-import Spinner from "../components/Loaders/Spinner";
-import Loader from "../components/Loaders/Loader";
-import postCreator from "../utils/postCreator";
-import toast from "../utils/toast";
-//redux
-import { auth } from "../../config";
-import imageUploadUtil from "../utils/imageUploadUtil";
-import { useAddPostMutation } from "../redux/posts/posts";
+import imageUploadUtil from "../utils/imageUploadUtil"; //util
+import postCreator from "../utils/postCreator"; //utils
+import showToast from "../utils/showToast"; //utils
 
-//
+
 export default CreatePublicationScreen = () => {
-  const [photo, setPhoto] = useState(null);
-  const [title, setTitle] = useState("");
-  const [location, setLocation] = useState("");
+  // teck states
+  const [loadingStatus, setLoadingStatus] = useState("idle");
   const [geoposition, setGeoposition] = useState("");
   const [isFocused, setIsFocused] = useState(null);
-  const [loadingStatus, setLoadingStatus] = useState("idle");
-  const [addPost] = useAddPostMutation();
-
+  const [location, setLocation] = useState("");
+  const [photo, setPhoto] = useState(null);
+  const [title, setTitle] = useState("");
+  //camera states
   const [hasPermission, setHasPermission] = useState(null);
-  const [cameraRef, setCameraRef] = useState(null);
   const [type, _] = useState(Camera.Constants.Type.back);
+  const [cameraRef, setCameraRef] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
 
+  const [addPost] = useAddPostMutation();
   const navigation = useNavigation();
 
   const isBtnDisabled = !photo;
@@ -53,25 +53,23 @@ export default CreatePublicationScreen = () => {
   //camera init
   useEffect(() => {
     setPhoto(null);
-
     (async () => {
       try {
         checkCameraPermission();
       } catch (error) {
         setHasPermission(null);
-        toast.error({ message: `${error.message}` });
+        showToast({ type: "error", message: `${error.message}` });
       }
     })();
-
     return () => setPhoto(null);
   }, []);
 
-  //Search for  geolication
+  //Search for geolocation
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        toast.error({ message: "Permission to access location was denied" });
+        showToast({ type: "error", message: "Permission to access location was denied" });
       }
       let foundLocation = await Location.getCurrentPositionAsync();
 
@@ -90,13 +88,10 @@ export default CreatePublicationScreen = () => {
 
     await MediaLibrary.requestPermissionsAsync().then(permission => {
       if (!permission.granted) {
-        Alert.alert("Attantion", "No access to camera", [
-          {
-            text: "Allow Permission",
-            onPress: () => checkCameraPermission,
-          },
-        ]);
-      }
+        Alert.alert("Attantion", "No access to camera", [{ 
+          text: "Allow Permission",
+          onPress: () => checkCameraPermission 
+        }])}
     });
     setHasPermission(status === "granted");
   }
@@ -119,16 +114,15 @@ export default CreatePublicationScreen = () => {
       };
       // add post to db
       try {
-        addPost(postCreator(post));
-        toast.info({ message: "Post created successfully" });
+        await addPost(postCreator(post))
+        showToast({ type: "info", message: "Post created successfully" });
         navigation.navigate("Publications");
       } catch (error) {
-        console.log(error);
-      }
+        showToast({ type: "error", message:"oops, somthing went wrong"})
 
-      setPhoto(null);
-      setTitle("");
-      setLocation("");
+      }
+      // reseting Form fields
+      onDelete()
     }
   };
 
@@ -168,7 +162,8 @@ export default CreatePublicationScreen = () => {
                           const asset = await MediaLibrary.createAssetAsync(uri);
                           setPhoto(asset);
                           setLoadingStatus("fullfield");
-                          toast.info({ message: "Photo added successfully" });
+                          showToast({ type: "info", message: "Photo added successfully" });
+
                         }
                       }}
                     >

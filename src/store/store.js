@@ -1,10 +1,9 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from "redux-persist";
+import AsyncStorage from "@react-native-async-storage/async-storage"; // async-storage
+import { persistStore, persistReducer } from "redux-persist"; // persist
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-import authReducer from "../redux/auth/slice";
-import { postsApi } from "../redux/posts/posts";
+import { configureStore } from "@reduxjs/toolkit"; // redux
+import authReducer from "../redux/auth/slice"; // redux
+import { postsApi } from "../redux/posts/posts"; // redux
 
 const authConfig = {
   key: "token",

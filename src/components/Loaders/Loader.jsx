@@ -1,8 +1,10 @@
-import React from "react";
-import { Pressable, useWindowDimensions, StyleSheet, Modal } from "react-native";
+import { Pressable, useWindowDimensions, StyleSheet, Modal } from "react-native"; // native
+import React from "react"; //react
 
-const Loader = ({ setVisible,children }) => {
+const Loader = ({ setVisible, children }) => {
+
   const { width: userWidth } = useWindowDimensions();
+  
   return (
     <Modal
       animationType="fade"

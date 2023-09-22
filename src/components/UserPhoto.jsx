@@ -1,15 +1,15 @@
-import { View, StyleSheet, ImageBackground, Pressable } from "react-native"; //native
-
-import { useState, useEffect } from "react"; //react
-import { getAuth } from "firebase/auth";
+import { View, StyleSheet, ImageBackground} from "react-native"; //native
 import updateUserPhotoUrl from "../utils/updateUserPhotoUrl"; //utils
 
+import Spinner from "../components/Loaders/Spinner"; // Components
 import PlusStyledButton from "./PlusStyledButton"; //Components
 import PhotoPicker from "./PhotoPicker"; //Components
-import Spinner from "../components/Loaders/Spinner";
-import { useSelector, useDispatch  } from "react-redux";
-import { refreshUserPhoto } from "../redux/auth/thunks";
-import { selectUserPhoto } from "../redux/auth/selectors";
+
+import { selectUserPhoto } from "../redux/auth/selectors"; //redux
+import { useSelector} from "react-redux"; //redux
+import { useState, useEffect } from "react"; //react
+import { getAuth } from "firebase/auth"; // firebase
+
 
 export default function UserPhoto() {
   const [isBtnActive, setIsBtnActive] = useState(false);
@@ -18,7 +18,7 @@ export default function UserPhoto() {
   const [image, setImage] = useState();
 
   const userPhoto = useSelector(selectUserPhoto);
-  const dispatch = useDispatch()
+
 
 
   useEffect(() => {

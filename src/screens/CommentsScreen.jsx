@@ -1,17 +1,15 @@
 import { View, StyleSheet, SafeAreaView, TextInput, Image, TouchableOpacity, FlatList, Keyboard } from "react-native"; //native
-import { Feather } from "@expo/vector-icons"; //native
+import { useFetchCommentsQuery, useAddCommentMutation } from "../redux/posts/posts";//redux
 import { useState, useEffect } from "react"; //react
 
-import { useFetchCommentsQuery, useAddCommentMutation } from "../redux/posts/posts";//RTK
-
-import toast from "../utils/toast";//toast
+import CommentCard from "../components/CommentCard"; //components
+import  showToast  from "../utils/showToast";// toast
+import { Feather } from "@expo/vector-icons"; //icons
 
 import commentCreator from "../utils/commentCreator"; //utils
-import CommentCard from "../components/CommentCard"; //components
-import { auth } from "../../config";//auth
+import { auth } from "../../config";//firebase
 
-
-export default function CommentsScreen(data) {
+ const  CommentsScreen = (data) => {
   const { params } = data.route;
   const photo = params.image;
   const postId = params.postId;
@@ -33,6 +31,7 @@ export default function CommentsScreen(data) {
     await addComment({ commentItem, postId });
     refetch();
     setComment("");
+    showToast({type: "info", message: "comment successfully added"})
   };
 
   return (
@@ -51,7 +50,6 @@ export default function CommentsScreen(data) {
         refreshing={isFetching}
         onRefresh={refetch}
       />
-      {isSuccess && toast.info({ message: "comment added" })}
       <View style={styles.footer}>
         <TextInput
           placeholder="Коментувати..."
@@ -68,6 +66,8 @@ export default function CommentsScreen(data) {
     </SafeAreaView>
   );
 }
+
+export default CommentsScreen;
 
 const styles = StyleSheet.create({
   box: {

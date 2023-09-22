@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet } from "react-native";
-import { useFonts } from "expo-font";
+import { View, Text, StyleSheet } from "react-native"; // native
+import { useFonts } from "expo-font"; // expo
 
 export default function HeaderTitle({ title }) {
   const [fontsLoaded] = useFonts({
@@ -16,7 +16,12 @@ export default function HeaderTitle({ title }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: "center", flexDirection: "row", paddingHorizontal: 75 },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    flexDirection: "row",
+    paddingHorizontal: 75,
+  },
   text: {
     color: "#212121",
     fontFamily: "Roboto",

@@ -1,6 +1,6 @@
-import React from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { TouchableOpacity, StyleSheet } from "react-native"; // native
+import { AntDesign } from "@expo/vector-icons"; // icons
+import React from "react"; // react
 
 const PlusStyledButton = ({ onPress, isActive = false }) => {
   return (

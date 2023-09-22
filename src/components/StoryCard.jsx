@@ -1,16 +1,16 @@
-import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { Feather } from "@expo/vector-icons";
-import { useState, useEffect } from "react";
-import {getLikes} from "../db/api";
-import { useRemoveLikeMutation, useAddLikeMutation } from "../redux/posts/posts";
-
-import { getAuth } from "firebase/auth";
+import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native"; // native
+import { useRemoveLikeMutation, useAddLikeMutation } from "../redux/posts/posts"; // redux
+import { useState, useEffect } from "react"; //react
+import { useNavigation } from "@react-navigation/native"; //react-native
+import { Feather } from "@expo/vector-icons";//icon
+import { getLikes } from "../db/api"; // api fetching
+import { getAuth } from "firebase/auth"; // firebase
 
 //redux
 
 export default function StoryCard({ item }) {
   const { image, title, location, comments, coords, likes: likesProps, id: postId } = item;
+
   const auth = getAuth();
   const { uid } = auth.currentUser;
 
@@ -92,6 +92,7 @@ export default function StoryCard({ item }) {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
+    marginBottom: 32,
   },
 
   photo: {

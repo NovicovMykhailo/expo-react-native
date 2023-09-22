@@ -1,6 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { register, logIn, logOut, refreshUserPhoto, showLoaderPage } from "./thunks";
-import initialState from "./initialState";
+import { register, logIn, logOut, refreshUserPhoto, showLoaderPage } from "./thunks"; // thunks
+import { createSlice } from "@reduxjs/toolkit"; // redux
+import initialState from "./initialState"; // init state
 
 const handlePending = state => {
   state.isLoading = true;
@@ -15,26 +15,30 @@ const handleRejected = (state, { error, payload }) => {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    autologin(state, {payload}) {
+      const { displayName, email, photoURL, stsTokenManager} = payload;
+      state.user = { displayName, email, photoURL };
+      state.token = stsTokenManager.accessToken;
+    },
+  },
   extraReducers: builder => {
     builder
-      .addCase(register.fulfilled, (state, { payload }) => {
-        const { displayName, email, photoURL } = payload.user;
-        state.user = { displayName, email, photoURL };
-        state.token = payload._tokenResponse.idToken;
+      .addCase(register.fulfilled, (state) => {
         state.isLoading = false;
         state.error = null;
+        state.isRegistered = true;
       })
       .addCase(logIn.fulfilled, (state, { payload }) => {
         const { displayName, email, photoURL } = payload.user;
-
         state.user = { displayName, email, photoURL };
         state.token = payload._tokenResponse.idToken;
         state.isLoading = false;
         state.error = null;
+        state.isRegistered = true;
       })
       .addCase(logOut.fulfilled, state => {
-        state.user = []
+        state.user = {};
         state.token = null;
         state.error = null;
         state.isLoading = false;
@@ -55,3 +59,4 @@ const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
+export const { autologin } = authSlice.actions

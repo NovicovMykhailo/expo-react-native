@@ -1,36 +1,43 @@
 import { createStackNavigator } from "@react-navigation/stack"; // native
-// import { useEffect } from "react";//react
+import { getAuth, onAuthStateChanged } from "firebase/auth"; // firebase
 
-import RegistrationScreen from "../screens/RegistrationScreen"; //screens
-import LoginScreen from "../screens/LoginScreen"; //screens
-import CommentsScreen from "../screens/CommentsScreen"; //screens
-import MapScreen from "../screens/MapScreen"; //screens
 import HomeScreenRoutes from "../navigation/HomeNavigation"; // stacks navigation
+import RegistrationScreen from "../screens/RegistrationScreen"; //screens
+import CommentsScreen from "../screens/CommentsScreen"; //screens
+import LoginScreen from "../screens/LoginScreen"; //screens
+import MapScreen from "../screens/MapScreen"; //screens
 
 import { CreateHedder } from "../components/CreateHedder"; // hedder Creator (util)
-import { useDispatch } from "react-redux"; //redux
+import { useDispatch, useSelector } from "react-redux"; //redux
+import { autologin } from "../redux/auth/slice"; // redux
 import { logOut } from "../redux/auth/thunks"; //redux
-import { getAuth, onAuthStateChanged } from "firebase/auth"; // firebase
-import { useState } from "react"; // feact
+
+import { useState } from "react"; // react
 
 // =========  Main Navigation
 
 const MainStack = createStackNavigator();
 
 export const Routes = () => {
-  const dispatch = useDispatch();
   const auth = getAuth();
-  const [isSignedIn, setIsSignedIn] = useState();
+  const isRegistered = useSelector(state=>state.auth.isRegistered);
 
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      setIsSignedIn(true);
-    }
-    if (!user) {
-      setIsSignedIn(false);
-      dispatch(logOut());
-    }
-  });
+  const dispatch = useDispatch();
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  isRegistered && onAuthStateChanged(auth, user => {
+      if (user) {
+        dispatch(autologin(user));
+        setIsSignedIn(true);
+
+      }
+      if (!user) {
+        setIsSignedIn(false);
+
+        dispatch(logOut());
+      }
+    });
+
 
   return (
     <MainStack.Navigator screenOptions={{ headerShown: false }}>

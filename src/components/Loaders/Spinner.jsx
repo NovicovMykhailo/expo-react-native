@@ -1,5 +1,5 @@
-import { StyleSheet, View, Image } from "react-native";
-import image from "../../assets/SpinnerOrange.gif";
+import { StyleSheet, View, Image } from "react-native"; // native
+import image from "../../assets/SpinnerOrange.gif"; // gif
 
 const Spinner = () => {
   return (

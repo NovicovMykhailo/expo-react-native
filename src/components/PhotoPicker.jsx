@@ -1,14 +1,18 @@
-import { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Pressable } from "react-native";
-import * as MediaLibrary from "expo-media-library";
-
-import ModalWindow from "./ModalWindow";
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Pressable } from "react-native"; // native
+import * as MediaLibrary from "expo-media-library"; //expo
+import { useEffect, useState } from "react"; // react
+import ModalWindow from "./ModalWindow"; // Component
 
 const PhotoPicker = ({ showModal, setPhoto }) => {
   const [response, setResponse] = useState(null);
   const [albums, setAlbums] = useState(null);
   const [searchAlbum, setSearchAlbum] = useState("Camera");
-
+  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
+//cheeck permission
+  useEffect(()=>{
+    if(permissionResponse === null)requestPermission()
+  },[])
+// handle Picker
   useEffect(() => {
     (async () => {
       const getPhotos = await MediaLibrary.getAlbumAsync(searchAlbum);

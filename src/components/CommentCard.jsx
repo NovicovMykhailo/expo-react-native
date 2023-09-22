@@ -1,14 +1,12 @@
-import { View, Text, Image, StyleSheet } from "react-native";
-import { dateFormat } from "../utils/formating";
-import { auth } from "../../config";
+import { View, Text, Image, StyleSheet } from "react-native"; // native
+import { dateFormat } from "../utils/formating"; // utils
+import { auth } from "../../config"; // firebase
 
 export default function CommentCard({ data }) {
-const {  photoURL, comment, createdAt, owner } = data;
+  const { photoURL, comment, createdAt, owner } = data;
 
-const user = auth.currentUser;
-const userUid = user.uid;
-
-
+  const user = auth.currentUser;
+  const userUid = user.uid;
 
   return (
     <View style={[styles.container, owner === userUid && styles.containerLeft]}>

@@ -1,18 +1,19 @@
-import { View, Text, Image, StyleSheet } from "react-native";// native
+import { View, Text, Image, StyleSheet } from "react-native"; // native
+import { useFocusEffect } from "@react-navigation/native"; //native
 import { useCallback, useState, useEffect } from "react"; //react
-import { useFocusEffect } from "@react-navigation/native"; //react-navigation
-import { getAuth } from "firebase/auth";
+import { getAuth } from "firebase/auth";//firebase
 
-import { useSelector, useDispatch } from "react-redux";//redux
-import { selectUser } from "../redux/auth/selectors";//redux
-import {refreshUserPhoto}from '../redux/auth/thunks'
-import UserBarPlaceholder from "./PlaceHolders/UserBarPlaceholder";//component
+import { refreshUserPhoto } from "../redux/auth/thunks"; // redux
+import { useSelector, useDispatch } from "react-redux"; //redux
+import { selectUser } from "../redux/auth/selectors"; //redux
+
+import UserBarPlaceholder from "./PlaceHolders/UserBarPlaceholder"; //component
 
 export default function UserTab() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const userInfo = useSelector(selectUser);
+  const [user, setUser] = useState();
   const [image, setImage] = useState();
-  const [user, setUser] = useState(userInfo);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
 
@@ -39,7 +40,7 @@ export default function UserTab() {
         const serverUserPhoto = auth.currentUser.photoURL;
         if (userInfo && userInfo.photoURL !== serverUserPhoto) {
           setImage(serverUserPhoto);
-          dispatch(refreshUserPhoto())
+          dispatch(refreshUserPhoto());
         }
       }, 1500);
     }, []),

@@ -1,7 +1,8 @@
 const initialState = {
   token: null,
   error: null,
-  user:[]
+  isRegistered: false,
+  user:{}
 };
 
 

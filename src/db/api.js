@@ -1,6 +1,5 @@
-import { db } from "../../config";
+import { db } from "../../config"; // firebase
 import {
-  getCountFromServer,
   collection,
   addDoc,
   getDocs,
@@ -12,8 +11,9 @@ import {
   arrayUnion,
   getDoc,
   where,
-} from "firebase/firestore";
+} from "firebase/firestore"; // firebase
 
+// Get All
 export const getPosts = async () => {
   try {
     const snapshot = await getDocs(query(collection(db, "posts"), orderBy("createdAt", "desc")));
@@ -28,20 +28,20 @@ export const getPosts = async () => {
   }
 };
 
+// Add Post
 export const addPost = async data => {
   try {
     const res = await addDoc(collection(db, "posts"), { ...data });
-    console.log("adding posts");
     return res;
   } catch (error) {
     console.log(error.message);
   }
 };
 
+// Add Comment
 export const addComment = async ({ postId, commentItem }) => {
   try {
     const Ref = doc(db, "posts", `${postId}`);
-    // console.log("adding comment");
     await updateDoc(Ref, {
       comments: arrayUnion(commentItem),
     });
@@ -50,54 +50,50 @@ export const addComment = async ({ postId, commentItem }) => {
   }
 };
 
+// Add Like
 export const addLike = async ({ postId, userId: uid }) => {
-
-
   try {
     const Ref = doc(db, "posts", `${postId}`);
-    console.log("adding Like");
-
-   await updateDoc(Ref, {
+    await updateDoc(Ref, {
       likes: arrayUnion(uid),
     });
-    return true
+    return true;
   } catch (error) {
     console.log(error.message);
   }
 };
 
+// Remove Like
 export const removeLike = async ({ postId, userId: uid }) => {
-  
   try {
     const Ref = doc(db, "posts", `${postId}`);
-    console.log("removing Like");
     await updateDoc(Ref, {
       likes: arrayRemove(uid),
     });
-    return true
+    return true;
   } catch (error) {
     console.log(error.message);
   }
 };
 
+// Get Likes by post Id
 export const getLikes = async postId => {
   const Ref = doc(db, "posts", `${postId}`);
-
   const docSnap = await getDoc(Ref);
-  console.log("getting Likes");
   const likes = docSnap.data().likes;
   return likes;
 };
 
+// Get comments by post Id
 export const getComments = async postId => {
   const Ref = doc(db, "posts", `${postId}`);
   const docSnap = await getDoc(Ref);
-  // console.log("getting Comments");
   const posts = docSnap.data().comments;
 
   return posts;
 };
 
+// Get posts by user Id
 export const getUserPosts = async userId => {
   const q = query(collection(db, "posts"), where("owner", "==", userId));
   const snapshot = await getDocs(q);

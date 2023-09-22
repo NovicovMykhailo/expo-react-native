@@ -11,21 +11,21 @@ import {
   KeyboardAvoidingView,
   Keyboard,
 } from "react-native"; //native
-import { useFonts } from "expo-font"; //fonts
-import { useFocusEffect, useNavigation } from "@react-navigation/native"; //navigator
 
+import { useFocusEffect, useNavigation } from "@react-navigation/native"; //native
 import { useState, useEffect, useCallback } from "react"; //react
+import { useFonts } from "expo-font"; //fonts
+
+import { selectError, selectIsLoading } from "../redux/auth/selectors"; //redux
 import { useDispatch, useSelector } from "react-redux"; //redux
 import { logIn } from "../redux/auth/thunks"; //redux
-import { selectError, selectIsLoading } from "../redux/auth/selectors"; //redux
+
 import LoadingScreen from "../components/Loaders/LoadingScreen"; // component
-
-import validateEmail from "../utils/validateEmail"; //util
-import validatePassLength from "../utils/validatePassLength"; //util
-
-import toast from "../utils/toast"; //toast
-
 import image from "../assets/Photo_BG2x.png"; //bgImage
+import showToast from "../utils/showToast"; //toast
+
+import validatePassLength from "../utils/validatePassLength"; //util
+import validateEmail from "../utils/validateEmail"; //util
 
 const LoginScreen = () => {
   const [fontsLoaded] = useFonts({ Roboto: require("../assets/fonts/Roboto-Regular.ttf") });
@@ -34,7 +34,7 @@ const LoginScreen = () => {
   const error = useSelector(selectError);
   const isLoading = useSelector(selectIsLoading);
   const navigation = useNavigation();
-  const user = useSelector(state => state.auth.token);
+
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,7 +45,7 @@ const LoginScreen = () => {
 
   useEffect(() => {
     // handle Errors
-    if (error) toast.error({ message: `${error}` });
+    if (error) showToast({type: "error", message:`${error}`})
   }, [error]);
 
   useFocusEffect(
@@ -71,10 +71,12 @@ const LoginScreen = () => {
 
     if (validateEmail(email) && validatePassLength(password)) {
       try {
-        dispatch(logIn({ email, password }));
-        toast.info({ message: `Welcome! To Phonygramm` })
+        dispatch(logIn({ email, password })).then((res)=>{
+          if(res.type !== "auth/login/rejected")showToast({type: "info", message:`Welcome! To Phonygramm`})
+        });
+
       } catch (error) {
-        toast.error({ message: `${error.message}` });
+        showToast({type: "error", message: `${error.message}`})
       }
     }
   };

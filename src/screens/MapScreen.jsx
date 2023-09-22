@@ -1,8 +1,7 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Feather, MaterialIcons } from "@expo/vector-icons";
-
-import MapView, { Marker } from "react-native-maps";
-import { useEffect, useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native"; // native
+import { Feather, MaterialIcons } from "@expo/vector-icons"; // icons
+import MapView, { Marker } from "react-native-maps"; // native
+import { useEffect, useState } from "react"; // react
 
 export default MapScreen = data => {
   const [location, setLocation] = useState(null);

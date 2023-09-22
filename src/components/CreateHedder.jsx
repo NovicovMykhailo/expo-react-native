@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet } from "react-native";
-import { Feather } from "@expo/vector-icons";
-import { getHeaderTitle } from "@react-navigation/elements";
-import { useDispatch } from "react-redux"; //redux
-import { logOut } from "../redux/auth/thunks";// redux action
+import { getHeaderTitle } from "@react-navigation/elements"; // native
+import { View, Text, StyleSheet } from "react-native";// native
+import { Feather } from "@expo/vector-icons"; // icons
 
+import { logOut } from "../redux/auth/thunks";// redux action
+import { useDispatch } from "react-redux"; //redux
 
 export function CreateHedder({ navigation, route, options, to }) {
   const title = getHeaderTitle(options, route.name);

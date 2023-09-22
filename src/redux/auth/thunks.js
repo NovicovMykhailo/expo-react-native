@@ -1,15 +1,17 @@
+import { getStorage, ref} from "firebase/storage"; // firebase
+import { auth } from "../../../config"; // firebase
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  onAuthStateChanged,
   updateProfile,
   signOut,
   getAuth,
-} from "firebase/auth";
-import { auth } from "../../../config";
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
-import getImageUrl from "../../utils/getImageUrl";
+} from "firebase/auth"; // firebase
+
+
+import { createAsyncThunk } from "@reduxjs/toolkit"; // redux
+import updateUserPhotoUrl from "../../utils/updateUserPhotoUrl"; // util
+import getImageUrl from "../../utils/getImageUrl"; // util
 
 const storage = getStorage();
 
@@ -20,29 +22,17 @@ export const register = createAsyncThunk("auth/register", async (credentials, th
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password); // register new Firebase  User
     await updateProfile(auth.currentUser, { displayName: login }); // update currentUser Name
-
-    //loading photo to Firebase Storage and updating current user userPhoto
-
     if (photo) {
-      //(if Photo exists)
-      const [blob, filename] = await img2Blob(photo); // photo to blob (util)
-      const storageRef = ref(storage, `userphoto/${res.user.uid}_${filename}`); //make starage url
-      const metadata = { contentType: "image/jpeg" }; //metadata to jpg
-      const url = await getImageUrl(storageRef);
-      await uploadBytes(storageRef, blob, metadata); //write file to storage
-      await updateProfile(auth.currentUser, { photoURL: `${url}` }); //update profile photo
+        await updateUserPhotoUrl(photo);
     } else {
-      //(if Photo not exists) save base avatar url from storage
 
       const storageRef = ref(storage, `userphoto/base_avatar.jpg`);
       const url = await getImageUrl(storageRef);
       await updateProfile(auth.currentUser, { photoURL: `${url}` });
     }
-
     return res;
   } catch (error) {
-    // return thunkAPI.rejectWithValue(error.message)
-    return thunkAPI.rejectWithValue("Oops, a User with this username or email exists");
+    return thunkAPI.rejectWithValue("Oops, a User with this email exists");
   }
 });
 

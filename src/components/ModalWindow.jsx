@@ -1,9 +1,6 @@
-import React from "react";
-import { Modal, StyleSheet, Text, Pressable, View, ScrollView } from "react-native";
+import { Modal, StyleSheet, Text, Pressable, View, ScrollView } from "react-native";// native
 
 const ModalWindow = ({ setVisible, children }) => {
-
-
   return (
     <View style={styles.centeredView}>
       <Modal

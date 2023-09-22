@@ -1,8 +1,9 @@
-import { auth } from "../../config";
-import img2Blob from "./img2Blob";
-import getImageUrl from "./getImageUrl";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getStorage, ref, uploadBytes } from "firebase/storage"; // firebase
+import { auth } from "../../config"; // firebase
+import getImageUrl from "./getImageUrl"; // util
+import img2Blob from "./img2Blob"; // util
 
+// upload image to DB and get URL from storage
 const imageUploadUtil = async photo => {
   const storage = getStorage();
 

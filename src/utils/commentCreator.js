@@ -1,7 +1,6 @@
-
+import { Timestamp } from "firebase/firestore";// firebase
 
 const shortid = require("shortid");
-import { Timestamp } from "firebase/firestore";
 
 export default function commentCreator(data) {
   const {photoURL, comment, uid } = data;

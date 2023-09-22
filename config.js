@@ -1,21 +1,18 @@
-// Для роботи із firebase обовʼязково треба ініціалізувати проект
-import { initializeApp } from "firebase/app";
-// Функція для підключення авторизації в проект
-import { getAuth } from "firebase/auth";
-// Функція для підключення бази даних у проект
-import { getFirestore } from "firebase/firestore";
-// Функція для підключення сховища файлів в проект
-import { getStorage } from "firebase/storage";
+import { initializeApp } from "firebase/app"; // firebase init
+import { getFirestore } from "firebase/firestore"; // firebase DB
+import { getStorage } from "firebase/storage";  // firebase Storage
+import { getAuth } from "firebase/auth"; // firebase auth
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAD6ffoRa7NDaOfD7RtLQldRMnskCGUjsg",
-  authDomain: "phonygram-f6e99.firebaseapp.com",
-  projectId: "phonygram-f6e99",
-  storageBucket: "phonygram-f6e99.appspot.com",
-  messagingSenderId: "261519130527",
-  appId: "1:261519130527:web:500af69da63c20ca29c7aa",
-  measurementId: "G-33EM1B535S"
+  apiKey: "AIzaSyAkybaMWEsyem5AtqnIjWGkNTIGqQfUeYk",
+  authDomain: "phonywebapp.firebaseapp.com",
+  projectId: "phonywebapp",
+  storageBucket: "phonywebapp.appspot.com",
+  messagingSenderId: "340816934486",
+  appId: "1:340816934486:web:e9f986bbd80edcc1d7adf7",
+  measurementId: "G-4RJHXG43V7"
+  
 };
 
 

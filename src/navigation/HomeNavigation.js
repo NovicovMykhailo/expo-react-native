@@ -1,21 +1,19 @@
-import { View, StyleSheet } from "react-native"; //react-native
-import { useDispatch } from "react-redux"; //redux
+import { View, StyleSheet } from "react-native"; //native
 import { logOut } from "../redux/auth/thunks"; //redux
-
+import { useDispatch } from "react-redux"; //redux
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"; //navigator
-
+import { getAuth, onAuthStateChanged } from "firebase/auth"; // firebase
 
 import CreatePublicationScreen from "../screens/CreatePublicationScreen"; //screens
-import PostsScreen from "../screens/PostsScreen"; //screens
 import ProfileScreen from "../screens/ProfileScreen"; //screens
+import PostsScreen from "../screens/PostsScreen"; //screens
 
-import { CreateHedder, PublicationsHedder } from "../components/CreateHedder"; //components
+import { CreateHedder, PublicationsHedder } from "../components/CreateHedder"; //hedder Creator (util)
 import { Feather, MaterialIcons } from "@expo/vector-icons"; //icons
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 
 const Tabs = createBottomTabNavigator();
-
 
 // let isAuth;
 const HomeScreenRoutes = () => {

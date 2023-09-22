@@ -8,33 +8,30 @@ import {
   Text,
   TouchableOpacity,
   RefreshControl,
-} from "react-native";
-import { Feather } from "@expo/vector-icons"; // icons
-
-import { useDispatch } from "react-redux"; // redux
+} from "react-native"; // native
+import { useFetchUserPostsQuery } from "../redux/posts/posts"; // redux
 import { logOut } from "../redux/auth/thunks"; // redux action
-import { useCallback, useEffect, useState } from "react"; //react
+import { useDispatch } from "react-redux"; // redux
+
+import {useEffect, useState } from "react"; //react
 import { auth } from "../../config"; //firebase
 
-import UserPhoto from "../components/UserPhoto"; //Components
-import StoryCard from "../components/StoryCard"; //Components
 import PostsPlaceholder from "../components/PlaceHolders/PostsPlaceholder"; //Components
-
-import { useFetchUserPostsQuery } from "../redux/posts/posts";
+import UserPhoto from "../components/UserPhoto"; //Components
+import StoryCard from "../components/StoryCard"; // Components
+import imageBg from "../assets/Photo_BG2x.png"; //bg image
+import { Feather } from "@expo/vector-icons"; // icons
 
 import getImageUrl from "../utils/getImageUrl"; //utils
-import toast from "../utils/toast";
-import imageBg from "../assets/Photo_BG2x.png"; //bg image
+import showToast from "../utils/showToast"; // toast
 
-import { useFocusEffect } from "@react-navigation/native";
 
 export default ProfileScreen = () => {
   const user = auth.currentUser;
   const name = user.displayName;
-  const [userImage, setUserImage] = useState(null);
-  const { isLoading, refetch, data: posts, error } = useFetchUserPostsQuery(user.uid);
 
-  useFocusEffect(useCallback(() => () => !isLoading && refetch(), []));
+  const [userImage, setUserImage] = useState(null);
+  const { isLoading, refetch, data: posts, error } = useFetchUserPostsQuery(user?.uid);
 
   useEffect(() => {
     if (user.photoURL) {
@@ -43,13 +40,13 @@ export default ProfileScreen = () => {
           const url = await getImageUrl(user.photoURL);
           setUserImage(url);
         } catch (e) {
-          toast.error({ message: `${e}` });
+          showToast({ type: "error", message: `${e}` });
         }
       })();
     }
   });
 
-  error && toast.error({ message: `${error}` });
+  error && showToast({ type: "error", message: `${error}` });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -58,14 +55,14 @@ export default ProfileScreen = () => {
       <View>
         <ScrollView refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} horizontal={false} />}>
           <View style={styles.view}>
-            <View>
+            <View style={styles.userbar}>
               <UserPhoto photo={{ uri: `${userImage}` }} />
               <ExitBtn />
               <Text style={styles.Name}>{name}</Text>
             </View>
             {isLoading && <PostsPlaceholder />}
             {!isLoading && posts?.map(item => <StoryCard key={item.id} item={item} userId={user.uid} />)}
-            {error && toast.error({ message: `${error}` })}
+            {error && showToast({ type: "error", message: `${error}` })}
           </View>
         </ScrollView>
       </View>
@@ -90,6 +87,9 @@ const styles = StyleSheet.create({
     height: 900,
     flex: 1,
   },
+  userbar: {
+    marginBottom: 32,
+  },
   Name: {
     fontFamily: "Roboto",
     fontWeight: 500,
@@ -98,7 +98,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     letterSpacing: 0.01,
     color: "#212121",
-
     marginTop: -32,
   },
   view: {
@@ -110,8 +109,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     paddingTop: 0,
     paddingHorizontal: 16,
-    paddingBottom: 43,
-    gap: 32,
   },
   exitBtn: {
     position: "absolute",

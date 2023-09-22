@@ -1,5 +1,5 @@
-import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
-import * as API from "../../db/api";
+import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";// RTK
+import * as API from "../../db/api"; //Fetch functions
 
 export const postsApi = createApi({
   reducerPath: "posts",
@@ -70,7 +70,7 @@ export const postsApi = createApi({
           return { error };
         }
       },
-      invalidatesTags: ["Post"],
+      invalidateTags: ["Post"],
     }),
     addLike: builder.mutation({
       async queryFn(data) {
@@ -83,7 +83,7 @@ export const postsApi = createApi({
           return { error };
         }
       },
-      providesTags: ["Post"],
+      invalidatesTags: (result, error, arg) =>  [{ type: "Post", id: arg.postId }],
     }),
     removeLike: builder.mutation({
       async queryFn(data) {
@@ -95,13 +95,13 @@ export const postsApi = createApi({
           return { error };
         }
       },
-      invalidatesTags: ["Post"],
+      invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg.postId }],
     }),
   }),
 });
 
 export const {
-  useFetchPostsQuery,
+  useFetchPostsQuery, 
   useFetchUserPostsQuery,
   useFetchCommentsQuery,
   useFetchLikesQuery,

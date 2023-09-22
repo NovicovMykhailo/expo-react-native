@@ -11,25 +11,24 @@ import {
   KeyboardAvoidingView,
   Keyboard,
 } from "react-native"; //native
-import { useFonts } from "expo-font"; //fonts
 import { useFocusEffect, useNavigation } from "@react-navigation/native"; //navigator
-
 import { useState, useEffect, useCallback } from "react"; //react
+import { useFonts } from "expo-font"; //fonts
+
+import { selectError, selectIsLoading } from "../redux/auth/selectors"; //redux
 import { useDispatch, useSelector } from "react-redux"; //redux
 import { register } from "../redux/auth/thunks"; //redux
-import { selectError, selectIsLoading } from "../redux/auth/selectors"; //redux
 
-import PhotoPicker from "../components/PhotoPicker"; //Components
-import PlusStyledButton from "../components/PlusStyledButton"; //Components
 import LoadingScreen from "../components/Loaders/LoadingScreen"; // component
-
-
-
-
-import validateEmail from "../utils/validateEmail"; //util
-import validatePassLength from "../utils/validatePassLength"; //util
-import toast from "../utils/toast"; //toast
+import PlusStyledButton from "../components/PlusStyledButton"; //Components
+import PhotoPicker from "../components/PhotoPicker"; //Components
 import image from "../assets/Photo_BG2x.png"; // bg Image
+
+import validatePassLength from "../utils/validatePassLength"; //util
+import validateEmail from "../utils/validateEmail"; //util
+import showToast from "../utils/showToast"; //toast
+
+
 
 export default RegistrationScreen = () => {
   const dispatch = useDispatch();
@@ -57,7 +56,7 @@ export default RegistrationScreen = () => {
 
   useEffect(() => {
     // handle Errors
-    if (error) toast.error({ message: `${error}` });
+    if (error) showToast({ type: "error", message: `${error}` });
   }, [error]);
 
   useFocusEffect(
@@ -85,9 +84,11 @@ export default RegistrationScreen = () => {
     // dispatching Form
     if (validateEmail(email) && validatePassLength(password)) {
       try {
-        dispatch(register({ email, password, photo, login }));
+        await dispatch(register({ email, password, photo, login })).then(res => {
+          if (res.type !== "auth/register/rejected") showToast({ type: "info", message: `Welcome! To Phonygramm` })
+        });
       } catch (error) {
-        toast.error({ message: `${error.message}` });
+        showToast({ type: "error", message: `${error.message}` });
       }
     }
   };
@@ -96,7 +97,7 @@ export default RegistrationScreen = () => {
     <SafeAreaView style={styles.base}>
       <ImageBackground source={image} style={styles.image} />
       {modalVisible && <PhotoPicker showModal={showModal} setPhoto={setPhoto} />}
-      {isLoading && <LoadingScreen/>}
+      {isLoading && <LoadingScreen />}
       <View style={styles.box}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.view}>
