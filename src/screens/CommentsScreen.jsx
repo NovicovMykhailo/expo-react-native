@@ -49,6 +49,8 @@ import { auth } from "../../config";//firebase
         ListEmptyComponent={<View />}
         refreshing={isFetching}
         onRefresh={refetch}
+        showsVerticalScrollIndicator ={false}
+        showsHorizontalScrollIndicator={false}
       />
       <View style={styles.footer}>
         <TextInput

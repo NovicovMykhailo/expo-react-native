@@ -1,7 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack"; // native
 import { getAuth, onAuthStateChanged } from "firebase/auth"; // firebase
 
-import HomeScreenRoutes from "../navigation/HomeNavigation"; // stacks navigation
+import HomeScreenRoutes from "./HomeNavigation"; // stacks navigation
 import RegistrationScreen from "../screens/RegistrationScreen"; //screens
 import CommentsScreen from "../screens/CommentsScreen"; //screens
 import LoginScreen from "../screens/LoginScreen"; //screens
@@ -37,7 +37,6 @@ export const Routes = () => {
         dispatch(logOut());
       }
     });
-
 
   return (
     <MainStack.Navigator screenOptions={{ headerShown: false }}>

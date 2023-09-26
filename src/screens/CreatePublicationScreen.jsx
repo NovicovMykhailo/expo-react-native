@@ -23,12 +23,11 @@ import { Camera } from "expo-camera"; // expo
 
 import { useAddPostMutation } from "../redux/posts/posts"; //redux
 import { useEffect, useState } from "react"; // react
-import { auth } from "../../config";// firebase
+import { auth } from "../../config"; // firebase
 
 import imageUploadUtil from "../utils/imageUploadUtil"; //util
 import postCreator from "../utils/postCreator"; //utils
 import showToast from "../utils/showToast"; //utils
-
 
 export default CreatePublicationScreen = () => {
   // teck states
@@ -43,12 +42,18 @@ export default CreatePublicationScreen = () => {
   const [type, _] = useState(Camera.Constants.Type.back);
   const [cameraRef, setCameraRef] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isBtnDisabled, setIsBtnDisabled] = useState(true);
 
   const [addPost] = useAddPostMutation();
   const navigation = useNavigation();
 
-  const isBtnDisabled = !photo;
   const isActive = Boolean(title || location || photo);
+
+
+  //enablibg button if photo was taken
+  useEffect(() => {
+    if (photo) setIsBtnDisabled(false);
+  }, [photo]);
 
   //camera init
   useEffect(() => {
@@ -88,10 +93,13 @@ export default CreatePublicationScreen = () => {
 
     await MediaLibrary.requestPermissionsAsync().then(permission => {
       if (!permission.granted) {
-        Alert.alert("Attantion", "No access to camera", [{ 
-          text: "Allow Permission",
-          onPress: () => checkCameraPermission 
-        }])}
+        Alert.alert("Attantion", "No access to camera", [
+          {
+            text: "Allow Permission",
+            onPress: () => checkCameraPermission,
+          },
+        ]);
+      }
     });
     setHasPermission(status === "granted");
   }
@@ -101,6 +109,7 @@ export default CreatePublicationScreen = () => {
     //make post
     if (!geoposition) setIsVisible(true);
     else if (photo && geoposition) {
+      setIsBtnDisabled(true);//disabling button
       setIsVisible(false);
       // uploadPhoto and get url
       const url = await imageUploadUtil(photo);
@@ -114,15 +123,14 @@ export default CreatePublicationScreen = () => {
       };
       // add post to db
       try {
-        await addPost(postCreator(post))
+        await addPost(postCreator(post));
         showToast({ type: "info", message: "Post created successfully" });
         navigation.navigate("Publications");
       } catch (error) {
-        showToast({ type: "error", message:"oops, somthing went wrong"})
-
+        showToast({ type: "error", message: "oops, somthing went wrong" });
       }
       // reseting Form fields
-      onDelete()
+      onDelete();
     }
   };
 
@@ -163,7 +171,6 @@ export default CreatePublicationScreen = () => {
                           setPhoto(asset);
                           setLoadingStatus("fullfield");
                           showToast({ type: "info", message: "Photo added successfully" });
-
                         }
                       }}
                     >

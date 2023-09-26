@@ -19,7 +19,7 @@ const markup = ({ type, message }) => {
 const showToast = ({ type, message }) => {
   const toast = Toast.show(markup({ type, message }), {
     duration: 3000,
-    position: 10,
+    position: 20,
     shadow: true,
     animation: true,
     hideOnPress: true,
@@ -41,6 +41,21 @@ const showToast = ({ type, message }) => {
       shadowRadius: 3,
       elevation: 20,
     },
+    onShow: () => {
+      const prevToast = toast.id
+        .split("-")
+        .map((item, idx) => {
+          if (idx !== 2) {
+            return item;
+          }
+          if (item[2]) {
+            return Number(item - 1).toString();
+          }
+        })
+        .join("-");
+
+      toast.manager.destroy(prevToast);
+    },
 
     onShown: () => {
       setTimeout(function () {
@@ -48,6 +63,7 @@ const showToast = ({ type, message }) => {
       }, 3000);
     },
   });
+
   return toast;
 };
 export default showToast;

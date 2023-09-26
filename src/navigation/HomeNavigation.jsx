@@ -35,7 +35,8 @@ const HomeScreenRoutes = () => {
       <Tabs.Screen
         name="Create"
         component={CreatePublicationScreen}
-        options={{ title: "Створити публікацію", ...CreateHeaderOption, tabBarStyle: styles.tabBarHidden }}
+        options={{ title: "Створити публікацію", ...CreateHeaderOption,  tabBarStyle: styles.tabBarHidden, unmountOnBlur: true }}
+        
       />
       <Tabs.Screen name="User" component={ProfileScreen} options={{ title: "Користувачі", headerShown: false }} />
     </Tabs.Navigator>

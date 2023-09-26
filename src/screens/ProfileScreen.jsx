@@ -13,7 +13,7 @@ import { useFetchUserPostsQuery } from "../redux/posts/posts"; // redux
 import { logOut } from "../redux/auth/thunks"; // redux action
 import { useDispatch } from "react-redux"; // redux
 
-import {useEffect, useState } from "react"; //react
+import { useEffect, useState } from "react"; //react
 import { auth } from "../../config"; //firebase
 
 import PostsPlaceholder from "../components/PlaceHolders/PostsPlaceholder"; //Components
@@ -24,7 +24,6 @@ import { Feather } from "@expo/vector-icons"; // icons
 
 import getImageUrl from "../utils/getImageUrl"; //utils
 import showToast from "../utils/showToast"; // toast
-
 
 export default ProfileScreen = () => {
   const user = auth.currentUser;
@@ -53,7 +52,11 @@ export default ProfileScreen = () => {
       <StatusBar hidden={true} />
       <ImageBackground source={imageBg} style={styles.image} />
       <View>
-        <ScrollView refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} horizontal={false} />}>
+        <ScrollView
+          refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} horizontal={false} />}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+        >
           <View style={styles.view}>
             <View style={styles.userbar}>
               <UserPhoto photo={{ uri: `${userImage}` }} />

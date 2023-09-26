@@ -26,6 +26,7 @@ import showToast from "../utils/showToast"; //toast
 
 import validatePassLength from "../utils/validatePassLength"; //util
 import validateEmail from "../utils/validateEmail"; //util
+import { handleError } from "../redux/auth/slice";
 
 const LoginScreen = () => {
   const [fontsLoaded] = useFonts({ Roboto: require("../assets/fonts/Roboto-Regular.ttf") });
@@ -34,7 +35,6 @@ const LoginScreen = () => {
   const error = useSelector(selectError);
   const isLoading = useSelector(selectIsLoading);
   const navigation = useNavigation();
-
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,8 +45,12 @@ const LoginScreen = () => {
 
   useEffect(() => {
     // handle Errors
-    if (error) showToast({type: "error", message:`${error}`})
+    if (error) showToast({ type: "error", message: `${error}` });
   }, [error]);
+
+  useEffect(() => {
+    dispatch(handleError());
+  }, []);
 
   useFocusEffect(
     // reseting form on change Screen
@@ -69,17 +73,21 @@ const LoginScreen = () => {
   const onLogin = async () => {
     // dispatching form data
 
-    if (validateEmail(email) && validatePassLength(password)) {
-      try {
-        dispatch(logIn({ email, password })).then((res)=>{
-          if(res.type !== "auth/login/rejected")showToast({type: "info", message:`Welcome! To Phonygramm`})
-        });
-
-      } catch (error) {
-        showToast({type: "error", message: `${error.message}`})
+    if (isBtnDisabled) {
+      showToast({ type: "info", message: "please enter email and password" });
+    } else {
+      if (validateEmail(email) && validatePassLength(password)) {
+        try {
+          dispatch(logIn({ email, password })).then(res => {
+            if (res.type !== "auth/login/rejected") showToast({ type: "info", message: `Welcome! To Phonygramm` });
+          });
+        } catch (error) {
+          showToast({ type: "error", message: `${error.message}` });
+        }
       }
     }
   };
+
   return (
     <SafeAreaView>
       <ImageBackground source={image} style={styles.image} />
@@ -103,7 +111,7 @@ const LoginScreen = () => {
                   onFocus={() => setIsFocused("password")}
                   onBlur={() => setIsFocused(null)}
                   placeholder="Пароль"
-                  style={[styles.input, isFocused === "password" && styles.active]}
+                  style={[styles.input, styles.toLowerCase, isFocused === "password" && styles.active]}
                   onChangeText={setPassword}
                   value={password}
                   textContentType="password"
@@ -115,7 +123,7 @@ const LoginScreen = () => {
                 </TouchableOpacity>
               </View>
             </KeyboardAvoidingView>
-            <TouchableOpacity style={styles.btn} disabled={isBtnDisabled} onPress={onLogin}>
+            <TouchableOpacity style={styles.btn}  onPress={onLogin}>
               <Text style={styles.btnText}>Увійти</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.bottomTextContainer}>
@@ -229,5 +237,8 @@ const styles = StyleSheet.create({
   },
   underlinedText: {
     textDecorationLine: "underline",
+  },
+  toLowerCase: {
+    textTransform: "lowercase",
   },
 });

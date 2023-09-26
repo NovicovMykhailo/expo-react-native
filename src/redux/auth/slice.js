@@ -20,6 +20,10 @@ const authSlice = createSlice({
       const { displayName, email, photoURL, stsTokenManager} = payload;
       state.user = { displayName, email, photoURL };
       state.token = stsTokenManager.accessToken;
+      state.error = null
+    },
+    handleError(state, _){
+      state.error = null
     },
   },
   extraReducers: builder => {
@@ -59,4 +63,4 @@ const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
-export const { autologin } = authSlice.actions
+export const { autologin, handleError } = authSlice.actions

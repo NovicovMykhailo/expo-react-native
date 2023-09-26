@@ -34,6 +34,8 @@ export default PostsScreen = () => {
           keyExtractor={item => item.id}
           onRefresh={refetch}
           refreshing={isLoading}
+          showsVerticalScrollIndicator ={false}
+          showsHorizontalScrollIndicator={false}
         />
       )}
       { error && showToast({type: "error", message:`${error}`})}

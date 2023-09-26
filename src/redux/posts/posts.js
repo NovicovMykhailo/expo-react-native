@@ -1,10 +1,11 @@
-import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";// RTK
+import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react"; // RTK
 import * as API from "../../db/api"; //Fetch functions
 
 export const postsApi = createApi({
   reducerPath: "posts",
   baseQuery: fakeBaseQuery(),
-  tagTypes: ["Post"],
+  keepUnusedDataFor: 0,
+  tagTypes: ["Posts"],
   endpoints: builder => ({
     fetchPosts: builder.query({
       async queryFn() {
@@ -15,7 +16,7 @@ export const postsApi = createApi({
           return { error };
         }
       },
-      providesTags: ["Post"],
+      providesTags: ["Posts"],
     }),
     fetchUserPosts: builder.query({
       async queryFn(id) {
@@ -26,7 +27,7 @@ export const postsApi = createApi({
           return { error };
         }
       },
-      providesTags: ["Post"],
+      providesTags: ["Posts"],
     }),
     fetchComments: builder.query({
       async queryFn(id) {
@@ -37,7 +38,7 @@ export const postsApi = createApi({
           return { error };
         }
       },
-      providesTags: ["Post"],
+      providesTags: ["Posts"],
     }),
     fetchLikes: builder.query({
       async queryFn(id) {
@@ -48,7 +49,7 @@ export const postsApi = createApi({
           return { error };
         }
       },
-      providesTags: ["Post"],
+      providesTags: ["Posts"],
     }),
     addPost: builder.mutation({
       async queryFn(data) {
@@ -59,7 +60,7 @@ export const postsApi = createApi({
           return { error };
         }
       },
-      invalidatesTags: ["Post"],
+      invalidatesTags: ["Posts"],
     }),
     addComment: builder.mutation({
       async queryFn(postId, commentItem) {
@@ -70,11 +71,10 @@ export const postsApi = createApi({
           return { error };
         }
       },
-      invalidateTags: ["Post"],
+      invalidatesTags: (result, error, arg) => [{ type: 'Posts' }, { type: "Posts", id: arg.postId }],
     }),
     addLike: builder.mutation({
       async queryFn(data) {
-
         try {
           const res = await API.addLike(data);
 
@@ -83,25 +83,24 @@ export const postsApi = createApi({
           return { error };
         }
       },
-      invalidatesTags: (result, error, arg) =>  [{ type: "Post", id: arg.postId }],
+      invalidatesTags: (result, error, arg) => [{ type: 'Posts' },{ type: "Posts", id: arg.postId }],
     }),
     removeLike: builder.mutation({
       async queryFn(data) {
-
         try {
-          const res =  await API.removeLike(data);
+          const res = await API.removeLike(data);
           return { data: res };
         } catch (error) {
           return { error };
         }
       },
-      invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg.postId }],
+      invalidatesTags: (result, error, arg) => [{ type: 'Posts' },{ type: "Posts", id: arg.postId }],
     }),
   }),
 });
 
 export const {
-  useFetchPostsQuery, 
+  useFetchPostsQuery,
   useFetchUserPostsQuery,
   useFetchCommentsQuery,
   useFetchLikesQuery,
@@ -110,3 +109,4 @@ export const {
   useAddLikeMutation,
   useRemoveLikeMutation,
 } = postsApi;
+

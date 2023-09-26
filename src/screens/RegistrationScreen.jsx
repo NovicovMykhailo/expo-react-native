@@ -27,8 +27,7 @@ import image from "../assets/Photo_BG2x.png"; // bg Image
 import validatePassLength from "../utils/validatePassLength"; //util
 import validateEmail from "../utils/validateEmail"; //util
 import showToast from "../utils/showToast"; //toast
-
-
+import { handleError } from "../redux/auth/slice";
 
 export default RegistrationScreen = () => {
   const dispatch = useDispatch();
@@ -60,6 +59,12 @@ export default RegistrationScreen = () => {
   }, [error]);
 
   useFocusEffect(
+    useCallback(() => {
+      dispatch(handleError());
+    }, []),
+  );
+
+  useFocusEffect(
     // reseting form on change Screen
     useCallback(() => {
       return () => {
@@ -81,14 +86,19 @@ export default RegistrationScreen = () => {
   }
 
   const onRegister = async () => {
-    // dispatching Form
-    if (validateEmail(email) && validatePassLength(password)) {
-      try {
-        await dispatch(register({ email, password, photo, login })).then(res => {
-          if (res.type !== "auth/register/rejected") showToast({ type: "info", message: `Welcome! To Phonygramm` })
-        });
-      } catch (error) {
-        showToast({ type: "error", message: `${error.message}` });
+    if(!login)showToast({ type: "info", message: "Please enter your name" })
+    else if (!email) showToast({ type: "info", message: "Please enter your email" })
+    else if (!password) showToast({ type: "info", message: "Please make up a password of at least 8 characters" })
+     else {
+      // dispatching Form
+      if (validateEmail(email) && validatePassLength(password)) {
+        try {
+          await dispatch(register({ email, password, photo, login })).then(res => {
+            if (res.type !== "auth/register/rejected") showToast({ type: "info", message: `Welcome! To Phonygramm` });
+          });
+        } catch (error) {
+          showToast({ type: "error", message: `${error.message}` });
+        }
       }
     }
   };
@@ -137,7 +147,7 @@ export default RegistrationScreen = () => {
                   onFocus={() => setIsFocused("password")}
                   onBlur={() => setIsFocused(null)}
                   placeholder="Пароль"
-                  style={[styles.input, isFocused === "password" && styles.active]}
+                  style={[styles.input, styles.toLowerCase, isFocused === "password" && styles.active]}
                   onChangeText={setPassword}
                   value={password}
                   textContentType="password"
@@ -149,7 +159,7 @@ export default RegistrationScreen = () => {
                 </TouchableOpacity>
               </View>
             </KeyboardAvoidingView>
-            <TouchableOpacity style={styles.btn} disabled={isBtnDisabled} onPress={onRegister}>
+            <TouchableOpacity style={styles.btn}  onPress={onRegister}>
               <Text style={styles.btnText}>Зареєстуватися</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.bottomTextContainer} onPress={() => navigation.navigate("Login")}>
@@ -288,5 +298,8 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+  toLowerCase: {
+    textTransform: "lowercase",
   },
 });
