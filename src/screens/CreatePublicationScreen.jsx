@@ -30,7 +30,7 @@ import postCreator from "../utils/postCreator"; //utils
 import showToast from "../utils/showToast"; //utils
 
 export default CreatePublicationScreen = () => {
-  // teck states
+  // tech states
   const [loadingStatus, setLoadingStatus] = useState("idle");
   const [geoposition, setGeoposition] = useState("");
   const [isFocused, setIsFocused] = useState(null);
@@ -355,6 +355,7 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     paddingVertical: 16,
     marginBottom: -4,
+    width: "100%",
   },
   btn: {
     backgroundColor: "#FF6C00",
