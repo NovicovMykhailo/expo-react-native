@@ -2,10 +2,13 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native"; // nati
 import { Feather, MaterialIcons } from "@expo/vector-icons"; // icons
 import MapView, { Marker } from "react-native-maps"; // native
 import { useEffect, useState } from "react"; // react
+import { PROVIDER_GOOGLE } from "react-native-maps"
 
 export default MapScreen = data => {
   const [location, setLocation] = useState(null);
   const [mapType, setMapStyle] = useState("standard");
+
+
 
   const { params } = data.route;
 
@@ -30,7 +33,7 @@ export default MapScreen = data => {
           }}
           showsUserLocation={true}
           mapType={mapType}
-          provider="google"
+          provider={PROVIDER_GOOGLE}
           minZoomLevel={10}
         >
           {location && <Marker title={markerTitles} coordinate={location} description={geoPlaceName} />}
