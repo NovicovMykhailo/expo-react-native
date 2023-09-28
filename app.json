@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "AndroidApp",
-    "slug": "AndroidApp",
+    "name": "Phonygram",
+    "slug": "Phonygram",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -10,8 +10,8 @@
       [
         "expo-media-library",
         {
-          "photosPermission": "Allow AndroidApp to access your photos.",
-          "savePhotosPermission": "Allow AndroidApp to save photos.",
+          "photosPermission": "Allow Phonygram to access your photos.",
+          "savePhotosPermission": "Allow Phonygram to save photos.",
           "isAccessMediaLocationEnabled": true
         }
       ]
@@ -27,8 +27,8 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "Allow AndroidApp to access your photos.",
-        "NSPhotoLibraryAddUsageDescription": "Allow AndroidApp to save photos."
+        "NSPhotoLibraryUsageDescription": "Allow Phonygram to access your photos.",
+        "NSPhotoLibraryAddUsageDescription": "Allow Phonygram to save photos."
       }
     },
     "android": {
