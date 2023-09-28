@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Phonygram",
-    "slug": "Phonygram",
+    "slug": "AndroidApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
