@@ -1,10 +1,13 @@
-import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native"; // native
-import { useRemoveLikeMutation, useAddLikeMutation } from "../redux/posts/posts"; // redux
+import { View, Image, Text, TouchableOpacity, StyleSheet, Alert } from "react-native"; // native
+import { useRemoveLikeMutation, useAddLikeMutation, useRemovePostMutation } from "../redux/posts/posts"; // redux
 import { useState, useEffect } from "react"; //react
 import { useNavigation } from "@react-navigation/native"; //react-native
-import { Feather } from "@expo/vector-icons";//icon
+import { Feather } from "@expo/vector-icons"; //icon
 import { getLikes } from "../db/api"; // api fetching
 import { getAuth } from "firebase/auth"; // firebase
+
+import LoadingScreen from "../components/Loaders/LoadingScreen";
+
 
 //redux
 
@@ -17,9 +20,12 @@ export default function StoryCard({ item }) {
   const [userId, _] = useState(uid);
   const [wasLiked, setWasLiked] = useState();
   const [likes, setLikes] = useState(likesProps);
+  const [isDeleating, setIsDeleating] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [addLike] = useAddLikeMutation();
   const [removeLike] = useRemoveLikeMutation();
+  const [removePost, { isSuccess }] = useRemovePostMutation();
 
   const navigation = useNavigation();
 
@@ -43,49 +49,91 @@ export default function StoryCard({ item }) {
     }
   };
 
-  return (
-    <TouchableOpacity style={styles.container} disabled={true}>
-      <View>
-        <Image source={{ uri: `${image}` }} style={styles.photo} />
-        <Text style={styles.title}>{title}</Text>
-      </View>
+  const askForDeleating = () => {
+    Alert.alert('Oh damn', 'Are you shure, you want to delete post?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {text: 'Delete', onPress: () => handleDelete(), style: 'default',},
+    ]);
+  };
 
-      <View style={styles.bottomContainer}>
-        <View style={styles.leftSideIcons}>
-          <TouchableOpacity
-            style={styles.barLeft}
-            onPress={() => navigation.navigate("Comments", { comments, image, postId })}
-          >
-            <Feather
-              name="message-circle"
-              size={24}
-              style={[styles.messageIcon, comments.length > 0 && styles.activeIcon]}
-            />
-            <Text style={styles.barLeftText}>{comments.length}</Text>
-          </TouchableOpacity>
-          <View style={styles.barLeft}>
-            <TouchableOpacity style={styles.isRelative} onPress={handleLikes}>
-              {wasLiked && likes.length > 0 && (
-                <Image source={require("./../assets/thumbsUpGg.png")} style={styles.thumbFill} />
-              )}
-              <Feather name="thumbs-up" size={24} style={[styles.thumbUpIcon, likes.length > 0 && styles.activeIcon]} />
-            </TouchableOpacity>
+  const handleDelete = async () => {
+    setIsDeleating(true);
+    await removePost(postId);
+    isSuccess && setIsDeleating(false);
+  };
 
-            <Text style={styles.barLeftText}>{likes.length}</Text>
-          </View>
+  const showModal = () => {
+    setModalVisible(prev => !prev);
+  };
+
+  return isDeleating ? (
+    <LoadingScreen />
+  ) : (
+    <>
+      <TouchableOpacity
+        style={styles.container}
+        disabled={false}
+        onLongPress={askForDeleating}
+        onPress={() => navigation.navigate("Comments", { comments, image, postId })}
+      >
+        <View>
+          <Image source={{ uri: `${image}` }} style={styles.photo} />
+          <Text style={styles.title}>{title}</Text>
         </View>
 
-        <TouchableOpacity
-          style={styles.barRight}
-          onPress={() => navigation.navigate("Map", { coords, location, title })}
-        >
-          <Feather name="map-pin" size={24} style={styles.pinIcon} />
-          <Text style={styles.barRightText} numberOfLines={1}>
-            {location}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </TouchableOpacity>
+        <View style={styles.bottomContainer}>
+          <View style={styles.leftSideIcons}>
+            <TouchableOpacity
+              style={styles.barLeft}
+              onPress={() => navigation.navigate("Comments", { comments, image, postId })}
+            >
+              <Feather
+                name="message-circle"
+                size={24}
+                style={[styles.messageIcon, comments.length > 0 && styles.activeIcon]}
+              />
+              <Text style={styles.barLeftText}>{comments.length}</Text>
+            </TouchableOpacity>
+            <View style={styles.barLeft}>
+              <TouchableOpacity style={styles.isRelative} onPress={handleLikes}>
+                {wasLiked && likes.length > 0 && (
+                  <Image source={require("./../assets/thumbsUpGg.png")} style={styles.thumbFill} />
+                )}
+                <Feather
+                  name="thumbs-up"
+                  size={24}
+                  style={[styles.thumbUpIcon, likes.length > 0 && styles.activeIcon]}
+                />
+              </TouchableOpacity>
+
+              <Text style={styles.barLeftText}>{likes.length}</Text>
+            </View>
+          </View>
+
+          <TouchableOpacity
+            style={styles.barRight}
+            onPress={() => navigation.navigate("Map", { coords, location, title })}
+          >
+            <Feather name="map-pin" size={24} style={styles.pinIcon} />
+            <Text style={styles.barRightText} numberOfLines={1}>
+              {location}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+      {modalVisible && (
+        <ModalWindow setVisible={showModal}>
+          <View style={styles.modal}>
+            <Text> Are you shure, you want to delete post?</Text>
+            <TouchableOpacity><Text>Yes</Text></TouchableOpacity>
+            <TouchableOpacity><Text>No</Text></TouchableOpacity>
+          </View>
+        </ModalWindow>
+      )}
+    </>
   );
 }
 
@@ -165,4 +213,21 @@ const styles = StyleSheet.create({
   activeIcon: {
     color: "#FF6C00",
   },
+  button: {
+    width: "90%",
+    position: "relative",
+    top: 0,
+    left: 20,
+    marginVertical: 20,
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  cancel: {
+    backgroundColor: "#F194FF",
+  },
+  delete: {
+    backgroundColor: "#FF6C00",
+  },
+ 
 });

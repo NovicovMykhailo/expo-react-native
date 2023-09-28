@@ -28,12 +28,14 @@ import { auth } from "../../config"; // firebase
 import imageUploadUtil from "../utils/imageUploadUtil"; //util
 import postCreator from "../utils/postCreator"; //utils
 import showToast from "../utils/showToast"; //utils
+import LoadingScreen from "../components/Loaders/LoadingScreen";
 
 export default CreatePublicationScreen = () => {
   // tech states
   const [loadingStatus, setLoadingStatus] = useState("idle");
   const [geoposition, setGeoposition] = useState("");
   const [isFocused, setIsFocused] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [location, setLocation] = useState("");
   const [photo, setPhoto] = useState(null);
   const [title, setTitle] = useState("");
@@ -48,7 +50,6 @@ export default CreatePublicationScreen = () => {
   const navigation = useNavigation();
 
   const isActive = Boolean(title || location || photo);
-
 
   //enablibg button if photo was taken
   useEffect(() => {
@@ -106,10 +107,11 @@ export default CreatePublicationScreen = () => {
 
   //submiting
   const HandleSubmit = async () => {
+    setIsLoading(true);
     //make post
     if (!geoposition) setIsVisible(true);
     else if (photo && geoposition) {
-      setIsBtnDisabled(true);//disabling button
+      setIsBtnDisabled(true); //disabling button
       setIsVisible(false);
       // uploadPhoto and get url
       const url = await imageUploadUtil(photo);
@@ -124,13 +126,17 @@ export default CreatePublicationScreen = () => {
       // add post to db
       try {
         await addPost(postCreator(post));
+        setIsLoading(false);
         showToast({ type: "info", message: "Post created successfully" });
+        // reseting Form fields
+        onDelete();
         navigation.navigate("Publications");
       } catch (error) {
+        setIsLoading(false);
         showToast({ type: "error", message: "oops, somthing went wrong" });
+        // reseting Form fields
+        onDelete();
       }
-      // reseting Form fields
-      onDelete();
     }
   };
 
@@ -141,7 +147,12 @@ export default CreatePublicationScreen = () => {
     setLocation("");
   };
 
-  return (
+  return isLoading ? (
+    <View style={styles.container}>
+      <LoadingScreen />
+      <Text style={[styles.decriptionText, {marginTop: 50}]}>Adding Post...</Text>
+    </View>
+  ) : (
     <View style={styles.container}>
       {isVisible && (
         <Loader setVisible={() => setIsVisible(false)}>

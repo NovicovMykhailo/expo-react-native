@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",
-     "plugins": [
+    "plugins": [
       [
         "expo-media-library",
         {
@@ -25,25 +25,41 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Allow AndroidApp to access your photos.",
+        "NSPhotoLibraryAddUsageDescription": "Allow AndroidApp to save photos."
+      }
     },
     "android": {
       "package": "com.myself.phonygram",
-      "config" :{
+      "config": {
         "googleMaps": {
-          "apiKey":"AIzaSyBuntfGXvYboVRWyzXjUUtOBCtBRgas3eg"
+          "apiKey": "AIzaSyBuntfGXvYboVRWyzXjUUtOBCtBRgas3eg"
         }
       },
-      "softwareKeyboardLayoutMode": "pan", 
+      "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff",
-        "permissions": ["ACCESS_BACKGROUND_LOCATION"]
-      }
+        "permissions": [
+          "ACCESS_BACKGROUND_LOCATION"
+        ]
+      },
+      "permissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_MEDIA_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./src/assets/icon.png",
       "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "39c3fe85-9e03-48d4-969f-a121dcc1f6b2"
+      }
     }
   }
 }

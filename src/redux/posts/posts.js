@@ -96,6 +96,17 @@ export const postsApi = createApi({
       },
       invalidatesTags: (result, error, arg) => [{ type: 'Posts' },{ type: "Posts", id: arg.postId }],
     }),
+    removePost: builder.mutation({
+      async queryFn(postId) {
+        try {
+          const res = await API.geletePostById(postId);
+          return { data: res };
+        } catch (error) {
+          return { error };
+        }
+      },
+      invalidatesTags: [{ type: 'Posts' }],
+    }),
   }),
 });
 
@@ -108,5 +119,6 @@ export const {
   useAddCommentMutation,
   useAddLikeMutation,
   useRemoveLikeMutation,
+  useRemovePostMutation
 } = postsApi;
 

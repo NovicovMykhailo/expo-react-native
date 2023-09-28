@@ -15,14 +15,13 @@ export default function UserPhoto() {
   const [isBtnActive, setIsBtnActive] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [image, setImage] = useState();
+
 
   const userPhoto = useSelector(selectUserPhoto);
-
+  const [image, setImage] = useState(userPhoto);
 
 
   useEffect(() => {
-    setImage(userPhoto);
     setTimeout(() => {
       const auth = getAuth();
       const user = auth.currentUser;

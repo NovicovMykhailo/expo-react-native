@@ -11,6 +11,7 @@ import {
   arrayUnion,
   getDoc,
   where,
+  deleteDoc,
 } from "firebase/firestore"; // firebase
 
 // Get All
@@ -102,4 +103,11 @@ export const getUserPosts = async userId => {
   });
   const sortedPosts = userPosts.sort((a, b) => b.createdAt - a.createdAt);
   return sortedPosts;
+};
+
+// Get posts by user Id
+export const geletePostById = async (postId) => {
+await deleteDoc(doc(db, "posts", `${postId}`));
+
+  return true;
 };
